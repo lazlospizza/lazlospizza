@@ -5,6 +5,7 @@ import { WalletProvider } from '../hooks/useWallet';
 import { colors, styles } from '../styles/theme';
 
 import '../styles/fonts.css';
+import { Footer } from '../components/Footer';
 
 const config = {
   initialColorMode: 'dark',
@@ -41,6 +42,7 @@ function MyApp({ Component, pageProps }) {
           <>
             <Header />
             <Component {...pageProps} />
+            <Footer />
           </>
         </WalletProvider>
       </ChakraProvider>
