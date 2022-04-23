@@ -15,8 +15,6 @@ export const ConnectWalletButton = () => {
   const { connect, disconnect, error, clearError, loading, address } =
     useWallet();
 
-  console.log(loading);
-
   useEffect(() => {
     if (!!error) {
       toast({
@@ -38,8 +36,8 @@ export const ConnectWalletButton = () => {
             <MenuButton
               isActive={isOpen}
               as={Button}
-              size="md"
-              colorScheme="bellpepper"
+              size="lg"
+              colorScheme="cheese"
               isLoading={loading}
               rightIcon={<ChevronDownIcon />}
             >
@@ -60,9 +58,9 @@ export const ConnectWalletButton = () => {
 
   return (
     <Button
-      size="md"
+      size="lg"
       onClick={connect}
-      colorScheme="bellpepper"
+      colorScheme="cheese"
       isLoading={loading}
     >
       Connect Wallet

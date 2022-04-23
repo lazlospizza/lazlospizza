@@ -1,4 +1,12 @@
-import { Box, Button, Center, Flex, Heading, Stack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Heading,
+  Stack,
+  Text,
+} from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { PromoHeader } from '../components/PromoHeader';
 
@@ -8,50 +16,77 @@ export default function Home() {
   const router = useRouter();
 
   return (
-    <Box p={'20px'} w="full">
-      <Stack spacing={'20px'}>
+    <Box p="20px" w="full">
+      <Stack spacing="20px">
         <PromoHeader></PromoHeader>
-        <Heading fontFamily={'Lato'} size={'lg'} color={'tomato.500'}>
+        <Heading fontFamily="Lato" size="lg" color="tomato.500">
           Get Started
         </Heading>
 
         {/* First card */}
-        <Box className="card" padding="20px" backgroundColor="bellpepper.200">
-          <Flex justifyContent="space-between">
+        <Box
+          className="card"
+          padding="20px"
+          backgroundColor="cheese.200"
+          borderWidth="1px"
+          borderColor="tomato.500"
+        >
+          <Stack direction="row">
             <Center w="250px">
-              <img src="/assets/pizza.svg" alt="pizza" />
+              <img
+                src="/assets/pizza.svg"
+                alt="pizza"
+                width="250px"
+                height="250px"
+              />
             </Center>
-
-            <Stack spacing={'20px'}>
-              <Heading size={'sm'} color="gray.dark">
-                Buy Ingredients and Bake a Pizza
-              </Heading>
-              <Heading fontFamily={'Lato'} size={'md'} color="gray.dark">
-                Select your hand-crafted ingredients freshy prepared by our
-                pixel artists.
-              </Heading>
-              <Button backgroundColor={'tomato.500'}>
-                Head to Laszlo’s Pizza Cave
-              </Button>
-            </Stack>
-          </Flex>
+            <Flex
+              flexDirection="column"
+              justifyContent="space-between"
+              padding="20px"
+            >
+              <Stack spacing="20px" mb={10}>
+                <Heading color="gray.dark" fontSize={28}>
+                  Buy Ingredients and Bake a Pizza
+                </Heading>
+                <Text fontFamily="Lato" color="gray.dark" fontSize={22}>
+                  Select your hand-crafted ingredients freshy prepared by our
+                  pixel artists.
+                </Text>
+              </Stack>
+              <Flex flexDirection="row">
+                <Button backgroundColor="tomato.500" size="lg">
+                  {"Head to Laszlo's Pizza Cave"}
+                </Button>
+              </Flex>
+            </Flex>
+          </Stack>
         </Box>
 
         {/* Second card */}
         <Box className="card" backgroundColor="tomato.500">
-          <Flex justifyContent="space-between">
-            <Stack padding="20px" spacing={'20px'}>
-              <Heading size={'sm'} color="bellpepper.200">
-                Check Rarity Rewards
-              </Heading>
-              <Heading fontFamily={'Lato'} size={'md'} color="gray.dark">
-                Find out more about Rarity Rewards
-              </Heading>
-              <Button backgroundColor={'bellpepper.200'}>Rarity Rewards</Button>
-            </Stack>
-            <Center w="250px">
-              <img src="/assets/double-pizza.svg" alt="pizza" />
-            </Center>
+          <Flex flexDirection="row" justifyContent="space-between">
+            <Flex
+              flexDirection="column"
+              justifyContent="space-between"
+              padding="40px"
+              minH="250px"
+            >
+              <Stack spacing="20px" mb={10}>
+                <Heading color="cheese.200" fontSize={28}>
+                  Check Rarity Rewards
+                </Heading>
+                <Text fontFamily="Lato" color="white" fontSize={22}>
+                  Find out more about Rarity Rewards
+                </Text>
+              </Stack>
+              <Flex flexDirection="row">
+                <Button colorScheme="cheese" size="lg">
+                  Rarity Rewards
+                </Button>
+              </Flex>
+            </Flex>
+            <img src="/assets/double-pizza.svg" alt="pizza" height="100%" />
           </Flex>
         </Box>
       </Stack>

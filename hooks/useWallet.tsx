@@ -68,12 +68,12 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
       const signer = web3Provider.getSigner();
       const address = await signer.getAddress();
       const network = await web3Provider.getNetwork();
-      const infuraProvider = new providers.InfuraProvider();
-      const contract = LazlosPizzaShop__factory.connect(
-        getMainContractAddress(),
-        infuraProvider,
-      );
-      const contractWithProvider = contract.connect(infuraProvider);
+      setWallet({
+        address,
+        chainId: network.chainId,
+        provider,
+        web3Provider,
+      });
     } catch (e) {
       if (e?.response?.data?.reference === 'signature-mismatch') {
         setError('Bad signature');

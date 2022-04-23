@@ -1,5 +1,5 @@
 export const colors = {
-  bellpepper: {
+  cheese: {
     100: '#ffff86',
     200: '#ffda54',
     300: '#c9a91d',
@@ -41,6 +41,8 @@ export const styles = {
       display: 'flex',
       flexDirection: 'row',
       backgroundColor: 'tomato.500',
+      borderBottomWidth: '2px',
+      borderColor: '#3D3431',
       zIndex: 1000,
     },
     '.header .header-content': {
@@ -48,7 +50,6 @@ export const styles = {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center',
       flexWrap: 'wrap',
       padding: 4,
     },
@@ -56,10 +57,37 @@ export const styles = {
       height: '159px',
       width: 'auto',
     },
-    a: {
-      color: 'bellpepper.200',
+    '.header .menu a': {
+      color: 'white',
+      padding: '0 0 7px',
+      position: 'relative',
+      fontSize: '18px',
+      fontWeight: '900',
+      marginRight: 6,
+      marginLeft: 1,
       _hover: {
-        color: 'bellpepper.300',
+        color: 'cheese.200',
+        textDecoration: 'none',
+      },
+    },
+    '.header .menu a::after': {
+      width: 0,
+      height: '4px',
+      content: '""',
+      position: 'absolute',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      bottom: 0,
+      background: '#ffda54',
+      transition: 'all .3s ease-in-out',
+    },
+    '.header .menu a:hover::after': {
+      width: '100%',
+    },
+    a: {
+      color: 'cheese.200',
+      _hover: {
+        color: 'cheese.300',
         textDecoration: 'underline',
       },
     },

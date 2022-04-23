@@ -4,7 +4,7 @@ export const Footer = () => {
   return (
     <Box className="footer">
       <Stack w={'full'} spacing={'60px'}>
-        <Heading size={'sm'} color="bellpepper.200">
+        <Heading size={'sm'} color="cheese.200">
           {'Join Our Community'}
         </Heading>
         <Stack spacing={10}>

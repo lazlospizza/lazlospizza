@@ -11,8 +11,22 @@ export const Header = () => {
         </a>
       </Link>
       <Box className="header-content">
-        <Stack>
+        <Stack direction="column" justifyContent="flex-end">
           <Heading>{"Lazlo's Pizza"}</Heading>
+          <Stack direction="row" className="menu">
+            <Link href="/">
+              <a>Home</a>
+            </Link>
+            <Link href="/">
+              <a>Pizza Cave</a>
+            </Link>
+            <Link href="/">
+              <a>Meet Artists</a>
+            </Link>
+            <Link href="/">
+              <a>Rarity Rewards</a>
+            </Link>
+          </Stack>
         </Stack>
         <ConnectWalletButton />
       </Box>
