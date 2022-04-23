@@ -2,9 +2,8 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import { providers } from 'ethers';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Web3Modal from 'web3modal';
-import { v4 as uuidv4 } from 'uuid';
 import { getMainContractAddress } from '../utils/network';
-// import { LazlosPizza__factory } from '../typechain';
+import { LazlosPizzaShop__factory } from '../contracts/typechain-types';
 import { isEmpty } from 'lodash';
 import { useRouter } from 'next/router';
 
@@ -70,11 +69,11 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
       const address = await signer.getAddress();
       const network = await web3Provider.getNetwork();
       const infuraProvider = new providers.InfuraProvider();
-      // const contract = LazlosPizza__factory.connect(
-      //   getMainContractAddress(),
-      //   infuraProvider,
-      // );
-      // const contractWithProvider = contract.connect(infuraProvider);
+      const contract = LazlosPizzaShop__factory.connect(
+        getMainContractAddress(),
+        infuraProvider,
+      );
+      const contractWithProvider = contract.connect(infuraProvider);
     } catch (e) {
       if (e?.response?.data?.reference === 'signature-mismatch') {
         setError('Bad signature');
