@@ -65,10 +65,10 @@ export const styles = {
       fontWeight: '900',
       marginRight: 6,
       marginLeft: 1,
-      _hover: {
-        color: 'cheese.200',
-        textDecoration: 'none',
-      },
+    },
+    '.header .menu a:hover, .header .menu a.current': {
+      color: 'cheese.200',
+      textDecoration: 'none',
     },
     '.header .menu a::after': {
       width: 0,
@@ -81,7 +81,7 @@ export const styles = {
       background: '#ffda54',
       transition: 'all .3s ease-in-out',
     },
-    '.header .menu a:hover::after': {
+    '.header .menu a:hover::after, .header .menu a.current::after': {
       width: '100%',
     },
     a: {

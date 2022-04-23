@@ -1,8 +1,13 @@
 import { Box, Heading, Stack } from '@chakra-ui/react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useWallet } from '../hooks/useWallet';
 import { ConnectWalletButton } from './ConnectWalletButton';
 
 export const Header = () => {
+  const router = useRouter();
+  const { isConnected } = useWallet();
+
   return (
     <Box className="header">
       <Link href="/">
@@ -15,17 +20,46 @@ export const Header = () => {
           <Heading>{"Lazlo's Pizza"}</Heading>
           <Stack direction="row" className="menu">
             <Link href="/">
-              <a>Home</a>
+              <a className={router.pathname === '/' ? 'current' : ''}>Home</a>
             </Link>
-            <Link href="/">
-              <a>Pizza Cave</a>
+            <Link href="/pizza-cave">
+              <a
+                className={
+                  router.pathname.startsWith('/pizza-cave') ? 'current' : ''
+                }
+              >
+                Pizza Cave
+              </a>
             </Link>
-            <Link href="/">
-              <a>Meet Artists</a>
+            <Link href="/meet-artists">
+              <a
+                className={
+                  router.pathname.startsWith('/meet-artists') ? 'current' : ''
+                }
+              >
+                Meet Artists
+              </a>
             </Link>
-            <Link href="/">
-              <a>Rarity Rewards</a>
+            <Link href="/rarity-rewards">
+              <a
+                className={
+                  router.pathname.startsWith('/rarity-rewards') ? 'current' : ''
+                }
+              >
+                Rarity Rewards
+              </a>
             </Link>
+            {isConnected && (
+              <Link href="/my-wallet">
+                <a
+                  className={
+                    router.pathname.startsWith('/my-wallet') ? 'current' : ''
+                  }
+                >
+                  My Wallet
+                </a>
+              </Link>
+            )}
           </Stack>
         </Stack>
         <ConnectWalletButton />

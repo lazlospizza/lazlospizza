@@ -34,10 +34,20 @@ export const ConnectWalletButton = () => {
         {({ isOpen }) => (
           <>
             <MenuButton
+              backgroundColor="cheese.200"
+              borderWidth={2}
+              borderColor="cheese.200"
+              fontWeight="900"
+              color="gray.800"
+              _hover={{
+                textDecoration: 'none',
+                backgroundColor: 'tomato.500',
+                borderColor: 'cheese.200',
+                color: 'cheese.200',
+              }}
+              size="lg"
               isActive={isOpen}
               as={Button}
-              size="lg"
-              colorScheme="cheese"
               isLoading={loading}
               rightIcon={<ChevronDownIcon />}
             >
@@ -58,9 +68,19 @@ export const ConnectWalletButton = () => {
 
   return (
     <Button
+      backgroundColor="cheese.200"
+      borderWidth={2}
+      borderColor="cheese.200"
+      fontWeight="900"
+      color="gray.800"
+      _hover={{
+        textDecoration: 'none',
+        backgroundColor: 'tomato.500',
+        borderColor: 'cheese.200',
+        color: 'cheese.200',
+      }}
       size="lg"
       onClick={connect}
-      colorScheme="cheese"
       isLoading={loading}
     >
       Connect Wallet

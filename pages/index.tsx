@@ -6,6 +6,7 @@ import {
   Heading,
   Stack,
   Text,
+  Link,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { PromoHeader } from '../components/PromoHeader';
@@ -55,9 +56,29 @@ export default function Home() {
                 </Text>
               </Stack>
               <Flex flexDirection="row">
-                <Button backgroundColor="tomato.500" size="lg">
-                  {"Head to Laszlo's Pizza Cave"}
-                </Button>
+                <Link
+                  href="/pizza-cave"
+                  _hover={{
+                    textDecoration: 'none',
+                    color: 'tomato.500',
+                  }}
+                >
+                  <Button
+                    backgroundColor="tomato.500"
+                    borderWidth={2}
+                    borderColor="tomato.500"
+                    fontWeight="900"
+                    _hover={{
+                      textDecoration: 'none',
+                      backgroundColor: 'cheese.200',
+                      borderColor: 'tomato.500',
+                      color: 'tomato.500',
+                    }}
+                    size="lg"
+                  >
+                    {"Head to Lazlo's Pizza Cave"}
+                  </Button>
+                </Link>
               </Flex>
             </Flex>
           </Stack>
@@ -81,9 +102,31 @@ export default function Home() {
                 </Text>
               </Stack>
               <Flex flexDirection="row">
-                <Button colorScheme="cheese" size="lg">
-                  Rarity Rewards
-                </Button>
+                <Link
+                  href="/pizza-cave"
+                  color="auto"
+                  _hover={{
+                    textDecoration: 'none',
+                    color: 'cheese.200',
+                  }}
+                >
+                  <Button
+                    backgroundColor="cheese.200"
+                    borderWidth={2}
+                    borderColor="cheese.200"
+                    fontWeight="900"
+                    color="gray.800"
+                    _hover={{
+                      textDecoration: 'none',
+                      backgroundColor: 'tomato.500',
+                      borderColor: 'cheese.200',
+                      color: 'cheese.200',
+                    }}
+                    size="lg"
+                  >
+                    Rarity Rewards
+                  </Button>
+                </Link>
               </Flex>
             </Flex>
             <img src="/assets/double-pizza.svg" alt="pizza" height="100%" />
