@@ -1,5 +1,6 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+# Lazlos's Pizza
 ## Getting Started
 
 First, run the development server:
@@ -32,5 +33,8 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-# lazlospizza
-# lazlospizza
+
+## rinkeby
+- [Lazlos Pizza Shop](https://rinkeby.etherscan.io/address/0x44F9C2F8aD53625936764e3D92e2AeC99aA9F494#code)
+- [Lazlos Ingredients ERC1155](https://rinkeby.etherscan.io/address/0xecaD4a8E85b2A416f3F30694B1E19DC37Ca80676#code)
+- [Lazlos Pizza ERC721](https://rinkeby.etherscan.io/address/0xc008A9077AA35412b3F005b4Ee2dd6D6E5150995#code)
