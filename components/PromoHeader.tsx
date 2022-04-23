@@ -4,7 +4,7 @@ export const PromoHeader = () => {
   return (
     <Box
       w="full"
-      h="130px"
+      h="330px"
       display={'flex'}
       alignItems="center"
       justifyContent={'center'}
@@ -12,14 +12,10 @@ export const PromoHeader = () => {
       {/* <Box py="100px"> */}
       <Stack spacing={10}>
         <Center>
-          <Heading size={'md'} color={'tomato.500'}>
-            {'Bake the RAREST Pizza'}
-          </Heading>
+          <Heading color={'tomato.500'}>{'Bake the RAREST Pizza'}</Heading>
         </Center>
         <Center>
-          <Heading size={'md'} color={'gray.dark'}>
-            {'To get Rarity Rewards'}
-          </Heading>
+          <Heading color={'gray.dark'}>{'To get Rarity Rewards'}</Heading>
         </Center>
       </Stack>
     </Box>
