@@ -1,6 +1,11 @@
 import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/react';
 
-export const Artist = () => {
+interface ArtistProps {
+  name: string;
+  about: string;
+}
+
+export const Artist = ({ name, about }: ArtistProps) => {
   return (
     <Box className="artist-card">
       <Flex>

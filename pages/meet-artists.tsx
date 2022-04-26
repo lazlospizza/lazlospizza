@@ -1,4 +1,4 @@
-import { Box, Heading, Stack, Text } from '@chakra-ui/react';
+import { Box, Stack, Text } from '@chakra-ui/react';
 import { Artist } from '../components/Artist';
 
 export default function MeetArtists() {
@@ -13,11 +13,27 @@ export default function MeetArtists() {
         </Text>
       </Stack>
 
-      <Stack>
-        <Artist />
-        <Artist />
-        <Artist />
-        <Artist />
+      <Stack m="20px" spacing={'20px'}>
+        <Artist
+          name={'Artist Name'}
+          about={`I am an artist. I love art. Check out my work`}
+        />
+        <Artist
+          name={'Artist Name'}
+          about={`I am an artist. I love art. Check out my work`}
+        />
+        <Artist
+          name={'Artist Name'}
+          about={`I am an artist. I love art. Check out my work`}
+        />
+        <Artist
+          name={'Artist Name'}
+          about={`I am an artist. I love art. Check out my work`}
+        />
+        <Artist
+          name={'Artist Name'}
+          about={`I am an artist. I love art. Check out my work`}
+        />
       </Stack>
     </Box>
   );
