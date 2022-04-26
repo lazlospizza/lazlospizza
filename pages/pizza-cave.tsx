@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { BuyAndBake } from '../components/PizzaCave/BuyAndBake';
+import { RandomBake } from '../components/PizzaCave/RandomBake';
 import { BAKING_FEE } from '../constants';
 
 enum Tabs {
@@ -25,6 +26,8 @@ export default function PizzaCave() {
     switch (tab) {
       case Tabs.bake:
         return <BuyAndBake />;
+      case Tabs.randomBake:
+        return <RandomBake />;
       default:
         break;
     }
