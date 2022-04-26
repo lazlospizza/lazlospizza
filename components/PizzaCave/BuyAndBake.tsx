@@ -3,7 +3,7 @@ import { BAKING_FEE } from '../../constants';
 
 export const BuyAndBake = () => {
   return (
-    <Stack m="20px">
+    <Stack m="10px">
       <Text color="tomato.500" fontWeight={700} fontSize={'xl'}>
         Bake a Pizza
       </Text>

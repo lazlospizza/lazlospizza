@@ -126,5 +126,11 @@ export const styles = {
     '.cave-nav-btn img:hover': {
       background: 'gray.dark',
     },
+    '.artist-card': {
+      color: 'tomato.500',
+      border: '1px',
+      borderRadius: '10px',
+      padding: '20px',
+    },
   },
 };

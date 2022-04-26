@@ -3,7 +3,7 @@ import { REBAKE_FEE } from '../../constants';
 
 export const RandomBake = () => {
   return (
-    <Stack m="20px">
+    <Stack m="10px">
       <Text color="tomato.500" fontWeight={700} fontSize={'xl'}>
         Random Bake
       </Text>
