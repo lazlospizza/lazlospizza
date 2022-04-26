@@ -109,7 +109,6 @@ export const styles = {
     },
     '.card': {
       width: 'full',
-      // padding: '20px',
       borderRadius: '10px',
     },
     '.card_subtext': {
@@ -117,6 +116,15 @@ export const styles = {
       fontStyle: 'normal',
       fontWeight: 600,
       fontSize: '30px',
+    },
+    '.cave-nav-btn': {
+      color: 'gray.dark',
+      background: '#ffda54',
+      border: '1px',
+      marginRight: 5,
+    },
+    '.cave-nav-btn img:hover': {
+      background: 'gray.dark',
     },
   },
 };
