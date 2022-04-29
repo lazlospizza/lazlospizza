@@ -1,14 +1,11 @@
-const dotenv = require('dotenv');
-
-require('@nomiclabs/hardhat-etherscan');
-require('@nomiclabs/hardhat-waffle');
-require('@typechain/hardhat');
+require("@nomiclabs/hardhat-waffle");
+require("@nomiclabs/hardhat-etherscan");
 require('hardhat-abi-exporter');
 require('hardhat-contract-sizer');
 
-dotenv.config();
+const fs = require("fs");
 
-task('accounts', 'Prints the list of accounts', async (taskArgs, hre) => {
+task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   const accounts = await hre.ethers.getSigners();
 
   for (const account of accounts) {
@@ -16,8 +13,10 @@ task('accounts', 'Prints the list of accounts', async (taskArgs, hre) => {
   }
 });
 
+const privatekey = fs.readFileSync(".privatekey").toString().trim();
+
 module.exports = {
-  solidity: '0.8.9',
+  solidity: "0.8.9",
   settings: {
     optimizer: {
       enabled: true,
@@ -25,8 +24,8 @@ module.exports = {
       details: {
         yul: true,
         yulDetails: {
-          stackAllocation: true,
-          optimizerSteps: 'dhfoDgvulfnTUtnIf',
+            stackAllocation: true,
+            optimizerSteps: "dhfoDgvulfnTUtnIf",
         },
       },
     },
@@ -34,16 +33,15 @@ module.exports = {
   networks: {
     hardhat: {
       allowUnlimitedContractSize: true,
-      blockGasLimit: 70_000_000,
+      blockGasLimit: 70_000_000
     },
     rinkeby: {
       allowUnlimitedContractSize: true,
-      url: process.env.RINKEBY_URL || '',
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      url: "https://rinkeby.infura.io/v3/67198f4f15244598b1a3980106ce8fe3",
+      accounts: [privatekey]
     },
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
-  },
+    apiKey: "FH2XUYE4T2EV7YGQKYJAY3FEIN9F33V68D"
+  }
 };
