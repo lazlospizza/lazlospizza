@@ -42,7 +42,7 @@ async function addIngredients(owner, ingredients) {
       name: ingredient.name,
       ingredientType:	ingredient.ingredientType,
       artist: owner.address,
-      price: hre.ethers.BigNumber.from('100000000000000000'),
+      price: hre.ethers.BigNumber.from('10000000000000000'),
       supply: 3,
     });
     await tx.wait();
@@ -68,7 +68,7 @@ async function main() {
   await pizzas.setRenderingContractAddress(rendering.address);
   await ingredients.setPizzaShopContractAddress(shop.address);
   await ingredients.setRenderingContractAddress(rendering.address);
-  await rendering.setIngredientsIPFSHash('QmdtCPDURLck3uATRLYJUoHUcWxdxZLWFNJ6fAbqCovG91');
+  await rendering.setIngredientsIPFSHash('QmS5P5ooGV2NYWThZ7YwPaxb8b4q9ntG248uMHp8Firzsy');
   await rendering.setIngredientsContractAddress(ingredients.address);
 
   console.log("LazlosPizzaShop deployed to:", shop.address);

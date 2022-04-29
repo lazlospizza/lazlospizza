@@ -28,7 +28,7 @@ contract LazlosRendering is Ownable {
                 "data:application/json;base64,",
                 Base64.encode(abi.encodePacked(
                     '{"name":"', ingredient.name,
-                    '","description":"blah blah blah something about pizza","image":"ipfs://',
+                    '","description":"blah blah blah something about pizza","image":"https://gateway.pinata.cloud/ipfs/',
                     ingredientsIPFSHash, '/', id.toString(), '.png"}'
                 ))
             )

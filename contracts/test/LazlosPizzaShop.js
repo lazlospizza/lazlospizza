@@ -181,8 +181,8 @@ describe("LazlosPizzaShop", function () {
         const metadata1 = await ingredients.uri(1);
         const metadata10 = await ingredients.uri(10);
         const metadata21 = await ingredients.uri(21);
-        expect(metadata1).to.equal('data:application/json;base64,eyJuYW1lIjoiRG91Z2giLCJkZXNjcmlwdGlvbiI6ImJsYWggYmxhaCBibGFoIHNvbWV0aGluZyBhYm91dCBwaXp6YSIsImltYWdlIjoiaXBmczovL0ZBS0VfSVBGU19IQVNILzEucG5nIn0=');
-        expect(metadata10).to.equal('data:application/json;base64,eyJuYW1lIjoiIiwiZGVzY3JpcHRpb24iOiJibGFoIGJsYWggYmxhaCBzb21ldGhpbmcgYWJvdXQgcGl6emEiLCJpbWFnZSI6ImlwZnM6Ly9GQUtFX0lQRlNfSEFTSC8xMC5wbmcifQ==');
-        expect(metadata21).to.equal('data:application/json;base64,eyJuYW1lIjoiIiwiZGVzY3JpcHRpb24iOiJibGFoIGJsYWggYmxhaCBzb21ldGhpbmcgYWJvdXQgcGl6emEiLCJpbWFnZSI6ImlwZnM6Ly9GQUtFX0lQRlNfSEFTSC8yMS5wbmcifQ==');
+        expect(metadata1).to.equal('data:application/json;base64,eyJuYW1lIjoiRG91Z2giLCJkZXNjcmlwdGlvbiI6ImJsYWggYmxhaCBibGFoIHNvbWV0aGluZyBhYm91dCBwaXp6YSIsImltYWdlIjoiaHR0cHM6Ly9nYXRld2F5LnBpbmF0YS5jbG91ZC9pcGZzL0ZBS0VfSVBGU19IQVNILzEucG5nIn0=');
+        expect(metadata10).to.equal('data:application/json;base64,eyJuYW1lIjoiIiwiZGVzY3JpcHRpb24iOiJibGFoIGJsYWggYmxhaCBzb21ldGhpbmcgYWJvdXQgcGl6emEiLCJpbWFnZSI6Imh0dHBzOi8vZ2F0ZXdheS5waW5hdGEuY2xvdWQvaXBmcy9GQUtFX0lQRlNfSEFTSC8xMC5wbmcifQ==');
+        expect(metadata21).to.equal('data:application/json;base64,eyJuYW1lIjoiIiwiZGVzY3JpcHRpb24iOiJibGFoIGJsYWggYmxhaCBzb21ldGhpbmcgYWJvdXQgcGl6emEiLCJpbWFnZSI6Imh0dHBzOi8vZ2F0ZXdheS5waW5hdGEuY2xvdWQvaXBmcy9GQUtFX0lQRlNfSEFTSC8yMS5wbmcifQ==');
     });
 });
