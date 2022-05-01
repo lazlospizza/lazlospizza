@@ -16,6 +16,8 @@ contract LazlosPizzas is ERC721U, Ownable {
     }
 
     address public pizzaShopContractAddress;
+    address public renderingContractAddress;
+
     Counters.Counter public numPizzas;
     mapping(uint256 => Pizza) pizzas;
 
@@ -25,9 +27,12 @@ contract LazlosPizzas is ERC721U, Ownable {
         pizzaShopContractAddress = addr;
     }
 
+    function setRenderingContractAddress(address addr) public onlyOwner {
+        renderingContractAddress = addr;
+    }
+
     function tokenURI(uint256 id) public view override returns (string memory) {
-        // TODO - implement me
-        return '';
+        return ILazlosRendering(renderingContractAddress).pizzaTokenMetadata(id);
     }
 
     function bake(address baker, Pizza memory pizzaData) external onlyPizzaShop returns (uint256) {

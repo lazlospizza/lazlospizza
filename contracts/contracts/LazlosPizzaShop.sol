@@ -25,6 +25,10 @@ contract LazlosPizzaShop is Ownable {
     function setIngredientsContractAddress(address addr) public onlyOwner {
         ingredientsContractAddress = addr;
     }
+    
+    function setSystemAddress(address addr) public onlyOwner {
+        systemAddress = addr;
+    }
 
     function buyIngredients(uint256[] memory tokenIds, uint256[] memory amounts) public payable {
         uint256 expectedPrice;

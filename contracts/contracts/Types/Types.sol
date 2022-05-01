@@ -39,3 +39,8 @@ interface ILazlosPizzas {
     function rebake(address baker, uint256 pizzaTokenId, Pizza memory pizza) external;
     function pizza(uint256 tokenId) external view returns (Pizza memory);
 }
+
+interface ILazlosRendering {
+    function ingredientTokenMetadata(uint256 id) external view returns (string memory); 
+    function pizzaTokenMetadata(uint256 id) external view returns (string memory); 
+}
