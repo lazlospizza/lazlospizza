@@ -8,11 +8,12 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import { Bake } from '../components/PizzaCave/Bake';
 import { BuyAndBake } from '../components/PizzaCave/BuyAndBake';
 import { RandomBake } from '../components/PizzaCave/RandomBake';
-import { BAKING_FEE } from '../constants';
 
 enum Tabs {
+  buyAndBake = 'Buy & Bake',
   bake = 'Bake',
   unbake = 'Unbake',
   rebake = 'Rebake',
@@ -24,8 +25,10 @@ export default function PizzaCave() {
 
   const renderSubpage = (tab: Tabs) => {
     switch (tab) {
-      case Tabs.bake:
+      case Tabs.buyAndBake:
         return <BuyAndBake />;
+      case Tabs.bake:
+        return <Bake />;
       case Tabs.randomBake:
         return <RandomBake />;
       default:
@@ -54,20 +57,26 @@ export default function PizzaCave() {
 
       {/* Page nav */}
       <Flex m="20px">
+        <Button
+          onClick={() => setTab(Tabs.buyAndBake)}
+          className="cave-nav-btn"
+        >
+          {Tabs.buyAndBake}
+        </Button>
         <Button onClick={() => setTab(Tabs.bake)} className="cave-nav-btn">
-          {'Bake'}
+          {Tabs.bake}
         </Button>
         <Button onClick={() => setTab(Tabs.unbake)} className="cave-nav-btn">
           {'Unbake'}
         </Button>
         <Button onClick={() => setTab(Tabs.rebake)} className="cave-nav-btn">
-          {'Rebake'}
+          {Tabs.unbake}
         </Button>
         <Button
           onClick={() => setTab(Tabs.randomBake)}
           className="cave-nav-btn"
         >
-          {'Random Bake'}
+          {Tabs.randomBake}
         </Button>
       </Flex>
 

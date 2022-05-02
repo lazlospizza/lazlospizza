@@ -117,6 +117,14 @@ export const styles = {
       fontWeight: 600,
       fontSize: '30px',
     },
+    '.tomato-btn': {
+      color: 'tomato.500',
+      background: '#ffda54',
+      border: '1px',
+    },
+    '.tomato-btn img:hover': {
+      background: 'gray.dark',
+    },
     '.cave-nav-btn': {
       color: 'gray.dark',
       background: '#ffda54',
