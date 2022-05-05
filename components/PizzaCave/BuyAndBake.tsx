@@ -1,7 +1,8 @@
-import { Box, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Stack, Text } from '@chakra-ui/react';
 import { useState } from 'react';
 import { BAKING_FEE, INGREDIENT_COST } from '../../constants';
 import { Ingredient, IngredientGroup, IngredientType } from '../../types';
+import { NavButton } from '../shared/NavButton';
 import { SelectYourIngredients } from './SelectYourIngredients';
 
 const tempGroup: IngredientGroup[] = [
@@ -10,9 +11,20 @@ const tempGroup: IngredientGroup[] = [
     namePlural: 'Bases',
     type: IngredientType.base,
     ingredients: [
-      { name: 'Plain', cost: 0.01, numAvailable: 5000, numAllowed: 1 },
-      { name: 'Thin', cost: 0.02, numAvailable: 5000, numAllowed: 1 },
-      { name: 'Thick', cost: 0.03, numAvailable: 5000, numAllowed: 1 },
+      {
+        name: 'Plain',
+        cost: 0.01,
+        numAvailable: 5000,
+        numAllowed: 1,
+        imgUrl: '/assets/base-plain.svg',
+      },
+      {
+        name: 'Gluten-Free',
+        cost: 0.02,
+        numAvailable: 5000,
+        numAllowed: 1,
+        imgUrl: '/assets/base-gluten-free.svg',
+      },
     ],
   },
   {
@@ -20,12 +32,25 @@ const tempGroup: IngredientGroup[] = [
     namePlural: 'Sauces',
     type: IngredientType.sauce,
     ingredients: [
-      { name: 'None', cost: 0.01, numAvailable: 5000, numAllowed: 1 },
-      { name: 'Tomato', cost: 0.03, numAvailable: 5000, numAllowed: 1 },
-      { name: 'Alfredo', cost: 0.04, numAvailable: 5000, numAllowed: 1 },
+      {
+        name: 'Tomato',
+        cost: 0.01,
+        numAvailable: 5000,
+        numAllowed: 1,
+        imgUrl: '/assets/sauce-tomato.svg',
+      },
+      { name: 'Chilli', cost: 0.01, numAvailable: 5000, numAllowed: 1 },
+      { name: 'BBQ', cost: 0.01, numAvailable: 5000, numAllowed: 1 },
+      { name: 'Garlic', cost: 0.01, numAvailable: 5000, numAllowed: 1 },
     ],
   },
 ];
+
+export enum BuyAndBakeTabs {
+  ingredients = 'Ingredients',
+  selections = 'Your Selections',
+  checkRarity = 'Check Rarity',
+}
 
 export const BuyAndBake = () => {
   const [ingredientGroups, setIngredientGroups] =
@@ -33,6 +58,12 @@ export const BuyAndBake = () => {
   const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>(
     [],
   );
+  const [selectedTab, setSelectedTab] = useState(BuyAndBakeTabs.ingredients);
+
+  const addIngredient = (item: Ingredient) => {
+    // validate ingredient can be added first
+    // maybe have different state for each ingredient type
+  };
 
   return (
     <Box>
@@ -44,7 +75,35 @@ export const BuyAndBake = () => {
           {`Select from a delightful selection of hand-crafted ingredients freshly prepared by our pixel artistes. You can buy now and bake later, or buy and bake in one transaction. (${INGREDIENT_COST} ETH per ingredient + ${BAKING_FEE}ETH Baking fee.)`}
         </Text>
       </Stack>
-      <div style={{ marginTop: 8, height: 1, backgroundColor: '#3D3431' }} />
+      {/* divider */}
+      {/* <div style={{ marginTop: 8, height: 1, backgroundColor: '#3D3431' }} /> */}
+      <Flex
+        pt="4"
+        px="8"
+        alignContent={'center'}
+        justifyContent={'center'}
+        borderTop={1}
+        borderBottom={1}
+        border="1px"
+        borderColor={'gray.dark'}
+        // backgroundColor="red"
+      >
+        <NavButton
+          title={BuyAndBakeTabs.ingredients}
+          isSelected={selectedTab === BuyAndBakeTabs.ingredients}
+          onClick={() => setSelectedTab(BuyAndBakeTabs.ingredients)}
+        />
+        <NavButton
+          title={BuyAndBakeTabs.selections}
+          isSelected={selectedTab === BuyAndBakeTabs.selections}
+          onClick={() => setSelectedTab(BuyAndBakeTabs.selections)}
+        />
+        <NavButton
+          title={BuyAndBakeTabs.checkRarity}
+          isSelected={selectedTab === BuyAndBakeTabs.checkRarity}
+          onClick={() => setSelectedTab(BuyAndBakeTabs.checkRarity)}
+        />
+      </Flex>
       <SelectYourIngredients ingredientGroups={ingredientGroups} />
     </Box>
   );

@@ -142,5 +142,9 @@ export const styles = {
       borderRadius: '10px',
       padding: '20px',
     },
+    // '.black-nav': {
+    //   color: 'gray.dark',
+    //   border
+    // },
   },
 };

@@ -1,5 +1,5 @@
 import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Ingredient } from '../../types';
 
 export const IngredientItem = ({
@@ -8,17 +8,33 @@ export const IngredientItem = ({
   numAvailable,
   numAllowed,
   imgUrl = '/assets/pizza.svg',
-}: Ingredient) => {
+  addIngredient,
+}: any) => {
+  // }: Ingredient) => {
   const [count, setCount] = useState(0);
-  const [disabled, setDisabled] = useState(count < numAllowed);
+  const [disabled, setDisabled] = useState(count >= numAllowed);
+
   const handleAdd = () => {
-    if (count < numAllowed) setCount(count + 1);
-    else setDisabled(true);
+    if (count < numAllowed) {
+      setCount(count + 1);
+    } else setDisabled(true);
   };
+
+  useEffect(() => {
+    if (count === numAllowed) {
+      !disabled && setDisabled(true);
+      // shouldnt happen but...
+    } else if (count > numAllowed) {
+      setCount(numAllowed);
+      setDisabled(true);
+    }
+  }, [count]);
+  //   console.log(name);
+  //   console.log(imgUrl);
   return (
     <Box className="artist-card" p="4">
       <Flex>
-        <img style={{ height: 120 }} src={imgUrl} alt="ingredient" />
+        <img style={{ height: 120 }} src={`${imgUrl}`} alt="ingredient" />
         {/* Right of Image */}
         <Flex width={'100%'} justifyContent={'space-between'}>
           {/* Name and Cost */}

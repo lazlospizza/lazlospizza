@@ -22,6 +22,8 @@ export const IngredientList = ({ ingredientGroup }: Props) => {
             name={item.name}
             cost={item.cost}
             numAvailable={item.numAvailable}
+            numAllowed={item.numAllowed}
+            imgUrl={item?.imgUrl}
           />
         ))}
       </Stack>
