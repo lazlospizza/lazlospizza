@@ -127,12 +127,14 @@ export const styles = {
     },
     '.cave-nav-btn': {
       color: 'gray.dark',
-      background: '#ffda54',
       border: '1px',
       marginRight: 5,
     },
-    '.cave-nav-btn img:hover': {
-      background: 'gray.dark',
+    '.cave-nav-btn-selected': {
+      color: '#FFD232',
+      background: '#3D3431',
+      border: '1px',
+      marginRight: 5,
     },
     '.artist-card': {
       color: 'tomato.500',

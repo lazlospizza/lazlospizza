@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { Bake } from '../components/PizzaCave/Bake';
 import { BuyAndBake } from '../components/PizzaCave/BuyAndBake';
 import { RandomBake } from '../components/PizzaCave/RandomBake';
+import { Ingredient } from '../types';
 
 enum Tabs {
   buyAndBake = 'Buy & Bake',
@@ -21,7 +22,7 @@ enum Tabs {
 }
 
 export default function PizzaCave() {
-  const [tab, setTab] = useState(Tabs.bake);
+  const [tab, setTab] = useState(Tabs.buyAndBake);
 
   const renderSubpage = (tab: Tabs) => {
     switch (tab) {
@@ -59,22 +60,46 @@ export default function PizzaCave() {
       <Flex m="20px">
         <Button
           onClick={() => setTab(Tabs.buyAndBake)}
-          className="cave-nav-btn"
+          backgroundColor={tab === Tabs.buyAndBake ? '#3D3431' : ''}
+          className={
+            tab === Tabs.buyAndBake ? 'cave-nav-btn-selected' : 'cave-nav-btn'
+          }
         >
           {Tabs.buyAndBake}
         </Button>
-        <Button onClick={() => setTab(Tabs.bake)} className="cave-nav-btn">
+        <Button
+          onClick={() => setTab(Tabs.bake)}
+          backgroundColor={tab === Tabs.bake ? '#3D3431' : ''}
+          className={
+            tab === Tabs.bake ? 'cave-nav-btn-selected' : 'cave-nav-btn'
+          }
+        >
           {Tabs.bake}
         </Button>
-        <Button onClick={() => setTab(Tabs.unbake)} className="cave-nav-btn">
+        <Button
+          onClick={() => setTab(Tabs.unbake)}
+          backgroundColor={tab === Tabs.unbake ? '#3D3431' : ''}
+          className={
+            tab === Tabs.unbake ? 'cave-nav-btn-selected' : 'cave-nav-btn'
+          }
+        >
           {'Unbake'}
         </Button>
-        <Button onClick={() => setTab(Tabs.rebake)} className="cave-nav-btn">
-          {Tabs.unbake}
+        <Button
+          onClick={() => setTab(Tabs.rebake)}
+          backgroundColor={tab === Tabs.rebake ? '#3D3431' : ''}
+          className={
+            tab === Tabs.rebake ? 'cave-nav-btn-selected' : 'cave-nav-btn'
+          }
+        >
+          {Tabs.rebake}
         </Button>
         <Button
           onClick={() => setTab(Tabs.randomBake)}
-          className="cave-nav-btn"
+          backgroundColor={tab === Tabs.randomBake ? '#3D3431' : ''}
+          className={
+            tab === Tabs.randomBake ? 'cave-nav-btn-selected' : 'cave-nav-btn'
+          }
         >
           {Tabs.randomBake}
         </Button>
