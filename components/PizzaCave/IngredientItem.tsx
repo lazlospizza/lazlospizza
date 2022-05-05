@@ -7,7 +7,7 @@ export const IngredientItem = ({
   cost,
   numAvailable,
   numAllowed,
-  imgUrl = '/assets/pizza.svg',
+  imgUrl = '/assets/pizza.svg', // Fixme
   addIngredient,
 }: any) => {
   // }: Ingredient) => {

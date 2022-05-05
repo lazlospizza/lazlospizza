@@ -4,6 +4,7 @@ import { BAKING_FEE, INGREDIENT_COST } from '../../constants';
 import { Ingredient, IngredientGroup, IngredientType } from '../../types';
 import { NavButton } from '../shared/NavButton';
 import { SelectYourIngredients } from './SelectYourIngredients';
+import { YourSelections } from './YourSelections';
 
 const tempGroup: IngredientGroup[] = [
   {
@@ -58,11 +59,22 @@ export const BuyAndBake = () => {
   const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>(
     [],
   );
-  const [selectedTab, setSelectedTab] = useState(BuyAndBakeTabs.ingredients);
+  const [selectedTab, setSelectedTab] = useState(BuyAndBakeTabs.selections);
 
   const addIngredient = (item: Ingredient) => {
     // validate ingredient can be added first
     // maybe have different state for each ingredient type
+  };
+
+  const renderTab = () => {
+    switch (selectedTab) {
+      case BuyAndBakeTabs.ingredients:
+        return <SelectYourIngredients ingredientGroups={ingredientGroups} />;
+      case BuyAndBakeTabs.selections:
+        return <YourSelections ingredients={selectedIngredients} />;
+      default:
+        break;
+    }
   };
 
   return (
@@ -104,7 +116,7 @@ export const BuyAndBake = () => {
           onClick={() => setSelectedTab(BuyAndBakeTabs.checkRarity)}
         />
       </Flex>
-      <SelectYourIngredients ingredientGroups={ingredientGroups} />
+      {renderTab()}
     </Box>
   );
 };

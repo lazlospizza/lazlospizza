@@ -8,6 +8,7 @@ export const colors = {
     500: '#CC4443',
   },
   gray: {
+    backGround: '#F5F5F5',
     light: '#C4C4C4',
     medium: '#999999',
     dark: '#3D3431',
