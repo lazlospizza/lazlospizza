@@ -10,7 +10,7 @@ import {
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { BAKING_FEE } from '../../constants';
-import { Ingredient } from '../../types';
+import { Ingredient, Pizza } from '../../types';
 
 const ingredients = [
   {
@@ -31,8 +31,9 @@ const ingredients = [
 
 interface Props {
   ingredients: Ingredient[];
+  pizza: Pizza;
 }
-export const YourSelections = ({ _ingredients }: Props) => {
+export const YourSelections = ({ _ingredients, pizza }: Props) => {
   const [buyCost, setBuyCost] = useState(0);
 
   useEffect(() => {
@@ -60,16 +61,17 @@ export const YourSelections = ({ _ingredients }: Props) => {
           </Text>
         </Flex>
         {/* Selected Ingredients */}
-        {ingredients.map(item => (
-          <Flex key={item.name} pt={8} justifyContent="space-between">
-            <Heading size={'sm'} color={'gray.dark'}>
-              {item.name}
-            </Heading>
-            <Heading size={'sm'} color={'tomato.500'}>
-              {item.cost}
-            </Heading>
-          </Flex>
-        ))}
+        {pizza.ingredients.length &&
+          pizza.ingredients.map(item => (
+            <Flex key={item.name} pt={8} justifyContent="space-between">
+              <Heading size={'sm'} color={'gray.dark'}>
+                {item.name}
+              </Heading>
+              <Heading size={'sm'} color={'tomato.500'}>
+                {item.cost}
+              </Heading>
+            </Flex>
+          ))}
         {/* Buttons */}
         <Stack pt={8}>
           <Button

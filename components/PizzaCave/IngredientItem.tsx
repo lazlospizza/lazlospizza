@@ -2,20 +2,26 @@ import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { Ingredient } from '../../types';
 
-export const IngredientItem = ({
-  name,
-  cost,
-  numAvailable,
-  numAllowed,
-  imgUrl = '/assets/pizza.svg', // Fixme
-  addIngredient,
-}: any) => {
+interface Props {
+  ingredient: Ingredient;
+  addIngredient: (ingredient: Ingredient) => void;
+}
+
+export const IngredientItem = ({ ingredient, addIngredient }: Props) => {
   // }: Ingredient) => {
+  const {
+    name,
+    cost,
+    numAvailable,
+    numAllowed,
+    imgUrl = '/assets/pizza.svg', // Fixme
+  } = ingredient;
   const [count, setCount] = useState(0);
   const [disabled, setDisabled] = useState(count >= numAllowed);
 
   const handleAdd = () => {
     if (count < numAllowed) {
+      addIngredient(ingredient);
       setCount(count + 1);
     } else setDisabled(true);
   };

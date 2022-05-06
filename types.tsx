@@ -19,3 +19,10 @@ export interface IngredientGroup {
   type?: IngredientType;
   ingredients: Ingredient[];
 }
+
+export interface Pizza {
+  base?: Ingredient;
+  sauce?: Ingredient;
+  ingredients?: Ingredient[];
+  totalCost?: number;
+}

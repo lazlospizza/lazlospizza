@@ -1,11 +1,15 @@
 import { Box, Text, Stack, Button, Flex } from '@chakra-ui/react';
-import { IngredientGroup } from '../../types';
+import { Ingredient, IngredientGroup } from '../../types';
 import { IngredientList } from './IngredientList';
 
 interface Props {
   ingredientGroups: IngredientGroup[];
+  addIngredient: (ingredient: Ingredient) => void;
 }
-export const SelectYourIngredients = ({ ingredientGroups }: Props) => {
+export const SelectYourIngredients = ({
+  ingredientGroups,
+  addIngredient,
+}: Props) => {
   return (
     <Box style={{ marginTop: 20, padding: 10 }}>
       <Stack>
@@ -18,7 +22,11 @@ export const SelectYourIngredients = ({ ingredientGroups }: Props) => {
         {/* <IngredientList /> */}
         {ingredientGroups &&
           ingredientGroups.map(_group => (
-            <IngredientList ingredientGroup={_group} key={_group.name} />
+            <IngredientList
+              ingredientGroup={_group}
+              key={_group.name}
+              addIngredient={addIngredient}
+            />
           ))}
       </Stack>
     </Box>

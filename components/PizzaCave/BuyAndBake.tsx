@@ -1,7 +1,12 @@
 import { Box, Button, Flex, Stack, Text } from '@chakra-ui/react';
 import { useState } from 'react';
 import { BAKING_FEE, INGREDIENT_COST } from '../../constants';
-import { Ingredient, IngredientGroup, IngredientType } from '../../types';
+import {
+  Ingredient,
+  IngredientGroup,
+  IngredientType,
+  Pizza,
+} from '../../types';
 import { NavButton } from '../shared/NavButton';
 import { SelectYourIngredients } from './SelectYourIngredients';
 import { YourSelections } from './YourSelections';
@@ -54,24 +59,48 @@ export enum BuyAndBakeTabs {
 }
 
 export const BuyAndBake = () => {
+  const [selectedTab, setSelectedTab] = useState(BuyAndBakeTabs.selections);
+  const [pizza, setPizza] = useState<Pizza>({ ingredients: [], totalCost: 0 });
   const [ingredientGroups, setIngredientGroups] =
     useState<IngredientGroup[]>(tempGroup);
   const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>(
     [],
   );
-  const [selectedTab, setSelectedTab] = useState(BuyAndBakeTabs.selections);
 
   const addIngredient = (item: Ingredient) => {
+    console.log('adding item', item.name);
+
     // validate ingredient can be added first
     // maybe have different state for each ingredient type
+
+    // add base
+    // if (item.type === IngredientType.base) {
+    //   setPizza({ base: item, totalCost: pizza.totalCost + item.cost });
+    // }
+    // // add sauce
+    // if (item.type === IngredientType.sauce) {
+    //   setPizza({ sauce: item, totalCost: pizza.totalCost + item.cost });
+    // }
+
+    setPizza(pizza => ({
+      ...pizza,
+      ingredients: [...pizza.ingredients, item],
+    }));
   };
 
   const renderTab = () => {
     switch (selectedTab) {
       case BuyAndBakeTabs.ingredients:
-        return <SelectYourIngredients ingredientGroups={ingredientGroups} />;
+        return (
+          <SelectYourIngredients
+            ingredientGroups={ingredientGroups}
+            addIngredient={addIngredient}
+          />
+        );
       case BuyAndBakeTabs.selections:
-        return <YourSelections ingredients={selectedIngredients} />;
+        return (
+          <YourSelections ingredients={selectedIngredients} pizza={pizza} />
+        );
       default:
         break;
     }
