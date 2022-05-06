@@ -1,13 +1,14 @@
 import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { Ingredient } from '../../types';
+import { Ingredient, Pizza } from '../../types';
 
 interface Props {
   ingredient: Ingredient;
   addIngredient: (ingredient: Ingredient) => void;
+  pizza: Pizza;
 }
 
-export const IngredientItem = ({ ingredient, addIngredient }: Props) => {
+export const IngredientItem = ({ ingredient, addIngredient, pizza }: Props) => {
   // }: Ingredient) => {
   const {
     name,
@@ -35,6 +36,13 @@ export const IngredientItem = ({ ingredient, addIngredient }: Props) => {
       setDisabled(true);
     }
   }, [count]);
+
+  useEffect(() => {
+    if (!pizza) return;
+    const foo = !!pizza.allIngredients?.find(item => item.name === name);
+    console.log('pizza updated!', pizza);
+    setDisabled(foo);
+  }, [pizza, name]);
   //   console.log(name);
   //   console.log(imgUrl);
   return (

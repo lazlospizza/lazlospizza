@@ -60,7 +60,10 @@ export enum BuyAndBakeTabs {
 
 export const BuyAndBake = () => {
   const [selectedTab, setSelectedTab] = useState(BuyAndBakeTabs.selections);
-  const [pizza, setPizza] = useState<Pizza>({ ingredients: [], totalCost: 0 });
+  const [pizza, setPizza] = useState<Pizza>({
+    allIngredients: [],
+    totalCost: 0,
+  });
   const [ingredientGroups, setIngredientGroups] =
     useState<IngredientGroup[]>(tempGroup);
   const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>(
@@ -84,7 +87,7 @@ export const BuyAndBake = () => {
 
     setPizza(pizza => ({
       ...pizza,
-      ingredients: [...pizza.ingredients, item],
+      allIngredients: [...pizza.allIngredients, item],
     }));
   };
 
@@ -95,6 +98,7 @@ export const BuyAndBake = () => {
           <SelectYourIngredients
             ingredientGroups={ingredientGroups}
             addIngredient={addIngredient}
+            pizza={pizza}
           />
         );
       case BuyAndBakeTabs.selections:

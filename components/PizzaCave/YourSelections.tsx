@@ -61,8 +61,8 @@ export const YourSelections = ({ _ingredients, pizza }: Props) => {
           </Text>
         </Flex>
         {/* Selected Ingredients */}
-        {pizza.ingredients.length &&
-          pizza.ingredients.map(item => (
+        {pizza.allIngredients.length &&
+          pizza.allIngredients.map(item => (
             <Flex key={item.name} pt={8} justifyContent="space-between">
               <Heading size={'sm'} color={'gray.dark'}>
                 {item.name}

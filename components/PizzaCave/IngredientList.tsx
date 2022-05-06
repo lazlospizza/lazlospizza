@@ -1,12 +1,17 @@
 import { Box, Flex, Stack, Text } from '@chakra-ui/react';
-import { Ingredient, IngredientGroup } from '../../types';
+import { Ingredient, IngredientGroup, Pizza } from '../../types';
 import { IngredientItem } from './IngredientItem';
 
 interface Props {
   ingredientGroup: IngredientGroup;
   addIngredient: (ingredient: Ingredient) => void;
+  pizza: Pizza;
 }
-export const IngredientList = ({ ingredientGroup, addIngredient }: Props) => {
+export const IngredientList = ({
+  ingredientGroup,
+  addIngredient,
+  pizza,
+}: Props) => {
   return (
     <Box>
       <Stack>
@@ -22,6 +27,7 @@ export const IngredientList = ({ ingredientGroup, addIngredient }: Props) => {
             key={item.name}
             ingredient={item}
             addIngredient={addIngredient}
+            pizza={pizza}
           />
         ))}
       </Stack>
