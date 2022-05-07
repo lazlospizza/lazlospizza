@@ -33,7 +33,7 @@ interface Props {
   ingredients: Ingredient[];
   pizza: Pizza;
 }
-export const YourSelections = ({ _ingredients, pizza }: Props) => {
+export const YourSelections = ({ pizza }: Props) => {
   const [buyCost, setBuyCost] = useState(0);
 
   useEffect(() => {
