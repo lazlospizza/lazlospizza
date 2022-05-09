@@ -12,32 +12,33 @@ import { useEffect, useState } from 'react';
 import { BAKING_FEE } from '../../constants';
 import { Ingredient, Pizza } from '../../types';
 
-const ingredients = [
-  {
-    name: 'Plain',
-    cost: 0.01,
-    numAvailable: 5000,
-    numAllowed: 1,
-    imgUrl: '/assets/base-plain.svg',
-  },
-  {
-    name: 'Gluten-Free',
-    cost: 0.02,
-    numAvailable: 5000,
-    numAllowed: 1,
-    imgUrl: '/assets/base-gluten-free.svg',
-  },
-];
+// const ingredients = [
+//   {
+//     name: 'Plain',
+//     cost: 0.01,
+//     numAvailable: 5000,
+//     numAllowed: 1,
+//     imgUrl: '/assets/base-plain.svg',
+//   },
+//   {
+//     name: 'Gluten-Free',
+//     cost: 0.02,
+//     numAvailable: 5000,
+//     numAllowed: 1,
+//     imgUrl: '/assets/base-gluten-free.svg',
+//   },
+// ];
 
 interface Props {
   ingredients: Ingredient[];
   pizza: Pizza;
 }
-export const YourSelections = ({ pizza }: Props) => {
+export const YourSelections = ({ ingredients, pizza }: Props) => {
   const [buyCost, setBuyCost] = useState(0);
 
   useEffect(() => {
     if (isEmpty(ingredients)) return;
+    console.log('ingredients', ingredients);
     const total = ingredients.reduce((sum, item) => sum + item.cost, 0);
     // don't update state if not needed
     if (total === buyCost) return;

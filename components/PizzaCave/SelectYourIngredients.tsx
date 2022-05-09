@@ -21,7 +21,6 @@ export const SelectYourIngredients = ({
           </Text>
           <Button className="tomato-btn">Quick Start</Button>
         </Flex>
-        {/* <IngredientList /> */}
         {ingredientGroups &&
           ingredientGroups.map(_group => (
             <IngredientList

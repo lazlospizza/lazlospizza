@@ -1,21 +1,22 @@
 import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { Ingredient, Pizza } from '../../types';
+import { Ingredient, IngredientType, Pizza } from '../../types';
 
 interface Props {
   ingredient: Ingredient;
   addIngredient: (ingredient: Ingredient) => void;
   pizza: Pizza;
+  disabledOverride: boolean;
 }
 
 export const IngredientItem = ({ ingredient, addIngredient, pizza }: Props) => {
-  // }: Ingredient) => {
   const {
     name,
     cost,
     numAvailable,
     numAllowed,
     imgUrl = '/assets/pizza.svg', // Fixme
+    disabledOverride,
   } = ingredient;
   const [count, setCount] = useState(0);
   const [disabled, setDisabled] = useState(count >= numAllowed);
@@ -38,11 +39,31 @@ export const IngredientItem = ({ ingredient, addIngredient, pizza }: Props) => {
   }, [count]);
 
   useEffect(() => {
-    if (!pizza) return;
-    const foo = !!pizza.allIngredients?.find(item => item.name === name);
-    console.log('pizza updated!', pizza);
-    setDisabled(foo);
+    if (!pizza || disabled) return;
+
+    const pizzaHasItem = !!pizza.allIngredients?.find(
+      item => item.name === name,
+    );
+    if (pizzaHasItem) return setDisabled(pizzaHasItem);
+
+    switch (ingredient.type) {
+      case IngredientType.base:
+        if (!!pizza.base) {
+          console.log('disabling base');
+          setDisabled(true);
+        }
+        break;
+      case IngredientType.sauce:
+        if (!!pizza.sauce) {
+          console.log('disabling sauce');
+          setDisabled(true);
+        }
+        break;
+      default:
+        break;
+    }
   }, [pizza, name]);
+
   //   console.log(name);
   //   console.log(imgUrl);
   return (
@@ -76,7 +97,7 @@ export const IngredientItem = ({ ingredient, addIngredient, pizza }: Props) => {
             <Button
               className="tomato-btn"
               onClick={handleAdd}
-              disabled={disabled}
+              disabled={disabled || disabledOverride}
             >
               Add
             </Button>

@@ -9,7 +9,7 @@ export interface Ingredient {
   cost: number;
   numAvailable: number;
   numAllowed: number;
-  type?: IngredientType;
+  type: IngredientType;
   imgUrl?: string;
 }
 

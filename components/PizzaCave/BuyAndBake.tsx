@@ -18,6 +18,7 @@ const tempGroup: IngredientGroup[] = [
     type: IngredientType.base,
     ingredients: [
       {
+        type: IngredientType.base,
         name: 'Plain',
         cost: 0.01,
         numAvailable: 5000,
@@ -25,6 +26,7 @@ const tempGroup: IngredientGroup[] = [
         imgUrl: '/assets/base-plain.svg',
       },
       {
+        type: IngredientType.base,
         name: 'Gluten-Free',
         cost: 0.02,
         numAvailable: 5000,
@@ -39,15 +41,34 @@ const tempGroup: IngredientGroup[] = [
     type: IngredientType.sauce,
     ingredients: [
       {
+        type: IngredientType.sauce,
         name: 'Tomato',
         cost: 0.01,
         numAvailable: 5000,
         numAllowed: 1,
         imgUrl: '/assets/sauce-tomato.svg',
       },
-      { name: 'Chilli', cost: 0.01, numAvailable: 5000, numAllowed: 1 },
-      { name: 'BBQ', cost: 0.01, numAvailable: 5000, numAllowed: 1 },
-      { name: 'Garlic', cost: 0.01, numAvailable: 5000, numAllowed: 1 },
+      {
+        type: IngredientType.sauce,
+        name: 'Chilli',
+        cost: 0.01,
+        numAvailable: 5000,
+        numAllowed: 1,
+      },
+      {
+        type: IngredientType.sauce,
+        name: 'BBQ',
+        cost: 0.01,
+        numAvailable: 5000,
+        numAllowed: 1,
+      },
+      {
+        type: IngredientType.sauce,
+        name: 'Garlic',
+        cost: 0.01,
+        numAvailable: 5000,
+        numAllowed: 1,
+      },
     ],
   },
 ];
@@ -71,7 +92,7 @@ export const BuyAndBake = () => {
   );
 
   const addIngredient = (item: Ingredient) => {
-    console.log('adding item', item.name);
+    console.log('adding item', item);
 
     // validate ingredient can be added first
     // maybe have different state for each ingredient type
@@ -85,6 +106,28 @@ export const BuyAndBake = () => {
     //   setPizza({ sauce: item, totalCost: pizza.totalCost + item.cost });
     // }
 
+    switch (item.type) {
+      case IngredientType.base:
+        if (!!pizza.base) return;
+        console.log('adding base');
+        setPizza(pizza => ({
+          ...pizza,
+          base: item,
+          totalCost: pizza.totalCost + item.cost,
+        }));
+        break;
+      case IngredientType.sauce:
+        if (!!pizza.sauce) return;
+        console.log('adding sauce');
+        setPizza(pizza => ({
+          ...pizza,
+          sauce: item,
+          totalCost: pizza.totalCost + item.cost,
+        }));
+        break;
+      default:
+        break;
+    }
     setPizza(pizza => ({
       ...pizza,
       allIngredients: [...pizza.allIngredients, item],
