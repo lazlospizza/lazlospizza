@@ -10,6 +10,7 @@ import {
 import { NavButton } from '../shared/NavButton';
 import { SelectYourIngredients } from './SelectYourIngredients';
 import { YourSelections } from './YourSelections';
+import { CheckRarity } from './CheckRarity';
 
 const tempGroup: IngredientGroup[] = [
   {
@@ -80,7 +81,7 @@ export enum BuyAndBakeTabs {
 }
 
 export const BuyAndBake = () => {
-  const [selectedTab, setSelectedTab] = useState(BuyAndBakeTabs.selections);
+  const [selectedTab, setSelectedTab] = useState(BuyAndBakeTabs.checkRarity);
   const [pizza, setPizza] = useState<Pizza>({
     allIngredients: [],
     totalCost: 0,
@@ -138,6 +139,8 @@ export const BuyAndBake = () => {
         return (
           <YourSelections ingredients={selectedIngredients} pizza={pizza} />
         );
+      case BuyAndBakeTabs.checkRarity:
+        return <CheckRarity pizza={pizza} />;
       default:
         break;
     }

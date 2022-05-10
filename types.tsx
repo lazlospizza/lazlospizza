@@ -11,6 +11,8 @@ export interface Ingredient {
   numAllowed: number;
   type: IngredientType;
   imgUrl?: string;
+  rarity?: number;
+  numPizzas?: number;
 }
 
 export interface IngredientGroup {
