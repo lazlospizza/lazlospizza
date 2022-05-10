@@ -1,3 +1,7 @@
+export const enum PizzaCave {
+  buyAndBake = 'Buy & Bake',
+  bake = 'Bake',
+}
 export const enum IngredientType {
   base = 'Base',
   sauce = 'Sauce',
@@ -7,8 +11,8 @@ export interface Ingredient {
   name: string;
   namePlural?: string;
   cost: number;
+  numOwned: number;
   numAvailable: number;
-  numAllowed: number;
   type: IngredientType;
   imgUrl?: string;
   rarity?: number;

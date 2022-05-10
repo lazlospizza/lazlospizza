@@ -10,30 +10,13 @@ import {
 import { isEmpty } from 'lodash';
 import { useEffect, useState } from 'react';
 import { BAKING_FEE } from '../../constants';
-import { Ingredient, Pizza } from '../../types';
-
-// const ingredients = [
-//   {
-//     name: 'Plain',
-//     cost: 0.01,
-//     numAvailable: 5000,
-//     numAllowed: 1,
-//     imgUrl: '/assets/base-plain.svg',
-//   },
-//   {
-//     name: 'Gluten-Free',
-//     cost: 0.02,
-//     numAvailable: 5000,
-//     numAllowed: 1,
-//     imgUrl: '/assets/base-gluten-free.svg',
-//   },
-// ];
+import { Pizza, PizzaCave } from '../../types';
 
 interface Props {
-  ingredients: Ingredient[];
   pizza: Pizza;
+  tab: PizzaCave;
 }
-export const YourSelections = ({ ingredients, pizza }: Props) => {
+export const YourSelections = ({ pizza, tab }: Props) => {
   // const [disableBuy, setDisableBuy] = useState(true);
   const [disableBake, setDisableBake] = useState(true);
 
@@ -50,6 +33,35 @@ export const YourSelections = ({ ingredients, pizza }: Props) => {
     validatePizza();
   }, [pizza]);
 
+  const renderButtons = () => {
+    switch (tab) {
+      case PizzaCave.buyAndBake:
+        return (
+          <Stack pt={8}>
+            <>
+              <Button
+                disabled={pizza.totalCost === 0}
+                className="tomato-btn"
+              >{`Buy Ingredients only at ${pizza.totalCost}`}</Button>
+              <Button
+                disabled={disableBake}
+                className="tomato-btn"
+              >{`Buy and Bake only at ${pizza.totalCost + BAKING_FEE}`}</Button>
+            </>
+          </Stack>
+        );
+      case PizzaCave.bake:
+        return (
+          <Button
+            disabled={disableBake}
+            className="tomato-btn"
+          >{`Bake Pizza at ${BAKING_FEE}`}</Button>
+        );
+
+      default:
+        break;
+    }
+  };
   return (
     <Box p="8">
       <Stack>
@@ -63,7 +75,7 @@ export const YourSelections = ({ ingredients, pizza }: Props) => {
             {`Ingredients Selected`}
           </Text>
           <Text fontWeight={700} color="tomato.500">
-            {ingredients.length}
+            {pizza.allIngredients.length}
           </Text>
         </Flex>
         {/* Selected Ingredients */}
@@ -79,16 +91,7 @@ export const YourSelections = ({ ingredients, pizza }: Props) => {
             </Flex>
           ))}
         {/* Buttons */}
-        <Stack pt={8}>
-          <Button
-            disabled={pizza.totalCost === 0}
-            className="tomato-btn"
-          >{`Buy Ingredients only at ${pizza.totalCost}`}</Button>
-          <Button
-            disabled={disableBake}
-            className="tomato-btn"
-          >{`Buy and Bake only at ${pizza.totalCost + BAKING_FEE}`}</Button>
-        </Stack>
+        {renderButtons()}
       </Stack>
     </Box>
   );

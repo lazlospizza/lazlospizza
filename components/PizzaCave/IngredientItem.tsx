@@ -1,42 +1,35 @@
-import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Flex, Heading, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { colors } from '../../styles/theme';
-import { Ingredient, IngredientType, Pizza } from '../../types';
+import { Ingredient, IngredientType, Pizza, PizzaCave } from '../../types';
 
 interface Props {
   ingredient: Ingredient;
   addIngredient: (ingredient: Ingredient) => void;
   pizza: Pizza;
+  tab: PizzaCave;
 }
 
-export const IngredientItem = ({ ingredient, addIngredient, pizza }: Props) => {
+export const IngredientItem = ({
+  ingredient,
+  addIngredient,
+  pizza,
+  tab,
+}: Props) => {
   const {
     name,
     cost,
+    numOwned,
     numAvailable,
-    numAllowed,
     imgUrl = '/assets/pizza.svg', // Fixme
   } = ingredient;
-  const [count, setCount] = useState(0);
-  const [disabled, setDisabled] = useState(count >= numAllowed);
+  const [disabled, setDisabled] = useState(false);
   const [added, setAdded] = useState(false);
 
   const handleAdd = () => {
-    if (count < numAllowed) {
-      addIngredient(ingredient);
-      setCount(count + 1);
-    } else setDisabled(true);
+    addIngredient(ingredient);
+    // setDisabled(true);
   };
-
-  useEffect(() => {
-    if (count === numAllowed) {
-      !disabled && setDisabled(true);
-      // shouldnt happen but...
-    } else if (count > numAllowed) {
-      setCount(numAllowed);
-      setDisabled(true);
-    }
-  }, [count]);
 
   // handle disabling add button
   useEffect(() => {
@@ -72,33 +65,37 @@ export const IngredientItem = ({ ingredient, addIngredient, pizza }: Props) => {
     <Box
       className="artist-card"
       backgroundColor={added ? colors.cheese[150] : ''}
-      p="4"
+      p="2"
     >
       <Flex>
-        <img style={{ height: 120 }} src={`${imgUrl}`} alt="ingredient" />
+        <img style={{ height: 100 }} src={`${imgUrl}`} alt="ingredient" />
         {/* Right of Image */}
         <Flex width={'100%'} justifyContent={'space-between'}>
           {/* Name and Cost */}
           <Flex
             direction={'column'}
-            justifyContent={'space-between'}
+            justifyContent={
+              tab === PizzaCave.buyAndBake ? 'space-between' : 'center'
+            }
             px="8"
-            py="4"
+            py="2"
           >
             <Heading size={'sm'} color="gray.dark">
               {name}
             </Heading>
-            <Flex>
-              <Heading size={'sm'} color="gray.500" mr="2">
-                {cost}
-              </Heading>
-              <img src="/assets/eth.svg" alt="eth icon" />
-            </Flex>
+            {tab === PizzaCave.buyAndBake && (
+              <Flex>
+                <Heading size={'sm'} color="gray.500" mr="2">
+                  {cost}
+                </Heading>
+                <img src="/assets/eth.svg" alt="eth icon" />
+              </Flex>
+            )}
           </Flex>
           {/* Count and Add Button */}
-          <Flex direction={'column'} justifyContent={'space-between'} py="4">
+          <Flex direction={'column'} justifyContent={'space-between'} py="2">
             <Text size={'sm'} color="gray.dark" align={'right'}>
-              {`${count}/${numAvailable}`}
+              {`${numOwned}/${numAvailable}`}
             </Text>
             <Button
               className="tomato-btn"

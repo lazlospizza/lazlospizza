@@ -6,13 +6,14 @@ import {
   IngredientGroup,
   IngredientType,
   Pizza,
+  PizzaCave,
 } from '../../types';
 import { NavButton } from '../shared/NavButton';
 import { SelectYourIngredients } from './SelectYourIngredients';
 import { YourSelections } from './YourSelections';
 import { CheckRarity } from './CheckRarity';
 
-const tempGroup: IngredientGroup[] = [
+export const tempGroup: IngredientGroup[] = [
   {
     name: 'Base',
     namePlural: 'Bases',
@@ -23,7 +24,7 @@ const tempGroup: IngredientGroup[] = [
         name: 'Plain',
         cost: 0.01,
         numAvailable: 5000,
-        numAllowed: 1,
+        numOwned: 1,
         imgUrl: '/assets/base-plain.svg',
       },
       {
@@ -31,7 +32,7 @@ const tempGroup: IngredientGroup[] = [
         name: 'Gluten-Free',
         cost: 0.02,
         numAvailable: 5000,
-        numAllowed: 1,
+        numOwned: 1,
         imgUrl: '/assets/base-gluten-free.svg',
       },
     ],
@@ -46,7 +47,7 @@ const tempGroup: IngredientGroup[] = [
         name: 'Tomato',
         cost: 0.01,
         numAvailable: 5000,
-        numAllowed: 1,
+        numOwned: 1,
         imgUrl: '/assets/sauce-tomato.svg',
       },
       {
@@ -54,21 +55,23 @@ const tempGroup: IngredientGroup[] = [
         name: 'Chilli',
         cost: 0.01,
         numAvailable: 5000,
-        numAllowed: 1,
+
+        numOwned: 1,
       },
       {
         type: IngredientType.sauce,
         name: 'BBQ',
         cost: 0.01,
         numAvailable: 5000,
-        numAllowed: 1,
+
+        numOwned: 1,
       },
       {
         type: IngredientType.sauce,
         name: 'Garlic',
         cost: 0.01,
         numAvailable: 5000,
-        numAllowed: 1,
+        numOwned: 1,
       },
     ],
   },
@@ -88,16 +91,8 @@ export const BuyAndBake = () => {
   });
   const [ingredientGroups, setIngredientGroups] =
     useState<IngredientGroup[]>(tempGroup);
-  const [selectedIngredients, setSelectedIngredients] = useState<Ingredient[]>(
-    [],
-  );
 
   const addIngredient = (item: Ingredient) => {
-    console.log('adding item', item);
-
-    // validate ingredient can be added first
-    // maybe have different state for each ingredient type
-
     switch (item.type) {
       case IngredientType.base:
         if (!!pizza.base) return;
@@ -133,12 +128,11 @@ export const BuyAndBake = () => {
             ingredientGroups={ingredientGroups}
             addIngredient={addIngredient}
             pizza={pizza}
+            tab={PizzaCave.buyAndBake}
           />
         );
       case BuyAndBakeTabs.selections:
-        return (
-          <YourSelections ingredients={selectedIngredients} pizza={pizza} />
-        );
+        return <YourSelections pizza={pizza} tab={PizzaCave.buyAndBake} />;
       case BuyAndBakeTabs.checkRarity:
         return <CheckRarity pizza={pizza} />;
       default:
