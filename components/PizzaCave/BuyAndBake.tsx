@@ -97,15 +97,6 @@ export const BuyAndBake = () => {
     // validate ingredient can be added first
     // maybe have different state for each ingredient type
 
-    // add base
-    // if (item.type === IngredientType.base) {
-    //   setPizza({ base: item, totalCost: pizza.totalCost + item.cost });
-    // }
-    // // add sauce
-    // if (item.type === IngredientType.sauce) {
-    //   setPizza({ sauce: item, totalCost: pizza.totalCost + item.cost });
-    // }
-
     switch (item.type) {
       case IngredientType.base:
         if (!!pizza.base) return;
@@ -113,7 +104,6 @@ export const BuyAndBake = () => {
         setPizza(pizza => ({
           ...pizza,
           base: item,
-          totalCost: pizza.totalCost + item.cost,
         }));
         break;
       case IngredientType.sauce:
@@ -122,7 +112,6 @@ export const BuyAndBake = () => {
         setPizza(pizza => ({
           ...pizza,
           sauce: item,
-          totalCost: pizza.totalCost + item.cost,
         }));
         break;
       default:
@@ -131,6 +120,7 @@ export const BuyAndBake = () => {
     setPizza(pizza => ({
       ...pizza,
       allIngredients: [...pizza.allIngredients, item],
+      totalCost: pizza.totalCost + item.cost,
     }));
   };
 

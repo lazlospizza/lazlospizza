@@ -18,24 +18,6 @@ export const IngredientList = ({
   addIngredient,
   pizza,
 }: Props) => {
-  const [limitReached, setLimitReached] = useState(false);
-
-  // useEffect(() => {
-  //   // h
-  //   switch (ingredientGroup.type) {
-  //     case IngredientType.base:
-  //       if (!!pizza.base) {
-  //         console.log('disabling base');
-  //         setLimitReached(true);
-  //       }
-  //       break;
-  //     case IngredientType.sauce:
-  //       break;
-
-  //     default:
-  //       break;
-  //   }
-  // }, [pizza]);
   return (
     <Box>
       <Stack>
@@ -52,7 +34,6 @@ export const IngredientList = ({
             ingredient={item}
             addIngredient={addIngredient}
             pizza={pizza}
-            disabledOverride={limitReached}
           />
         ))}
       </Stack>

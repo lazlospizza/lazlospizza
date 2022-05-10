@@ -1,12 +1,12 @@
 import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { colors } from '../../styles/theme';
 import { Ingredient, IngredientType, Pizza } from '../../types';
 
 interface Props {
   ingredient: Ingredient;
   addIngredient: (ingredient: Ingredient) => void;
   pizza: Pizza;
-  disabledOverride: boolean;
 }
 
 export const IngredientItem = ({ ingredient, addIngredient, pizza }: Props) => {
@@ -16,10 +16,10 @@ export const IngredientItem = ({ ingredient, addIngredient, pizza }: Props) => {
     numAvailable,
     numAllowed,
     imgUrl = '/assets/pizza.svg', // Fixme
-    disabledOverride,
   } = ingredient;
   const [count, setCount] = useState(0);
   const [disabled, setDisabled] = useState(count >= numAllowed);
+  const [added, setAdded] = useState(false);
 
   const handleAdd = () => {
     if (count < numAllowed) {
@@ -38,14 +38,16 @@ export const IngredientItem = ({ ingredient, addIngredient, pizza }: Props) => {
     }
   }, [count]);
 
+  // handle disabling add button
   useEffect(() => {
     if (!pizza || disabled) return;
-
     const pizzaHasItem = !!pizza.allIngredients?.find(
       item => item.name === name,
     );
-    if (pizzaHasItem) return setDisabled(pizzaHasItem);
-
+    if (pizzaHasItem) {
+      setDisabled(pizzaHasItem);
+      return setAdded(true);
+    }
     switch (ingredient.type) {
       case IngredientType.base:
         if (!!pizza.base) {
@@ -67,7 +69,11 @@ export const IngredientItem = ({ ingredient, addIngredient, pizza }: Props) => {
   //   console.log(name);
   //   console.log(imgUrl);
   return (
-    <Box className="artist-card" p="4">
+    <Box
+      className="artist-card"
+      backgroundColor={added ? colors.cheese[150] : ''}
+      p="4"
+    >
       <Flex>
         <img style={{ height: 120 }} src={`${imgUrl}`} alt="ingredient" />
         {/* Right of Image */}
@@ -97,9 +103,9 @@ export const IngredientItem = ({ ingredient, addIngredient, pizza }: Props) => {
             <Button
               className="tomato-btn"
               onClick={handleAdd}
-              disabled={disabled || disabledOverride}
+              disabled={disabled}
             >
-              Add
+              {added ? `Added` : `Add`}
             </Button>
           </Flex>
         </Flex>

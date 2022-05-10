@@ -23,6 +23,6 @@ export interface IngredientGroup {
 export interface Pizza {
   base?: Ingredient;
   sauce?: Ingredient;
-  allIngredients?: Ingredient[];
-  totalCost?: number;
+  allIngredients: Ingredient[];
+  totalCost: number;
 }

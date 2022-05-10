@@ -1,6 +1,7 @@
 export const colors = {
   cheese: {
     100: '#ffff86',
+    150: '#FFDF8D',
     200: '#ffda54',
     300: '#c9a91d',
   },

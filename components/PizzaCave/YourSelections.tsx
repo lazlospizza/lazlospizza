@@ -34,16 +34,21 @@ interface Props {
   pizza: Pizza;
 }
 export const YourSelections = ({ ingredients, pizza }: Props) => {
-  const [buyCost, setBuyCost] = useState(0);
+  // const [disableBuy, setDisableBuy] = useState(true);
+  const [disableBake, setDisableBake] = useState(true);
+
+  const validatePizza = () => {
+    if (isEmpty(pizza.allIngredients)) return setDisableBake(true);
+    if (!pizza.base) return setDisableBake(true);
+    if (!pizza.sauce) return setDisableBake(true);
+    // add checks for other ingredients
+    console.log('Bake and Bake Allowed!');
+    setDisableBake(false);
+  };
 
   useEffect(() => {
-    if (isEmpty(ingredients)) return;
-    console.log('ingredients', ingredients);
-    const total = ingredients.reduce((sum, item) => sum + item.cost, 0);
-    // don't update state if not needed
-    if (total === buyCost) return;
-    setBuyCost(total);
-  }, [ingredients]);
+    validatePizza();
+  }, [pizza]);
 
   return (
     <Box p="8">
@@ -76,13 +81,13 @@ export const YourSelections = ({ ingredients, pizza }: Props) => {
         {/* Buttons */}
         <Stack pt={8}>
           <Button
-            disabled={isEmpty(ingredients)}
+            disabled={pizza.totalCost === 0}
             className="tomato-btn"
-          >{`Buy Ingredients only at ${buyCost}`}</Button>
+          >{`Buy Ingredients only at ${pizza.totalCost}`}</Button>
           <Button
-            disabled={isEmpty(ingredients)}
+            disabled={disableBake}
             className="tomato-btn"
-          >{`Buy and Bake only at ${buyCost + BAKING_FEE}`}</Button>
+          >{`Buy and Bake only at ${pizza.totalCost + BAKING_FEE}`}</Button>
         </Stack>
       </Stack>
     </Box>
