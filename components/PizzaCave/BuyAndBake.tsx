@@ -84,7 +84,7 @@ export enum BuyAndBakeTabs {
 }
 
 export const BuyAndBake = () => {
-  const [selectedTab, setSelectedTab] = useState(BuyAndBakeTabs.checkRarity);
+  const [selectedTab, setSelectedTab] = useState(BuyAndBakeTabs.ingredients);
   const [pizza, setPizza] = useState<Pizza>({
     allIngredients: [],
     totalCost: 0,
