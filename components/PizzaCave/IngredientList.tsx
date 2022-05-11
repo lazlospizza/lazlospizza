@@ -24,7 +24,7 @@ export const IngredientList = ({
         </Text>
         <Flex>
           <Text color="gray.dark">{`A Pizza must have`}</Text>
-          <Text color="tomato.500">{` only 1 ${ingredientGroup.name}`}</Text>
+          <Text color="tomato.500">&nbsp;{`only 1 ${ingredientGroup.name}`}</Text>
         </Flex>
         {ingredientGroup.ingredients.map(item => (
           <IngredientItem
