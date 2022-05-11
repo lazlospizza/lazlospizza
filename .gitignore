@@ -5,7 +5,6 @@ abi
 #Hardhat files
 cache
 artifacts
-typechain-types
 .privatekey
 
 # dependencies
