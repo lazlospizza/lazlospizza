@@ -5,9 +5,13 @@ export const enum PizzaCave {
 export const enum IngredientType {
   base = 'Base',
   sauce = 'Sauce',
+  cheese = 'Cheese',
+  meat = 'Meat',
+  topping = 'Topping',
 }
 
 export interface Ingredient {
+  tokenId: number;
   name: string;
   namePlural?: string;
   cost: number;
@@ -27,8 +31,11 @@ export interface IngredientGroup {
 }
 
 export interface Pizza {
-  base?: Ingredient;
-  sauce?: Ingredient;
+  base?: Ingredient | null;
+  sauce?: Ingredient | null;
+  cheese?: Ingredient | null;
+  meats?: Ingredient[];
+  toppings?: Ingredient[];
   allIngredients: Ingredient[];
   totalCost: number;
 }

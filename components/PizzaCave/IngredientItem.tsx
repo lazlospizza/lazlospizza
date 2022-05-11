@@ -6,6 +6,7 @@ import { Ingredient, IngredientType, Pizza, PizzaCave } from '../../types';
 interface Props {
   ingredient: Ingredient;
   addIngredient: (ingredient: Ingredient) => void;
+  removeIngredient: (ingredient: Ingredient) => void;
   pizza: Pizza;
   tab: PizzaCave;
 }
@@ -13,6 +14,7 @@ interface Props {
 export const IngredientItem = ({
   ingredient,
   addIngredient,
+  removeIngredient,
   pizza,
   tab,
 }: Props) => {
@@ -31,6 +33,10 @@ export const IngredientItem = ({
     // setDisabled(true);
   };
 
+  const handleRemove = () => {
+    removeIngredient(ingredient);
+  };
+
   // handle disabling add button
   useEffect(() => {
     if (!pizza || disabled) return;
@@ -43,14 +49,12 @@ export const IngredientItem = ({
     }
     switch (ingredient.type) {
       case IngredientType.base:
-        if (!!pizza.base) {
-          console.log('disabling base');
+        if (pizza.base) {
           setDisabled(true);
         }
         break;
       case IngredientType.sauce:
-        if (!!pizza.sauce) {
-          console.log('disabling sauce');
+        if (pizza.sauce) {
           setDisabled(true);
         }
         break;
@@ -68,7 +72,11 @@ export const IngredientItem = ({
       p="2"
     >
       <Flex>
-        <img style={{ height: 100 }} src={`${imgUrl}`} alt="ingredient" />
+        <img
+          style={{ height: 100 }}
+          src={`/assets/ingredients/raw/${imgUrl}`}
+          alt="ingredient"
+        />
         {/* Right of Image */}
         <Flex width={'100%'} justifyContent={'space-between'}>
           {/* Name and Cost */}
@@ -99,10 +107,10 @@ export const IngredientItem = ({
             </Text>
             <Button
               className="tomato-btn"
-              onClick={handleAdd}
-              disabled={disabled}
+              onClick={added ? handleRemove : handleAdd}
+              disabled={disabled && !added}
             >
-              {added ? `Added` : `Add`}
+              {added ? `Remove` : `Add`}
             </Button>
           </Flex>
         </Flex>

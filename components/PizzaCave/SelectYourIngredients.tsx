@@ -5,12 +5,14 @@ import { IngredientList } from './IngredientList';
 interface Props {
   ingredientGroups: IngredientGroup[];
   addIngredient: (ingredient: Ingredient) => void;
+  removeIngredient?: (Ingredient: Ingredient) => void;
   pizza: Pizza;
   tab: PizzaCave;
 }
 export const SelectYourIngredients = ({
   ingredientGroups,
   addIngredient,
+  removeIngredient,
   pizza,
   tab,
 }: Props) => {
@@ -31,6 +33,7 @@ export const SelectYourIngredients = ({
               ingredientGroup={_group}
               key={_group.name}
               addIngredient={addIngredient}
+              removeIngredient={removeIngredient}
               pizza={pizza}
               tab={tab}
             />

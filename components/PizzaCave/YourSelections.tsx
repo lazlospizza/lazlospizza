@@ -46,7 +46,9 @@ export const YourSelections = ({ pizza, tab }: Props) => {
               <Button
                 disabled={disableBake}
                 className="tomato-btn"
-              >{`Buy and Bake only at ${pizza.totalCost + BAKING_FEE}`}</Button>
+              >{`Buy and Bake only at ${
+                Math.round((pizza.totalCost + BAKING_FEE) * 100) / 100
+              }`}</Button>
             </>
           </Stack>
         );
@@ -62,12 +64,34 @@ export const YourSelections = ({ pizza, tab }: Props) => {
         break;
     }
   };
+
   return (
     <Box p="8">
       <Stack>
         {/* Image */}
-        <Center>
+        <Center
+          style={{
+            position: 'relative',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
           <img src="/assets/tablecloth.svg" alt="tablecloth" />
+          {(pizza?.allIngredients ?? []).map(item => (
+            <div
+              key={item.tokenId}
+              style={{
+                position: 'absolute',
+                width: '90%',
+                height: '90%',
+                backgroundImage: `url(/assets/ingredients/baked/${item.imgUrl})`,
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center center',
+              }}
+            />
+          ))}
         </Center>
         {/* Number of Ingredients Selected */}
         <Flex pt={8} justifyContent="space-between">
