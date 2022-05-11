@@ -1,15 +1,9 @@
 import { Box, Flex, Stack, Text } from '@chakra-ui/react';
 import { useState } from 'react';
 import { BAKING_FEE } from '../../constants';
-import {
-  Pizza,
-  IngredientGroup,
-  Ingredient,
-  IngredientType,
-  PizzaCave,
-} from '../../types';
+import { Pizza, Ingredient, IngredientType, PizzaCave } from '../../types';
 import { NavButton } from '../shared/NavButton';
-import { BuyAndBakeTabs, tempGroup } from './BuyAndBake';
+import { BuyAndBakeTabs, ingredientGroups } from './BuyAndBake';
 import { CheckRarity } from './CheckRarity';
 import { SelectYourIngredients } from './SelectYourIngredients';
 import { YourSelections } from './YourSelections';
@@ -20,8 +14,6 @@ export const Bake = () => {
     allIngredients: [],
     totalCost: 0,
   });
-  const [ingredientGroups, setIngredientGroups] =
-    useState<IngredientGroup[]>(tempGroup);
 
   const addIngredient = (item: Ingredient) => {
     switch (item.type) {

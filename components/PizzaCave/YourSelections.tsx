@@ -7,9 +7,12 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
+import { parseEther } from 'ethers/lib/utils';
 import { isEmpty } from 'lodash';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { BAKING_FEE } from '../../constants';
+import { useMainContract } from '../../hooks/useMainContract';
+import { useWallet } from '../../hooks/useWallet';
 import { Pizza, PizzaCave } from '../../types';
 
 interface Props {
@@ -17,13 +20,20 @@ interface Props {
   tab: PizzaCave;
 }
 export const YourSelections = ({ pizza, tab }: Props) => {
-  // const [disableBuy, setDisableBuy] = useState(true);
+  const { wallet, isConnected } = useWallet();
+  const { mainContract } = useMainContract();
   const [disableBake, setDisableBake] = useState(true);
+  const [isMinting, setIsMinting] = useState(false);
+  const [mintingTxn, setMintingTxn] = useState<string | null>(null);
+  const [tokenIds, setTokenIds] = useState([])
+  const [errorMessage, setErrorMessage] = useState('');
+  const provider = wallet?.web3Provider;
 
   const validatePizza = () => {
     if (isEmpty(pizza.allIngredients)) return setDisableBake(true);
     if (!pizza.base) return setDisableBake(true);
     if (!pizza.sauce) return setDisableBake(true);
+    if (!pizza.cheese) return setDisableBake(true);
     // add checks for other ingredients
     console.log('Bake and Bake Allowed!');
     setDisableBake(false);
@@ -32,6 +42,77 @@ export const YourSelections = ({ pizza, tab }: Props) => {
   useEffect(() => {
     validatePizza();
   }, [pizza]);
+
+  const handleBuyAndBake = useCallback(async () => {
+    if (!provider) return;
+    try {
+      const ingredientTokenIds = pizza.allIngredients.map(ingredient => ingredient.tokenId);
+      setIsMinting(true);
+      setErrorMessage(null);
+      const signer = provider.getSigner();
+      const contractWithSigner = mainContract.connect(signer);
+      const result = await contractWithSigner.buyAndBakePizza(
+        ingredientTokenIds,
+        {
+          from: signer._address,
+          value: parseEther((Math.round((pizza.totalCost + BAKING_FEE) * 100) / 100).toFixed(2)),
+        },
+      );
+
+      setMintingTxn(result.hash);
+      const receipt = await result.wait();
+
+      const mintedIds = receipt.events
+        ?.map(({ args }) => (args?.[2] ? parseInt(args?.[2]) : null))
+        .filter(id => !!id);
+
+      setTokenIds(mintedIds);
+    } catch (e) {
+      console.log(e)
+      // @ts-ignore
+      window.MM_ERR = e;
+      setMintingTxn(null);
+      setErrorMessage('Unexpected Error');
+    } finally {
+      setIsMinting(false);
+    }
+  }, [mainContract, provider, pizza]);
+
+  const handleBuyIngredients = useCallback(async () => {
+    if (!provider) return;
+    try {
+      const ingredientTokenIds = pizza.allIngredients.map(ingredient => ingredient.tokenId);
+      setIsMinting(true);
+      setErrorMessage(null);
+      const signer = provider.getSigner();
+      const contractWithSigner = mainContract.connect(signer);
+      const result = await contractWithSigner.buyIngredients(
+        ingredientTokenIds,
+        ingredientTokenIds.map(() => 1),
+        {
+          from: signer._address,
+          value: parseEther((Math.round((pizza.totalCost) * 100) / 100).toFixed(2)),
+        },
+      );
+
+      setMintingTxn(result.hash);
+      const receipt = await result.wait();
+
+      const mintedIds = receipt.events
+        ?.map(({ args }) => (args?.[2] ? parseInt(args?.[2]) : null))
+        .filter(id => !!id);
+
+      setTokenIds(mintedIds);
+    } catch (e) {
+      console.log(e)
+      // @ts-ignore
+      window.MM_ERR = e;
+      setMintingTxn(null);
+      setErrorMessage('Unexpected Error');
+    } finally {
+      setIsMinting(false);
+    }
+  }, [mainContract, provider, pizza]);
 
   const renderButtons = () => {
     switch (tab) {
@@ -42,10 +123,12 @@ export const YourSelections = ({ pizza, tab }: Props) => {
               <Button
                 disabled={pizza.totalCost === 0}
                 className="tomato-btn"
+                onClick={handleBuyIngredients}
               >{`Buy Ingredients only at ${pizza.totalCost}`}</Button>
               <Button
                 disabled={disableBake}
                 className="tomato-btn"
+                onClick={handleBuyAndBake}
               >{`Buy and Bake only at ${
                 Math.round((pizza.totalCost + BAKING_FEE) * 100) / 100
               }`}</Button>

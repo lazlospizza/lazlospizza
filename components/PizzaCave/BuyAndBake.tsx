@@ -13,7 +13,7 @@ import { SelectYourIngredients } from './SelectYourIngredients';
 import { YourSelections } from './YourSelections';
 import { CheckRarity } from './CheckRarity';
 
-export const tempGroup: IngredientGroup[] = [
+export const ingredientGroups: IngredientGroup[] = [
   {
     name: 'Base',
     namePlural: 'Bases',
@@ -290,17 +290,17 @@ export const BuyAndBake = () => {
     allIngredients: [],
     totalCost: 0,
   });
-  const [ingredientGroups, setIngredientGroups] =
-    useState<IngredientGroup[]>(tempGroup);
+
+console.log(pizza)
 
   const addIngredient = (item: Ingredient) => {
     switch (item.type) {
       case IngredientType.base:
         if (pizza.base) return;
-        setPizza(pizza => ({
+        setPizza({
           ...pizza,
           base: item,
-        }));
+        });
         break;
       case IngredientType.sauce:
         if (pizza.sauce) return;
@@ -347,54 +347,38 @@ export const BuyAndBake = () => {
   };
 
   const removeIngredient = (item: Ingredient) => {
+    let newPizza = { ...pizza }
     switch (item.type) {
       case IngredientType.base:
-        if (pizza.base?.tokenId !== item.tokenId) return;
-        setPizza(pizza => ({
-          ...pizza,
-          base: null,
-        }));
+        if (pizza.base?.tokenId !== item.tokenId) break;
+        delete newPizza.base;
         break;
       case IngredientType.sauce:
-        if (pizza.sauce?.tokenId !== item.tokenId) return;
-        setPizza(pizza => ({
-          ...pizza,
-          sauce: null,
-        }));
+        if (pizza.sauce?.tokenId !== item.tokenId) break;
+        delete newPizza.sauce
         break;
       case IngredientType.cheese:
-        if (pizza.cheese?.tokenId !== item.tokenId) return;
-        setPizza(pizza => ({
-          ...pizza,
-          cheese: null,
-        }));
+        if (pizza.cheese?.tokenId !== item.tokenId) break;
+        delete newPizza.cheese
         break;
       case IngredientType.meat:
-        if (!pizza.meats?.find(_item => _item.tokenId === item.tokenId)) return;
-        setPizza(pizza => ({
-          ...pizza,
-          meats: pizza.meats.filter(_item => _item.tokenId !== item.tokenId),
-        }));
+        if (!pizza.meats?.find(_item => _item.tokenId === item.tokenId)) break;
+        newPizza.meats = pizza.meats.filter(_item => _item.tokenId !== item.tokenId)
         break;
       case IngredientType.topping:
-        if (pizza.toppings?.length >= 4) return;
-        setPizza(pizza => ({
-          ...pizza,
-          toppings: pizza.toppings.filter(
+        if (pizza.toppings?.length >= 4) break;
+        newPizza.toppings = pizza.toppings.filter(
             _item => _item.tokenId !== item.tokenId,
-          ),
-        }));
-        break;
-      default:
+          )
         break;
     }
-    setPizza(pizza => ({
-      ...pizza,
+    setPizza({
+      ...newPizza,
       allIngredients: pizza.allIngredients.filter(
         _item => _item.tokenId !== item.tokenId,
       ),
       totalCost: pizza.totalCost - item.cost,
-    }));
+    });
   };
 
   const renderTab = () => {

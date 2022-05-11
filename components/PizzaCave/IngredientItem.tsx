@@ -1,5 +1,5 @@
 import { Box, Button, Center, Flex, Heading, Text } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { colors } from '../../styles/theme';
 import { Ingredient, IngredientType, Pizza, PizzaCave } from '../../types';
 
@@ -25,50 +25,23 @@ export const IngredientItem = ({
     numAvailable,
     imgUrl = '/assets/pizza.svg', // Fixme
   } = ingredient;
-  const [disabled, setDisabled] = useState(false);
-  const [added, setAdded] = useState(false);
 
   const handleAdd = () => {
     addIngredient(ingredient);
-    // setDisabled(true);
   };
 
   const handleRemove = () => {
     removeIngredient(ingredient);
   };
 
-  // handle disabling add button
-  useEffect(() => {
-    if (!pizza || disabled) return;
-    const pizzaHasItem = !!pizza.allIngredients?.find(
-      item => item.name === name,
-    );
-    if (pizzaHasItem) {
-      setDisabled(pizzaHasItem);
-      return setAdded(true);
-    }
-    switch (ingredient.type) {
-      case IngredientType.base:
-        if (pizza.base) {
-          setDisabled(true);
-        }
-        break;
-      case IngredientType.sauce:
-        if (pizza.sauce) {
-          setDisabled(true);
-        }
-        break;
-      default:
-        break;
-    }
-  }, [pizza, name]);
+  const pizzaHasItem = useMemo(() => !!pizza.allIngredients?.find(
+    item => item.name === name,
+  ), [pizza, name]);
 
-  //   console.log(name);
-  //   console.log(imgUrl);
   return (
     <Box
       className="artist-card"
-      backgroundColor={added ? colors.cheese[150] : ''}
+      backgroundColor={pizzaHasItem ? colors.cheese[150] : ''}
       p="2"
     >
       <Flex>
@@ -107,10 +80,9 @@ export const IngredientItem = ({
             </Text>
             <Button
               className="tomato-btn"
-              onClick={added ? handleRemove : handleAdd}
-              disabled={disabled && !added}
+              onClick={pizzaHasItem ? handleRemove : handleAdd}
             >
-              {added ? `Remove` : `Add`}
+              {pizzaHasItem ? `Remove` : `Add`}
             </Button>
           </Flex>
         </Flex>
