@@ -30,17 +30,27 @@ export const SelectYourIngredients = ({
           </Flex>
         )}
         {ingredientGroups &&
-          ingredientGroups.map(_group => (
-            <IngredientList
-              ingredientGroup={_group}
-              ownedIngredients={ownedIngredients}
-              key={_group.name}
-              addIngredient={addIngredient}
-              removeIngredient={removeIngredient}
-              pizza={pizza}
-              tab={tab}
-            />
-          ))}
+          ingredientGroups.map(_group => {
+            const ownedFromGroup =
+              _group.ingredients?.filter(ingredient =>
+                ownedIngredients?.find(
+                  ownedIngredient =>
+                    ingredient.tokenId === ownedIngredient.tokenId &&
+                    ownedIngredient.amount > 0,
+                ),
+              ) || [];
+            return ownedFromGroup.length || !ownedIngredients ? (
+              <IngredientList
+                ingredientGroup={_group}
+                ownedIngredients={ownedIngredients}
+                key={_group.name}
+                addIngredient={addIngredient}
+                removeIngredient={removeIngredient}
+                pizza={pizza}
+                tab={tab}
+              />
+            ) : null;
+          })}
       </Stack>
     </Box>
   );
