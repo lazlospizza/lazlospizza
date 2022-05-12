@@ -45,6 +45,54 @@ export const YourSelections = ({ pizza, tab }: Props) => {
     validatePizza();
   }, [pizza]);
 
+  useEffect(() => {
+    if (!!errorMessage) {
+      toast({
+        title: 'Error',
+        description: errorMessage,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        onCloseComplete: () => setErrorMessage(null),
+      });
+    }
+  }, [errorMessage, toast]);
+
+  const handleBake = useCallback(async () => {
+    if (!provider) return;
+    try {
+      const ingredientTokenIds = pizza.allIngredients.map(
+        ingredient => ingredient.tokenId,
+      );
+      setIsMinting(true);
+      setErrorMessage(null);
+      const signer = provider.getSigner();
+      const contractWithSigner = mainContract.connect(signer);
+      const result = await contractWithSigner.bakePizza(ingredientTokenIds, {
+        from: signer._address,
+        value: parseEther(BAKING_FEE.toFixed(2)),
+      });
+
+      setMintingTxn(result.hash);
+      const receipt = await result.wait();
+
+      const mintedIds = receipt.events
+        ?.map(({ args }) => (args?.[2] ? parseInt(args?.[2]) : null))
+        .filter(id => !!id);
+
+      setTokenIds(mintedIds);
+    } catch (e) {
+      console.log(e);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      window.MM_ERR = e;
+      setMintingTxn(null);
+      setErrorMessage('Unexpected Error');
+    } finally {
+      setIsMinting(false);
+    }
+  }, [mainContract, provider, pizza]);
+
   const handleBuyAndBake = useCallback(async () => {
     if (!provider) return;
     try {
@@ -68,11 +116,13 @@ export const YourSelections = ({ pizza, tab }: Props) => {
       setMintingTxn(result.hash);
       const receipt = await result.wait();
 
-      const mintedIds = receipt.events
-        ?.map(({ args }) => (args?.[2] ? parseInt(args?.[2]) : null))
-        .filter(id => !!id);
+      console.log(receipt);
 
-      setTokenIds(mintedIds);
+      // const mintedIds = receipt.events
+      //   ?.map(({ args }) => (args?.[2] ? parseInt(args?.[2]) : null))
+      //   .filter(id => !!id);
+
+      // setTokenIds(mintedIds);
     } catch (e) {
       console.log(e);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -84,19 +134,6 @@ export const YourSelections = ({ pizza, tab }: Props) => {
       setIsMinting(false);
     }
   }, [mainContract, provider, pizza]);
-
-  useEffect(() => {
-    if (!!errorMessage) {
-      toast({
-        title: 'Error',
-        description: errorMessage,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        onCloseComplete: () => setErrorMessage(null),
-      });
-    }
-  }, [errorMessage, toast]);
 
   const handleBuyIngredients = useCallback(async () => {
     if (!provider) return;
@@ -167,9 +204,11 @@ export const YourSelections = ({ pizza, tab }: Props) => {
       case PizzaCave.bake:
         return (
           <Button
-            disabled={disableBake}
+            disabled={disableBake || !isConnected}
             className="tomato-btn"
-          >{`Bake Pizza at ${BAKING_FEE}`}</Button>
+            onClick={handleBake}
+            isLoading={isMinting}
+          >{`Bake only at ${BAKING_FEE}`}</Button>
         );
 
       default:
