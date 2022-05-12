@@ -73,6 +73,7 @@ export const YourSelections = ({ pizza, tab }: Props) => {
       setTokenIds(mintedIds);
     } catch (e) {
       console.log(e);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       window.MM_ERR = e;
       setMintingTxn(null);
@@ -113,6 +114,7 @@ export const YourSelections = ({ pizza, tab }: Props) => {
       setTokenIds(mintedIds);
     } catch (e) {
       console.log(e);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       window.MM_ERR = e;
       setMintingTxn(null);

@@ -1,9 +1,10 @@
 from sanic import Sanic
 from sanic_cors import CORS, cross_origin
-from sanic.response import raw, text
+from sanic.response import raw, text, json
 from sanic_cors import cross_origin
 from contract.lazlos_pizza import pizza
 from pizza.image import pizza_image_bytes
+from pizza.random import random_pizza_ingredient_ids
 
 
 app = Sanic(name="Lazlos Pizza API")
@@ -21,6 +22,18 @@ async def get_token_png(request, token_id):
         'content-type': 'image/png'
     })
 
+@app.route('/random_pizza', methods=["GET"])
+@cross_origin(app)
+async def get_token_png(request):
+    if 'address' not in request.args and len(request.args) != 1:
+        return text('address is required', status=400)
+
+    addr = request.args['address'][0]
+
+    return json({
+        'token_ids': random_pizza_ingredient_ids(),
+        'addr': addr
+    }, status=200)
 
 @app.route('/healthcheck', methods=["GET"])
 @cross_origin(app)
