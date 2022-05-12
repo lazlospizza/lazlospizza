@@ -4,7 +4,7 @@ import { IngredientList } from './IngredientList';
 
 interface Props {
   ingredientGroups: IngredientGroup[];
-  onwedIngredients?: { tokenId: number; amount: number }[];
+  ownedIngredients?: { tokenId: number; amount: number }[];
   addIngredient: (ingredient: Ingredient) => void;
   removeIngredient?: (Ingredient: Ingredient) => void;
   pizza: Pizza;
