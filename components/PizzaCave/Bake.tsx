@@ -1,6 +1,9 @@
-import { Box, Center, Flex, Stack, Text } from '@chakra-ui/react';
-import { useState } from 'react';
+import { Box, Center, Flex, Stack, Text, useToast } from '@chakra-ui/react';
+import { flatten } from 'lodash';
+import { useCallback, useEffect, useState } from 'react';
 import { BAKING_FEE } from '../../constants';
+import { useIngredientsContract } from '../../hooks/useContract';
+import { useWallet } from '../../hooks/useWallet';
 import { colors } from '../../styles/theme';
 import { Pizza, Ingredient, PizzaCave } from '../../types';
 import {
@@ -16,12 +19,78 @@ import { SelectYourIngredients } from './SelectYourIngredients';
 import { YourSelections } from './YourSelections';
 
 export const Bake = () => {
+  const { wallet, isConnected } = useWallet();
+  const { ingredientsContract } = useIngredientsContract();
   const isMobile = getIsMobile();
   const [pizza, setPizza] = useState<Pizza>(DefaultPizza);
   const [selectedTab, setSelectedTab] = useState(BuyAndBakeTabs.ingredients);
   const [selectedHalfTab, setSelectedHalfTab] = useState(
     BuyAndBakeTabs.selections,
   );
+  const [ownedIngredients, setOwnedIngredients] = useState<
+    { tokenId: number; amount: number }[]
+  >([]);
+  const [errorMessage, setErrorMessage] = useState('');
+  const toast = useToast();
+  const provider = wallet?.web3Provider;
+
+  const getIngredients = useCallback(async () => {
+    if (!provider) return;
+    try {
+      setErrorMessage(null);
+      const allIngredients = flatten(
+        ingredientGroups.map(group => group.ingredients),
+      );
+      const results = await ingredientsContract.balanceOfBatch(
+        allIngredients.map(() => wallet?.address),
+        allIngredients.map(ingredient => ingredient.tokenId),
+      );
+      const parsedResults = results.map(bigNumber =>
+        parseInt(bigNumber._hex, 16),
+      );
+
+      setOwnedIngredients(
+        allIngredients.map(({ tokenId }, index) => ({
+          tokenId,
+          amount: parsedResults[index],
+        })),
+      );
+
+      // setMintingTxn(result.hash);
+      // const receipt = await result.wait();
+
+      // const mintedIds = receipt.events
+      //   ?.map(({ args }) => (args?.[2] ? parseInt(args?.[2]) : null))
+      //   .filter(id => !!id);
+
+      // setTokenIds(mintedIds);
+    } catch (e) {
+      console.log(e);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      window.MM_ERR = e;
+      setErrorMessage('Unexpected Error');
+    } finally {
+      // setIsMinting(false);
+    }
+  }, [ingredientsContract, provider, pizza]);
+
+  useEffect(() => {
+    getIngredients();
+  }, [getIngredients]);
+
+  useEffect(() => {
+    if (!!errorMessage) {
+      toast({
+        title: 'Error',
+        description: errorMessage,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        onCloseComplete: () => setErrorMessage(null),
+      });
+    }
+  }, [errorMessage, toast]);
 
   const handleAddIngredient = (item: Ingredient) => {
     addIngredient({ item, pizza, setPizza });
@@ -108,6 +177,7 @@ export const Bake = () => {
           <div style={{ width: '50%', height: '1000px', overflowY: 'scroll' }}>
             <SelectYourIngredients
               ingredientGroups={ingredientGroups}
+              ownedIngredients={ownedIngredients}
               addIngredient={handleAddIngredient}
               removeIngredient={handleRemoveIngredient}
               pizza={pizza}

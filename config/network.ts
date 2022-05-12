@@ -4,6 +4,8 @@ import localNetworks from './networks.local.json';
 
 export type ContractConfiguration = {
   mainContractAddress: string;
+  ingredientsContractAddress: string;
+  pizzaContractAddress: string;
 };
 
 export enum EthNetwork {
@@ -13,12 +15,8 @@ export enum EthNetwork {
   rinkeby = 'rinkeby',
 }
 
-const contractConfig: Record<
-  EthNetwork.mainnet | EthNetwork.rinkeby,
-  ContractConfiguration
-> = persistedNetworks;
-let localContractConfig: Record<EthNetwork.localhost, ContractConfiguration> =
-  persistedLocalNetworks;
+const contractConfig = persistedNetworks;
+let localContractConfig = persistedLocalNetworks;
 try {
   localContractConfig = localNetworks;
 } catch {
@@ -32,7 +30,7 @@ export type EthNetworkConfig = {
   chainId: number;
   rpcUrl: string;
   blockExplorer?: string;
-  contractConfig: ContractConfiguration;
+  contractConfig: any;
   openSeaBaseUrl?: string;
   openSeaProjectSlug?: string;
   openSeaBaseApiUrl: string;

@@ -297,8 +297,6 @@ export const BuyAndBake = () => {
     BuyAndBakeTabs.selections,
   );
 
-  console.log(pizza);
-
   const handleAddIngredient = (item: Ingredient) => {
     addIngredient({ item, pizza, setPizza });
   };
