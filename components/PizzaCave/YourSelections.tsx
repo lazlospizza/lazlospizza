@@ -190,7 +190,9 @@ export const YourSelections = ({ pizza, tab }: Props) => {
           }}
         >
           <img src="/assets/tablecloth.svg" alt="tablecloth" />
-          {(pizza?.allIngredients ?? []).map(item => (
+          {(
+            pizza?.allIngredients?.sort((a, b) => a.tokenId - b.tokenId) ?? []
+          ).map(item => (
             <div
               key={item.tokenId}
               style={{
