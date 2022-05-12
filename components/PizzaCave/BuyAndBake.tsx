@@ -378,8 +378,9 @@ export const BuyAndBake = () => {
           {renderTab(selectedTab)}
         </Stack>
       ) : (
+        // desktop view
         <Flex borderTop="2px" borderColor={'gray.light'}>
-          <div style={{ width: '50%' }}>
+          <div style={{ width: '50%', height: '1000px', overflowY: 'scroll' }}>
             <SelectYourIngredients
               ingredientGroups={ingredientGroups}
               addIngredient={handleAddIngredient}

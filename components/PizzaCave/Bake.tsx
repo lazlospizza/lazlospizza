@@ -2,7 +2,7 @@ import { Box, Center, Flex, Stack, Text } from '@chakra-ui/react';
 import { useState } from 'react';
 import { BAKING_FEE } from '../../constants';
 import { colors } from '../../styles/theme';
-import { Pizza, Ingredient, IngredientType, PizzaCave } from '../../types';
+import { Pizza, Ingredient, PizzaCave } from '../../types';
 import {
   addIngredient,
   DefaultPizza,
@@ -40,11 +40,11 @@ export const Bake = () => {
             addIngredient={handleAddIngredient}
             removeIngredient={handleRemoveIngredient}
             pizza={pizza}
-            tab={PizzaCave.buyAndBake}
+            tab={PizzaCave.bake}
           />
         );
       case BuyAndBakeTabs.selections:
-        return <YourSelections pizza={pizza} tab={PizzaCave.buyAndBake} />;
+        return <YourSelections pizza={pizza} tab={PizzaCave.bake} />;
       case BuyAndBakeTabs.checkRarity:
         return <CheckRarity pizza={pizza} />;
       default:
@@ -103,8 +103,9 @@ export const Bake = () => {
           {renderTab(selectedTab)}
         </Stack>
       ) : (
+        // desktop view
         <Flex borderTop="2px" borderColor={'gray.light'}>
-          <div style={{ width: '50%' }}>
+          <div style={{ width: '50%', height: '1000px', overflowY: 'scroll' }}>
             <SelectYourIngredients
               ingredientGroups={ingredientGroups}
               addIngredient={handleAddIngredient}

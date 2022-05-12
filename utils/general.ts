@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { MEAT_LIMIT, TOPPING_LIMIT } from '../constants';
 import { Ingredient, IngredientType, Pizza } from '../types';
 
 export const getIsMobile = () => {
@@ -59,7 +60,7 @@ export const addIngredient = ({
       }));
       break;
     case IngredientType.meat:
-      if (pizza.meats?.length >= 4) return;
+      if (pizza.meats?.length >= MEAT_LIMIT) return;
       setPizza(pizza => ({
         ...pizza,
         meats: [
@@ -69,7 +70,7 @@ export const addIngredient = ({
       }));
       break;
     case IngredientType.topping:
-      if (pizza.toppings?.length >= 4) return;
+      if (pizza.toppings?.length >= TOPPING_LIMIT) return;
       setPizza(pizza => ({
         ...pizza,
         toppings: [
