@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Flex, Stack, Text } from '@chakra-ui/react';
 import { useState } from 'react';
 import { BAKING_FEE, INGREDIENT_COST } from '../../constants';
 import {
@@ -12,6 +12,7 @@ import { NavButton } from '../shared/NavButton';
 import { SelectYourIngredients } from './SelectYourIngredients';
 import { YourSelections } from './YourSelections';
 import { CheckRarity } from './CheckRarity';
+import { getIsMobile } from '../../utils/general';
 
 export const ingredientGroups: IngredientGroup[] = [
   {
@@ -283,7 +284,11 @@ export enum BuyAndBakeTabs {
 }
 
 export const BuyAndBake = () => {
+  const isMobile = getIsMobile();
   const [selectedTab, setSelectedTab] = useState(BuyAndBakeTabs.ingredients);
+  const [selectedHalfTab, setSelectedHalfTab] = useState(
+    BuyAndBakeTabs.selections,
+  );
   const [pizza, setPizza] = useState<Pizza>({
     meats: [],
     toppings: [],
@@ -291,7 +296,7 @@ export const BuyAndBake = () => {
     totalCost: 0,
   });
 
-console.log(pizza)
+  console.log(pizza);
 
   const addIngredient = (item: Ingredient) => {
     switch (item.type) {
@@ -347,7 +352,7 @@ console.log(pizza)
   };
 
   const removeIngredient = (item: Ingredient) => {
-    let newPizza = { ...pizza }
+    const newPizza = { ...pizza };
     switch (item.type) {
       case IngredientType.base:
         if (pizza.base?.tokenId !== item.tokenId) break;
@@ -355,21 +360,23 @@ console.log(pizza)
         break;
       case IngredientType.sauce:
         if (pizza.sauce?.tokenId !== item.tokenId) break;
-        delete newPizza.sauce
+        delete newPizza.sauce;
         break;
       case IngredientType.cheese:
         if (pizza.cheese?.tokenId !== item.tokenId) break;
-        delete newPizza.cheese
+        delete newPizza.cheese;
         break;
       case IngredientType.meat:
         if (!pizza.meats?.find(_item => _item.tokenId === item.tokenId)) break;
-        newPizza.meats = pizza.meats.filter(_item => _item.tokenId !== item.tokenId)
+        newPizza.meats = pizza.meats.filter(
+          _item => _item.tokenId !== item.tokenId,
+        );
         break;
       case IngredientType.topping:
         if (pizza.toppings?.length >= 4) break;
         newPizza.toppings = pizza.toppings.filter(
-            _item => _item.tokenId !== item.tokenId,
-          )
+          _item => _item.tokenId !== item.tokenId,
+        );
         break;
     }
     setPizza({
@@ -381,8 +388,8 @@ console.log(pizza)
     });
   };
 
-  const renderTab = () => {
-    switch (selectedTab) {
+  const renderTab = (tab: BuyAndBakeTabs) => {
+    switch (tab) {
       case BuyAndBakeTabs.ingredients:
         return (
           <SelectYourIngredients
@@ -412,36 +419,84 @@ console.log(pizza)
           {`Select from a delightful selection of hand-crafted ingredients freshly prepared by our pixel artistes. You can buy now and bake later, or buy and bake in one transaction. (${INGREDIENT_COST} ETH per ingredient + ${BAKING_FEE}ETH Baking fee.)`}
         </Text>
       </Stack>
-      {/* divider */}
-      {/* <div style={{ marginTop: 8, height: 1, backgroundColor: '#3D3431' }} /> */}
-      <Flex
-        pt="4"
-        px="8"
-        alignContent={'center'}
-        justifyContent={'center'}
-        borderTop={1}
-        borderBottom={1}
-        border="1px"
-        borderColor={'gray.dark'}
-        // backgroundColor="red"
-      >
-        <NavButton
-          title={BuyAndBakeTabs.ingredients}
-          isSelected={selectedTab === BuyAndBakeTabs.ingredients}
-          onClick={() => setSelectedTab(BuyAndBakeTabs.ingredients)}
-        />
-        <NavButton
-          title={BuyAndBakeTabs.selections}
-          isSelected={selectedTab === BuyAndBakeTabs.selections}
-          onClick={() => setSelectedTab(BuyAndBakeTabs.selections)}
-        />
-        <NavButton
-          title={BuyAndBakeTabs.checkRarity}
-          isSelected={selectedTab === BuyAndBakeTabs.checkRarity}
-          onClick={() => setSelectedTab(BuyAndBakeTabs.checkRarity)}
-        />
-      </Flex>
-      {renderTab()}
+      {/* deterime which view */}
+      {isMobile ? (
+        <Stack>
+          {/* mobile nav */}
+          <Center
+            pt="4"
+            px="8"
+            alignContent={'center'}
+            justifyContent={'center'}
+            borderTop="1px"
+            borderBottom="1px"
+            borderColor={'gray.dark'}
+          >
+            <Flex flex="grow" w="100%" maxW="400" justifyContent="space-around">
+              <NavButton
+                title={BuyAndBakeTabs.ingredients}
+                isSelected={selectedTab === BuyAndBakeTabs.ingredients}
+                onClick={() => setSelectedTab(BuyAndBakeTabs.ingredients)}
+              />
+              <NavButton
+                title={BuyAndBakeTabs.selections}
+                isSelected={selectedTab === BuyAndBakeTabs.selections}
+                onClick={() => {
+                  setSelectedTab(BuyAndBakeTabs.selections);
+                  setSelectedHalfTab(BuyAndBakeTabs.selections);
+                }}
+              />
+              <NavButton
+                title={BuyAndBakeTabs.checkRarity}
+                isSelected={selectedTab === BuyAndBakeTabs.checkRarity}
+                onClick={() => {
+                  setSelectedTab(BuyAndBakeTabs.checkRarity);
+                  setSelectedHalfTab(BuyAndBakeTabs.checkRarity);
+                }}
+              />
+            </Flex>
+          </Center>
+          {renderTab(selectedTab)}
+        </Stack>
+      ) : (
+        <Flex borderTop="2px" borderColor={'gray.light'}>
+          <div style={{ width: '50%' }}>
+            <SelectYourIngredients
+              ingredientGroups={ingredientGroups}
+              addIngredient={addIngredient}
+              removeIngredient={removeIngredient}
+              pizza={pizza}
+              tab={PizzaCave.buyAndBake}
+            />
+          </div>
+          <Stack style={{ width: '50%', backgroundColor: '#F5F5F5' }}>
+            <Flex
+              pt="4"
+              px="8"
+              alignContent={'center'}
+              justifyContent={'center'}
+            >
+              <NavButton
+                title={BuyAndBakeTabs.selections}
+                isSelected={selectedHalfTab === BuyAndBakeTabs.selections}
+                onClick={() => {
+                  setSelectedTab(BuyAndBakeTabs.selections);
+                  setSelectedHalfTab(BuyAndBakeTabs.selections);
+                }}
+              />
+              <NavButton
+                title={BuyAndBakeTabs.checkRarity}
+                isSelected={selectedHalfTab === BuyAndBakeTabs.checkRarity}
+                onClick={() => {
+                  setSelectedTab(BuyAndBakeTabs.checkRarity);
+                  setSelectedHalfTab(BuyAndBakeTabs.checkRarity);
+                }}
+              />
+            </Flex>
+            {renderTab(selectedHalfTab)}
+          </Stack>
+        </Flex>
+      )}
     </Box>
   );
 };
