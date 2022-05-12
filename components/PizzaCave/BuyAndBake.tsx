@@ -12,7 +12,13 @@ import { NavButton } from '../shared/NavButton';
 import { SelectYourIngredients } from './SelectYourIngredients';
 import { YourSelections } from './YourSelections';
 import { CheckRarity } from './CheckRarity';
-import { getIsMobile } from '../../utils/general';
+import {
+  addIngredient,
+  DefaultPizza,
+  getIsMobile,
+  removeIngredient,
+} from '../../utils/general';
+import { colors } from '../../styles/theme';
 
 export const ingredientGroups: IngredientGroup[] = [
   {
@@ -285,107 +291,20 @@ export enum BuyAndBakeTabs {
 
 export const BuyAndBake = () => {
   const isMobile = getIsMobile();
+  const [pizza, setPizza] = useState<Pizza>(DefaultPizza);
   const [selectedTab, setSelectedTab] = useState(BuyAndBakeTabs.ingredients);
   const [selectedHalfTab, setSelectedHalfTab] = useState(
     BuyAndBakeTabs.selections,
   );
-  const [pizza, setPizza] = useState<Pizza>({
-    meats: [],
-    toppings: [],
-    allIngredients: [],
-    totalCost: 0,
-  });
 
   console.log(pizza);
 
-  const addIngredient = (item: Ingredient) => {
-    switch (item.type) {
-      case IngredientType.base:
-        if (pizza.base) return;
-        setPizza({
-          ...pizza,
-          base: item,
-        });
-        break;
-      case IngredientType.sauce:
-        if (pizza.sauce) return;
-        setPizza(pizza => ({
-          ...pizza,
-          sauce: item,
-        }));
-        break;
-      case IngredientType.cheese:
-        if (pizza.cheese) return;
-        setPizza(pizza => ({
-          ...pizza,
-          cheese: item,
-        }));
-        break;
-      case IngredientType.meat:
-        if (pizza.meats?.length >= 4) return;
-        setPizza(pizza => ({
-          ...pizza,
-          meats: [
-            ...pizza.meats.filter(_item => _item.tokenId !== item.tokenId),
-            item,
-          ],
-        }));
-        break;
-      case IngredientType.topping:
-        if (pizza.toppings?.length >= 4) return;
-        setPizza(pizza => ({
-          ...pizza,
-          toppings: [
-            ...pizza.toppings.filter(_item => _item.tokenId !== item.tokenId),
-            item,
-          ],
-        }));
-        break;
-      default:
-        break;
-    }
-    setPizza(pizza => ({
-      ...pizza,
-      allIngredients: [...pizza.allIngredients, item],
-      totalCost: pizza.totalCost + item.cost,
-    }));
+  const handleAddIngredient = (item: Ingredient) => {
+    addIngredient({ item, pizza, setPizza });
   };
 
-  const removeIngredient = (item: Ingredient) => {
-    const newPizza = { ...pizza };
-    switch (item.type) {
-      case IngredientType.base:
-        if (pizza.base?.tokenId !== item.tokenId) break;
-        delete newPizza.base;
-        break;
-      case IngredientType.sauce:
-        if (pizza.sauce?.tokenId !== item.tokenId) break;
-        delete newPizza.sauce;
-        break;
-      case IngredientType.cheese:
-        if (pizza.cheese?.tokenId !== item.tokenId) break;
-        delete newPizza.cheese;
-        break;
-      case IngredientType.meat:
-        if (!pizza.meats?.find(_item => _item.tokenId === item.tokenId)) break;
-        newPizza.meats = pizza.meats.filter(
-          _item => _item.tokenId !== item.tokenId,
-        );
-        break;
-      case IngredientType.topping:
-        if (pizza.toppings?.length >= 4) break;
-        newPizza.toppings = pizza.toppings.filter(
-          _item => _item.tokenId !== item.tokenId,
-        );
-        break;
-    }
-    setPizza({
-      ...newPizza,
-      allIngredients: pizza.allIngredients.filter(
-        _item => _item.tokenId !== item.tokenId,
-      ),
-      totalCost: pizza.totalCost - item.cost,
-    });
+  const handleRemoveIngredient = (item: Ingredient) => {
+    removeIngredient({ item, pizza, setPizza });
   };
 
   const renderTab = (tab: BuyAndBakeTabs) => {
@@ -394,8 +313,8 @@ export const BuyAndBake = () => {
         return (
           <SelectYourIngredients
             ingredientGroups={ingredientGroups}
-            addIngredient={addIngredient}
-            removeIngredient={removeIngredient}
+            addIngredient={handleAddIngredient}
+            removeIngredient={handleRemoveIngredient}
             pizza={pizza}
             tab={PizzaCave.buyAndBake}
           />
@@ -463,13 +382,15 @@ export const BuyAndBake = () => {
           <div style={{ width: '50%' }}>
             <SelectYourIngredients
               ingredientGroups={ingredientGroups}
-              addIngredient={addIngredient}
-              removeIngredient={removeIngredient}
+              addIngredient={handleAddIngredient}
+              removeIngredient={handleRemoveIngredient}
               pizza={pizza}
               tab={PizzaCave.buyAndBake}
             />
           </div>
-          <Stack style={{ width: '50%', backgroundColor: '#F5F5F5' }}>
+          <Stack
+            style={{ width: '50%', backgroundColor: colors.gray.backGround }}
+          >
             <Flex
               pt="4"
               px="8"
@@ -483,6 +404,7 @@ export const BuyAndBake = () => {
                   setSelectedTab(BuyAndBakeTabs.selections);
                   setSelectedHalfTab(BuyAndBakeTabs.selections);
                 }}
+                bgColor={colors.gray.backGround}
               />
               <NavButton
                 title={BuyAndBakeTabs.checkRarity}
@@ -491,6 +413,7 @@ export const BuyAndBake = () => {
                   setSelectedTab(BuyAndBakeTabs.checkRarity);
                   setSelectedHalfTab(BuyAndBakeTabs.checkRarity);
                 }}
+                bgColor={colors.gray.backGround}
               />
             </Flex>
             {renderTab(selectedHalfTab)}

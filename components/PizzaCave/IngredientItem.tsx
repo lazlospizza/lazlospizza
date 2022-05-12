@@ -1,7 +1,7 @@
-import { Box, Button, Center, Flex, Heading, Text } from '@chakra-ui/react';
-import { useEffect, useMemo, useState } from 'react';
+import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
+import { useMemo } from 'react';
 import { colors } from '../../styles/theme';
-import { Ingredient, IngredientType, Pizza, PizzaCave } from '../../types';
+import { Ingredient, Pizza, PizzaCave } from '../../types';
 
 interface Props {
   ingredient: Ingredient;
@@ -34,9 +34,10 @@ export const IngredientItem = ({
     removeIngredient(ingredient);
   };
 
-  const pizzaHasItem = useMemo(() => !!pizza.allIngredients?.find(
-    item => item.name === name,
-  ), [pizza, name]);
+  const pizzaHasItem = useMemo(
+    () => !!pizza.allIngredients?.find(item => item.name === name),
+    [pizza, name],
+  );
 
   return (
     <Box

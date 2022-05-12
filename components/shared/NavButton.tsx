@@ -1,24 +1,29 @@
 import { Text } from '@chakra-ui/react';
-import { CSSProperties, useState } from 'react';
+import { CSSProperties } from 'react';
 
 interface Props {
   title: string;
   isSelected: boolean;
   onClick: () => void;
+  bgColor?: string; // to 'hide' bottom border when not selected
 }
 
-export const NavButton = ({ title, isSelected, onClick }: Props) => {
-  //   const [isSelected, setIsSelected] = useState(false);
-  const selected: CSSProperties = {
+export const NavButton = ({
+  title,
+  isSelected,
+  onClick,
+  bgColor = 'white',
+}: Props) => {
+  const selectedStyle: CSSProperties = {
     color: '#CC4443',
     cursor: 'pointer',
     borderColor: '#CC4443',
   };
-  const notSelected: CSSProperties = {
+  const notSelectedStyle: CSSProperties = {
     color: '#3D3431',
     cursor: 'pointer',
     marginBottom: '16',
-    borderColor: 'white',
+    borderColor: bgColor,
   };
 
   return (
@@ -28,7 +33,7 @@ export const NavButton = ({ title, isSelected, onClick }: Props) => {
       borderBottom="4px"
       color={'tomato.500'}
       fontWeight={500}
-      style={isSelected ? selected : notSelected}
+      style={isSelected ? selectedStyle : notSelectedStyle}
       onClick={onClick}
     >
       {title}
