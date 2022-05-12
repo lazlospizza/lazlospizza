@@ -6,6 +6,7 @@ import {
   Heading,
   Stack,
   Text,
+  useToast,
 } from '@chakra-ui/react';
 import { parseEther } from 'ethers/lib/utils';
 import { isEmpty } from 'lodash';
@@ -27,6 +28,7 @@ export const YourSelections = ({ pizza, tab }: Props) => {
   const [mintingTxn, setMintingTxn] = useState<string | null>(null);
   const [tokenIds, setTokenIds] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
+  const toast = useToast();
   const provider = wallet?.web3Provider;
 
   const validatePizza = () => {
@@ -83,6 +85,19 @@ export const YourSelections = ({ pizza, tab }: Props) => {
     }
   }, [mainContract, provider, pizza]);
 
+  useEffect(() => {
+    if (!!errorMessage) {
+      toast({
+        title: 'Error',
+        description: errorMessage,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        onCloseComplete: () => setErrorMessage(null),
+      });
+    }
+  }, [errorMessage, toast]);
+
   const handleBuyIngredients = useCallback(async () => {
     if (!provider) return;
     try {
@@ -131,14 +146,18 @@ export const YourSelections = ({ pizza, tab }: Props) => {
           <Stack pt={8}>
             <>
               <Button
-                disabled={pizza.totalCost === 0}
+                disabled={pizza.totalCost === 0 || !isConnected}
                 className="tomato-btn"
                 onClick={handleBuyIngredients}
-              >{`Buy Ingredients only at ${pizza.totalCost}`}</Button>
+                isLoading={isMinting}
+              >{`Buy Ingredients only at ${
+                Math.round(pizza.totalCost * 100) / 100
+              }`}</Button>
               <Button
-                disabled={disableBake}
+                disabled={disableBake || !isConnected}
                 className="tomato-btn"
                 onClick={handleBuyAndBake}
+                isLoading={isMinting}
               >{`Buy and Bake only at ${
                 Math.round((pizza.totalCost + BAKING_FEE) * 100) / 100
               }`}</Button>
