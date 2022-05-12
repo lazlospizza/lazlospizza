@@ -34,9 +34,10 @@ export const IngredientItem = ({
     removeIngredient(ingredient);
   };
 
-  const pizzaHasItem = useMemo(() => !!pizza.allIngredients?.find(
-    item => item.name === name,
-  ), [pizza, name]);
+  const pizzaHasItem = useMemo(
+    () => !!pizza.allIngredients?.find(item => item.name === name),
+    [pizza, name],
+  );
 
   return (
     <Box

@@ -25,7 +25,7 @@ export const YourSelections = ({ pizza, tab }: Props) => {
   const [disableBake, setDisableBake] = useState(true);
   const [isMinting, setIsMinting] = useState(false);
   const [mintingTxn, setMintingTxn] = useState<string | null>(null);
-  const [tokenIds, setTokenIds] = useState([])
+  const [tokenIds, setTokenIds] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const provider = wallet?.web3Provider;
 
@@ -46,7 +46,9 @@ export const YourSelections = ({ pizza, tab }: Props) => {
   const handleBuyAndBake = useCallback(async () => {
     if (!provider) return;
     try {
-      const ingredientTokenIds = pizza.allIngredients.map(ingredient => ingredient.tokenId);
+      const ingredientTokenIds = pizza.allIngredients.map(
+        ingredient => ingredient.tokenId,
+      );
       setIsMinting(true);
       setErrorMessage(null);
       const signer = provider.getSigner();
@@ -55,7 +57,9 @@ export const YourSelections = ({ pizza, tab }: Props) => {
         ingredientTokenIds,
         {
           from: signer._address,
-          value: parseEther((Math.round((pizza.totalCost + BAKING_FEE) * 100) / 100).toFixed(2)),
+          value: parseEther(
+            (Math.round((pizza.totalCost + BAKING_FEE) * 100) / 100).toFixed(2),
+          ),
         },
       );
 
@@ -68,7 +72,7 @@ export const YourSelections = ({ pizza, tab }: Props) => {
 
       setTokenIds(mintedIds);
     } catch (e) {
-      console.log(e)
+      console.log(e);
       // @ts-ignore
       window.MM_ERR = e;
       setMintingTxn(null);
@@ -81,7 +85,9 @@ export const YourSelections = ({ pizza, tab }: Props) => {
   const handleBuyIngredients = useCallback(async () => {
     if (!provider) return;
     try {
-      const ingredientTokenIds = pizza.allIngredients.map(ingredient => ingredient.tokenId);
+      const ingredientTokenIds = pizza.allIngredients.map(
+        ingredient => ingredient.tokenId,
+      );
       setIsMinting(true);
       setErrorMessage(null);
       const signer = provider.getSigner();
@@ -91,7 +97,9 @@ export const YourSelections = ({ pizza, tab }: Props) => {
         ingredientTokenIds.map(() => 1),
         {
           from: signer._address,
-          value: parseEther((Math.round((pizza.totalCost) * 100) / 100).toFixed(2)),
+          value: parseEther(
+            (Math.round(pizza.totalCost * 100) / 100).toFixed(2),
+          ),
         },
       );
 
@@ -104,7 +112,7 @@ export const YourSelections = ({ pizza, tab }: Props) => {
 
       setTokenIds(mintedIds);
     } catch (e) {
-      console.log(e)
+      console.log(e);
       // @ts-ignore
       window.MM_ERR = e;
       setMintingTxn(null);

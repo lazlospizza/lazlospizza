@@ -291,7 +291,7 @@ export const BuyAndBake = () => {
     totalCost: 0,
   });
 
-console.log(pizza)
+  console.log(pizza);
 
   const addIngredient = (item: Ingredient) => {
     switch (item.type) {
@@ -347,7 +347,7 @@ console.log(pizza)
   };
 
   const removeIngredient = (item: Ingredient) => {
-    let newPizza = { ...pizza }
+    const newPizza = { ...pizza };
     switch (item.type) {
       case IngredientType.base:
         if (pizza.base?.tokenId !== item.tokenId) break;
@@ -355,21 +355,23 @@ console.log(pizza)
         break;
       case IngredientType.sauce:
         if (pizza.sauce?.tokenId !== item.tokenId) break;
-        delete newPizza.sauce
+        delete newPizza.sauce;
         break;
       case IngredientType.cheese:
         if (pizza.cheese?.tokenId !== item.tokenId) break;
-        delete newPizza.cheese
+        delete newPizza.cheese;
         break;
       case IngredientType.meat:
         if (!pizza.meats?.find(_item => _item.tokenId === item.tokenId)) break;
-        newPizza.meats = pizza.meats.filter(_item => _item.tokenId !== item.tokenId)
+        newPizza.meats = pizza.meats.filter(
+          _item => _item.tokenId !== item.tokenId,
+        );
         break;
       case IngredientType.topping:
         if (pizza.toppings?.length >= 4) break;
         newPizza.toppings = pizza.toppings.filter(
-            _item => _item.tokenId !== item.tokenId,
-          )
+          _item => _item.tokenId !== item.tokenId,
+        );
         break;
     }
     setPizza({
