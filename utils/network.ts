@@ -24,6 +24,14 @@ export function getMainContractAddress(): string {
   return getNetworkConfig().contractConfig.mainContractAddress;
 }
 
+export function getIngredientsContractAddress(): string {
+  return getNetworkConfig().contractConfig.ingredientsContractAddress;
+}
+
+export function getPizzaContractAddress(): string {
+  return getNetworkConfig().contractConfig.pizzaContractAddress;
+}
+
 export function getBlockExplorerUrl(): string | undefined {
   return getNetworkConfig().blockExplorer;
 }

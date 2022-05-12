@@ -4,6 +4,7 @@ import { IngredientItem } from './IngredientItem';
 
 interface Props {
   ingredientGroup: IngredientGroup;
+  ownedIngredients?: { tokenId: number; amount: number }[];
   addIngredient: (ingredient: Ingredient) => void;
   removeIngredient: (ingredient: Ingredient) => void;
   pizza: Pizza;
@@ -11,6 +12,7 @@ interface Props {
 }
 export const IngredientList = ({
   ingredientGroup,
+  ownedIngredients,
   addIngredient,
   removeIngredient,
   pizza,
@@ -28,7 +30,16 @@ export const IngredientList = ({
             &nbsp;{`only 1 ${ingredientGroup.name}`}
           </Text>
         </Flex>
-        {ingredientGroup.ingredients.map(item => (
+        {(!!ownedIngredients
+          ? ingredientGroup.ingredients.filter(ingredient =>
+              ownedIngredients.find(
+                ownedIngredient =>
+                  ownedIngredient.tokenId === ingredient.tokenId &&
+                  ownedIngredient.amount > 0,
+              ),
+            )
+          : ingredientGroup.ingredients
+        ).map(item => (
           <IngredientItem
             key={item.name}
             ingredient={item}

@@ -12,7 +12,7 @@ import { parseEther } from 'ethers/lib/utils';
 import { isEmpty } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { BAKING_FEE } from '../../constants';
-import { useMainContract } from '../../hooks/useMainContract';
+import { useMainContract } from '../../hooks/useContract';
 import { useWallet } from '../../hooks/useWallet';
 import { Pizza, PizzaCave } from '../../types';
 

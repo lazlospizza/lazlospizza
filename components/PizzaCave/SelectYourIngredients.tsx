@@ -4,6 +4,7 @@ import { IngredientList } from './IngredientList';
 
 interface Props {
   ingredientGroups: IngredientGroup[];
+  onwedIngredients?: { tokenId: number; amount: number }[];
   addIngredient: (ingredient: Ingredient) => void;
   removeIngredient?: (Ingredient: Ingredient) => void;
   pizza: Pizza;
@@ -11,6 +12,7 @@ interface Props {
 }
 export const SelectYourIngredients = ({
   ingredientGroups,
+  ownedIngredients,
   addIngredient,
   removeIngredient,
   pizza,
@@ -31,6 +33,7 @@ export const SelectYourIngredients = ({
           ingredientGroups.map(_group => (
             <IngredientList
               ingredientGroup={_group}
+              ownedIngredients={ownedIngredients}
               key={_group.name}
               addIngredient={addIngredient}
               removeIngredient={removeIngredient}
