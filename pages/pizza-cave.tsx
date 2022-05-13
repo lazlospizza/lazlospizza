@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { Bake } from '../components/PizzaCave/Bake';
 import { BuyAndBake } from '../components/PizzaCave/BuyAndBake';
 import { RandomBake } from '../components/PizzaCave/RandomBake';
+import { Rebake } from '../components/PizzaCave/Rebake';
 import { Unbake } from '../components/PizzaCave/Unbake';
 import { Ingredient } from '../types';
 
@@ -33,6 +34,8 @@ export default function PizzaCave() {
         return <Bake />;
       case Tabs.unbake:
         return <Unbake />;
+      case Tabs.rebake:
+        return <Rebake />;
       case Tabs.randomBake:
         return <RandomBake />;
       default:

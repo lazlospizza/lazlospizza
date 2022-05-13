@@ -55,15 +55,6 @@ export const Bake = () => {
           amount: parsedResults[index],
         })),
       );
-
-      // setMintingTxn(result.hash);
-      // const receipt = await result.wait();
-
-      // const mintedIds = receipt.events
-      //   ?.map(({ args }) => (args?.[2] ? parseInt(args?.[2]) : null))
-      //   .filter(id => !!id);
-
-      // setTokenIds(mintedIds);
     } catch (e) {
       console.log(e);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -185,7 +176,7 @@ export const Bake = () => {
             />
           </div>
           <Stack
-            style={{ width: '50%', backgroundColor: colors.gray.backGround }}
+            style={{ width: '50%', backgroundColor: colors.gray.background }}
           >
             <Flex
               pt="4"
@@ -200,7 +191,7 @@ export const Bake = () => {
                   setSelectedTab(BuyAndBakeTabs.selections);
                   setSelectedHalfTab(BuyAndBakeTabs.selections);
                 }}
-                bgColor={colors.gray.backGround}
+                bgColor={colors.gray.background}
               />
               <NavButton
                 title={BuyAndBakeTabs.checkRarity}
@@ -209,7 +200,7 @@ export const Bake = () => {
                   setSelectedTab(BuyAndBakeTabs.checkRarity);
                   setSelectedHalfTab(BuyAndBakeTabs.checkRarity);
                 }}
-                bgColor={colors.gray.backGround}
+                bgColor={colors.gray.background}
               />
             </Flex>
             {renderTab(selectedHalfTab)}

@@ -388,7 +388,7 @@ export const BuyAndBake = () => {
             />
           </div>
           <Stack
-            style={{ width: '50%', backgroundColor: colors.gray.backGround }}
+            style={{ width: '50%', backgroundColor: colors.gray.background }}
           >
             <Flex
               pt="4"
@@ -403,7 +403,7 @@ export const BuyAndBake = () => {
                   setSelectedTab(BuyAndBakeTabs.selections);
                   setSelectedHalfTab(BuyAndBakeTabs.selections);
                 }}
-                bgColor={colors.gray.backGround}
+                bgColor={colors.gray.background}
               />
               <NavButton
                 title={BuyAndBakeTabs.checkRarity}
@@ -412,7 +412,7 @@ export const BuyAndBake = () => {
                   setSelectedTab(BuyAndBakeTabs.checkRarity);
                   setSelectedHalfTab(BuyAndBakeTabs.checkRarity);
                 }}
-                bgColor={colors.gray.backGround}
+                bgColor={colors.gray.background}
               />
             </Flex>
             {renderTab(selectedHalfTab)}

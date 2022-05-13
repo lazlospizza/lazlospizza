@@ -1,6 +1,8 @@
 export const enum PizzaCave {
   buyAndBake = 'Buy & Bake',
   bake = 'Bake',
+  unbake = 'Unbake',
+  rebake = 'Rebake',
 }
 export const enum IngredientType {
   base = 'Base',
@@ -31,11 +33,14 @@ export interface IngredientGroup {
 }
 
 export interface Pizza {
+  tokenId?: number;
   base?: Ingredient | null;
   sauce?: Ingredient | null;
   cheese?: Ingredient | null;
   meats?: Ingredient[];
   toppings?: Ingredient[];
   allIngredients: Ingredient[];
+  additionalIngredients?: Ingredient[];
+  burnIngredients?: Ingredient[];
   totalCost: number;
 }
