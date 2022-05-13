@@ -5,6 +5,7 @@ interface Props {
   pizza: Pizza;
 }
 export const CheckRarity = ({ pizza }: Props) => {
+  if (!pizza) return null;
   return (
     <Box p="8">
       <Flex justifyContent={'space-between'}>
@@ -12,7 +13,7 @@ export const CheckRarity = ({ pizza }: Props) => {
           <Heading size={'xs'} color={'tomato.500'}>
             Ingredients
           </Heading>
-          {pizza.allIngredients.map(item => {
+          {pizza?.allIngredients.map(item => {
             return (
               <Heading key={item.name} size={'xs'} color={'gray.dark'} pt="4">
                 {item.name}
@@ -24,7 +25,7 @@ export const CheckRarity = ({ pizza }: Props) => {
           <Heading size={'xs'} color={'tomato.500'}>
             Rarity
           </Heading>
-          {pizza.allIngredients.map(item => {
+          {pizza?.allIngredients.map(item => {
             return (
               <Center key={item.name}>
                 <Heading size={'xs'} color={'gray.dark'} pt="4">
@@ -38,7 +39,7 @@ export const CheckRarity = ({ pizza }: Props) => {
           <Heading size={'xs'} color={'tomato.500'}>
             # of Pizzas
           </Heading>
-          {pizza.allIngredients.map(item => {
+          {pizza?.allIngredients.map(item => {
             return (
               <Center key={item.name}>
                 <Heading size={'xs'} color={'gray.dark'} pt="4">

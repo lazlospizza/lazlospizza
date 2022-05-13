@@ -35,14 +35,21 @@ export const IngredientItem = ({
   };
 
   const pizzaHasItem = useMemo(
-    () => !!pizza.allIngredients?.find(item => item.name === name),
+    () => !!pizza?.allIngredients?.find(item => item.name === name),
     [pizza, name],
   );
+
+  const itemAdded = useMemo(
+    () => !!pizza?.additionalIngredients?.find(item => item.name === name),
+    [pizza, name],
+  );
+
+  const selected = tab === PizzaCave.rebake ? itemAdded : pizzaHasItem;
 
   return (
     <Box
       className="artist-card"
-      backgroundColor={pizzaHasItem ? colors.cheese[150] : ''}
+      backgroundColor={selected ? colors.cheese[150] : ''}
       p="2"
     >
       <Flex>
@@ -81,9 +88,10 @@ export const IngredientItem = ({
             </Text>
             <Button
               className="tomato-btn"
-              onClick={pizzaHasItem ? handleRemove : handleAdd}
+              onClick={selected ? handleRemove : handleAdd}
+              disabled={tab === PizzaCave.rebake && pizzaHasItem}
             >
-              {pizzaHasItem ? `Remove` : `Add`}
+              {selected ? `Remove` : `Add`}
             </Button>
           </Flex>
         </Flex>

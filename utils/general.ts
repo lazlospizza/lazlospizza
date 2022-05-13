@@ -85,7 +85,7 @@ export const addIngredient = ({
   setPizza(pizza => ({
     ...pizza,
     allIngredients: [...pizza.allIngredients, item],
-    totalCost: pizza.totalCost + item.cost,
+    totalCost: (pizza.totalCost || 0) + item.cost,
   }));
 };
 
@@ -130,6 +130,70 @@ export const removeIngredient = ({
     allIngredients: pizza.allIngredients.filter(
       _item => _item.tokenId !== item.tokenId,
     ),
-    totalCost: pizza.totalCost - item.cost,
+    totalCost: (pizza.totalCost || 0) - item.cost,
   });
+};
+
+export const addBurnIngredient = ({
+  item,
+  setPizza,
+}: {
+  item: Ingredient;
+  setPizza: any;
+}) => {
+  setPizza(pizza => ({
+    ...pizza,
+    burnIngredients: (pizza.burnIngredients || []).find(
+      (_item: Ingredient) => _item.tokenId === item.tokenId,
+    )
+      ? pizza.burnIngredients || []
+      : [...(pizza.burnIngredients || []), item],
+  }));
+};
+
+export const removeBurnIngredient = ({
+  item,
+  setPizza,
+}: {
+  item: Ingredient;
+  setPizza: any;
+}) => {
+  setPizza(pizza => ({
+    ...pizza,
+    burnIngredients: (pizza.burnIngredients || []).filter(
+      _item => _item.tokenId !== item.tokenId,
+    ),
+  }));
+};
+
+export const addAdditionalIngredient = ({
+  item,
+  setPizza,
+}: {
+  item: Ingredient;
+  setPizza: any;
+}) => {
+  setPizza(pizza => ({
+    ...pizza,
+    additionalIngredients: (pizza.additionalIngredients || []).find(
+      (_item: Ingredient) => _item.tokenId === item.tokenId,
+    )
+      ? pizza.additionalIngredients || []
+      : [...(pizza.additionalIngredients || []), item],
+  }));
+};
+
+export const removeAdditionalIngredient = ({
+  item,
+  setPizza,
+}: {
+  item: Ingredient;
+  setPizza: any;
+}) => {
+  setPizza(pizza => ({
+    ...pizza,
+    additionalIngredients: (pizza.additionalIngredients || []).filter(
+      _item => _item.tokenId !== item.tokenId,
+    ),
+  }));
 };

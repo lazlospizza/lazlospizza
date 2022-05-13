@@ -11,16 +11,23 @@ import {
 import { parseEther } from 'ethers/lib/utils';
 import { isEmpty } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
-import { BAKING_FEE } from '../../constants';
+import { BAKING_FEE, REBAKE_FEE, UNBAKE_FEE } from '../../constants';
 import { useMainContract } from '../../hooks/useContract';
 import { useWallet } from '../../hooks/useWallet';
-import { Pizza, PizzaCave } from '../../types';
+import { Ingredient, Pizza, PizzaCave } from '../../types';
 
 interface Props {
-  pizza: Pizza;
+  pizza?: Pizza | null;
+  removeBurnIngredient?: (item: Ingredient) => void;
+  addBurnIngredient?: (item: Ingredient) => void;
   tab: PizzaCave;
 }
-export const YourSelections = ({ pizza, tab }: Props) => {
+export const YourSelections = ({
+  pizza,
+  tab,
+  removeBurnIngredient,
+  addBurnIngredient,
+}: Props) => {
   const { wallet, isConnected } = useWallet();
   const { mainContract } = useMainContract();
   const [disableBake, setDisableBake] = useState(true);
@@ -32,10 +39,10 @@ export const YourSelections = ({ pizza, tab }: Props) => {
   const provider = wallet?.web3Provider;
 
   const validatePizza = () => {
-    if (isEmpty(pizza.allIngredients)) return setDisableBake(true);
-    if (!pizza.base) return setDisableBake(true);
-    if (!pizza.sauce) return setDisableBake(true);
-    if (!pizza.cheese) return setDisableBake(true);
+    if (isEmpty(pizza?.allIngredients)) return setDisableBake(true);
+    if (!pizza?.base) return setDisableBake(true);
+    if (!pizza?.sauce) return setDisableBake(true);
+    if (!pizza?.cheese) return setDisableBake(true);
     // add checks for other ingredients
     console.log('Bake and Bake Allowed!');
     setDisableBake(false);
@@ -61,7 +68,7 @@ export const YourSelections = ({ pizza, tab }: Props) => {
   const handleBake = useCallback(async () => {
     if (!provider) return;
     try {
-      const ingredientTokenIds = pizza.allIngredients.map(
+      const ingredientTokenIds = pizza?.allIngredients.map(
         ingredient => ingredient.tokenId,
       );
       setIsMinting(true);
@@ -93,10 +100,67 @@ export const YourSelections = ({ pizza, tab }: Props) => {
     }
   }, [mainContract, provider, pizza]);
 
+  const handleUnbake = useCallback(async () => {
+    if (!provider) return;
+    try {
+      setIsMinting(true);
+      setErrorMessage(null);
+      const signer = provider.getSigner();
+      const contractWithSigner = mainContract.connect(signer);
+      const result = await contractWithSigner.unbakePizza(pizza.tokenId, {
+        from: signer._address,
+        value: parseEther(UNBAKE_FEE.toFixed(2)),
+      });
+
+      setMintingTxn(result.hash);
+      await result.wait();
+    } catch (e) {
+      console.log(e);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      window.MM_ERR = e;
+      setMintingTxn(null);
+      setErrorMessage('Unexpected Error');
+    } finally {
+      setIsMinting(false);
+    }
+  }, [mainContract, provider, pizza]);
+
+  const handleRebake = useCallback(async () => {
+    if (!provider) return;
+    try {
+      setIsMinting(true);
+      setErrorMessage(null);
+      const signer = provider.getSigner();
+      const contractWithSigner = mainContract.connect(signer);
+      const result = await contractWithSigner.rebakePizza(
+        pizza.tokenId,
+        pizza.additionalIngredients?.map(i => i.tokenId) || [],
+        pizza.burnIngredients?.map(i => i.tokenId) || [],
+        {
+          from: signer._address,
+          value: parseEther(REBAKE_FEE.toFixed(2)),
+        },
+      );
+
+      setMintingTxn(result.hash);
+      await result.wait();
+    } catch (e) {
+      console.log(e);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      window.MM_ERR = e;
+      setMintingTxn(null);
+      setErrorMessage('Unexpected Error');
+    } finally {
+      setIsMinting(false);
+    }
+  }, [mainContract, provider, pizza]);
+
   const handleBuyAndBake = useCallback(async () => {
     if (!provider) return;
     try {
-      const ingredientTokenIds = pizza.allIngredients.map(
+      const ingredientTokenIds = pizza?.allIngredients.map(
         ingredient => ingredient.tokenId,
       );
       setIsMinting(true);
@@ -138,7 +202,7 @@ export const YourSelections = ({ pizza, tab }: Props) => {
   const handleBuyIngredients = useCallback(async () => {
     if (!provider) return;
     try {
-      const ingredientTokenIds = pizza.allIngredients.map(
+      const ingredientTokenIds = pizza?.allIngredients.map(
         ingredient => ingredient.tokenId,
       );
       setIsMinting(true);
@@ -151,7 +215,7 @@ export const YourSelections = ({ pizza, tab }: Props) => {
         {
           from: signer._address,
           value: parseEther(
-            (Math.round(pizza.totalCost * 100) / 100).toFixed(2),
+            (Math.round(pizza?.totalCost * 100) / 100).toFixed(2),
           ),
         },
       );
@@ -181,36 +245,57 @@ export const YourSelections = ({ pizza, tab }: Props) => {
       case PizzaCave.buyAndBake:
         return (
           <Stack pt={8}>
-            <>
-              <Button
-                disabled={pizza.totalCost === 0 || !isConnected}
-                className="tomato-btn"
-                onClick={handleBuyIngredients}
-                isLoading={isMinting}
-              >{`Buy Ingredients only at ${
-                Math.round(pizza.totalCost * 100) / 100
-              }`}</Button>
-              <Button
-                disabled={disableBake || !isConnected}
-                className="tomato-btn"
-                onClick={handleBuyAndBake}
-                isLoading={isMinting}
-              >{`Buy and Bake only at ${
-                Math.round((pizza.totalCost + BAKING_FEE) * 100) / 100
-              }`}</Button>
-            </>
+            <Button
+              disabled={pizza?.totalCost === 0 || !isConnected}
+              className="tomato-btn"
+              onClick={handleBuyIngredients}
+              isLoading={isMinting}
+            >{`Buy Ingredients only at ${
+              Math.round((pizza?.totalCost || 0) * 100) / 100
+            }`}</Button>
+            <Button
+              disabled={disableBake || !isConnected}
+              className="tomato-btn"
+              onClick={handleBuyAndBake}
+              isLoading={isMinting}
+            >{`Buy & Bake at ${
+              Math.round(((pizza?.totalCost || 0) + BAKING_FEE) * 100) / 100
+            }`}</Button>
           </Stack>
         );
       case PizzaCave.bake:
         return (
-          <Button
-            disabled={disableBake || !isConnected}
-            className="tomato-btn"
-            onClick={handleBake}
-            isLoading={isMinting}
-          >{`Bake only at ${BAKING_FEE}`}</Button>
+          <Stack pt={8}>
+            <Button
+              disabled={disableBake || !isConnected}
+              className="tomato-btn"
+              onClick={handleBake}
+              isLoading={isMinting}
+            >{`Bake at ${BAKING_FEE}`}</Button>
+          </Stack>
         );
-
+      case PizzaCave.unbake:
+        return (
+          <Stack pt={8}>
+            <Button
+              disabled={disableBake || !isConnected}
+              className="tomato-btn"
+              onClick={handleUnbake}
+              isLoading={isMinting}
+            >{`Unbake at ${UNBAKE_FEE}`}</Button>
+          </Stack>
+        );
+      case PizzaCave.rebake:
+        return (
+          <Stack pt={8}>
+            <Button
+              disabled={disableBake || !isConnected}
+              className="tomato-btn"
+              onClick={handleRebake}
+              isLoading={isMinting}
+            >{`Rebake Pizza at ${REBAKE_FEE}`}</Button>
+          </Stack>
+        );
       default:
         break;
     }
@@ -230,14 +315,24 @@ export const YourSelections = ({ pizza, tab }: Props) => {
         >
           <img src="/assets/tablecloth.svg" alt="tablecloth" />
           {(
-            pizza?.allIngredients?.sort((a, b) => a.tokenId - b.tokenId) ?? []
+            [
+              ...(pizza?.allIngredients || []),
+              ...(pizza?.additionalIngredients || []),
+            ]
+              .filter(
+                item =>
+                  !(pizza.burnIngredients || []).find(
+                    burnItem => burnItem.tokenId == item.tokenId,
+                  ),
+              )
+              .sort((a, b) => a.tokenId - b.tokenId) ?? []
           ).map(item => (
             <div
               key={item.tokenId}
               style={{
                 position: 'absolute',
-                width: '90%',
-                height: '90%',
+                width: '80%',
+                height: '80%',
                 backgroundImage: `url(/assets/ingredients/baked/${item.imgUrl})`,
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
@@ -252,18 +347,58 @@ export const YourSelections = ({ pizza, tab }: Props) => {
             {`Ingredients Selected`}
           </Text>
           <Text fontWeight={700} color="tomato.500">
-            {pizza.allIngredients.length}
+            {pizza?.allIngredients.length}
           </Text>
         </Flex>
         {/* Selected Ingredients */}
-        {pizza.allIngredients.length &&
-          pizza.allIngredients.map(item => (
+        {pizza?.allIngredients.length &&
+          pizza?.allIngredients.map(item => (
+            <Flex key={item.name} pt={8} justifyContent="space-between">
+              {pizza?.burnIngredients?.find(
+                burn => burn.tokenId === item.tokenId,
+              ) ? (
+                <Heading
+                  size={'sm'}
+                  color={'gray.dark'}
+                  textDecoration="line-through"
+                >
+                  {item.name}
+                </Heading>
+              ) : (
+                <Heading size={'sm'} color={'gray.dark'}>
+                  {item.name}
+                </Heading>
+              )}
+              {(tab === PizzaCave.buyAndBake || tab === PizzaCave.bake) && (
+                <Heading size={'sm'} color={'tomato.500'}>
+                  {item.cost}
+                </Heading>
+              )}
+              {tab === PizzaCave.rebake &&
+                (pizza?.burnIngredients?.find(
+                  burn => burn.tokenId === item.tokenId,
+                ) ? (
+                  <Button
+                    className="tomato-btn"
+                    onClick={() => removeBurnIngredient(item)}
+                  >
+                    Undo
+                  </Button>
+                ) : (
+                  <Button
+                    className="tomato-btn"
+                    onClick={() => addBurnIngredient(item)}
+                  >
+                    Burn
+                  </Button>
+                ))}
+            </Flex>
+          ))}
+        {pizza?.additionalIngredients?.length &&
+          pizza?.additionalIngredients.map(item => (
             <Flex key={item.name} pt={8} justifyContent="space-between">
               <Heading size={'sm'} color={'gray.dark'}>
                 {item.name}
-              </Heading>
-              <Heading size={'sm'} color={'tomato.500'}>
-                {item.cost}
               </Heading>
             </Flex>
           ))}
