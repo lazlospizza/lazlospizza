@@ -1,6 +1,14 @@
 import { Box, Button, Center, Flex, Stack, Text } from '@chakra-ui/react';
 import { useState } from 'react';
-import { BAKING_FEE, INGREDIENT_COST } from '../../constants';
+import {
+  BAKING_FEE,
+  BASE_LIMIT,
+  CHEESE_LIMIT,
+  INGREDIENT_COST,
+  MEAT_LIMIT,
+  SAUCE_LIMIT,
+  TOPPING_LIMIT,
+} from '../../constants';
 import {
   Ingredient,
   IngredientGroup,
@@ -16,6 +24,7 @@ import {
   addIngredient,
   DefaultPizza,
   getIsMobile,
+  getRandomInt,
   removeIngredient,
 } from '../../utils/general';
 import { colors } from '../../styles/theme';
@@ -305,6 +314,30 @@ export const BuyAndBake = () => {
     removeIngredient({ item, pizza, setPizza });
   };
 
+  const handleQuickStart = () => {
+    const bases = ingredientGroups[0].ingredients;
+    const sauces = ingredientGroups[1].ingredients;
+    const cheeses = ingredientGroups[2].ingredients;
+    const meats = ingredientGroups[3].ingredients;
+    const toppings = ingredientGroups[4].ingredients;
+    // add base
+    console.log(bases);
+    const rand = getRandomInt(bases.length);
+    console.log('rand', rand);
+    handleAddIngredient(bases[rand]);
+    // add sauce
+    handleAddIngredient(sauces[getRandomInt(sauces.length)]);
+    // add cheese
+    handleAddIngredient(cheeses[getRandomInt(cheeses.length)]);
+    // add meat
+    const numMeatsToPick = getRandomInt(MEAT_LIMIT);
+    while (pizza.meats.length <= numMeatsToPick) {
+      handleAddIngredient(meats[getRandomInt(meats.length)]);
+    }
+    // add toppings
+    handleAddIngredient(toppings[getRandomInt(toppings.length)]);
+  };
+
   const renderTab = (tab: BuyAndBakeTabs) => {
     switch (tab) {
       case BuyAndBakeTabs.ingredients:
@@ -315,6 +348,7 @@ export const BuyAndBake = () => {
             removeIngredient={handleRemoveIngredient}
             pizza={pizza}
             tab={PizzaCave.buyAndBake}
+            handleQuickStart={handleQuickStart}
           />
         );
       case BuyAndBakeTabs.selections:
@@ -385,6 +419,7 @@ export const BuyAndBake = () => {
               removeIngredient={handleRemoveIngredient}
               pizza={pizza}
               tab={PizzaCave.buyAndBake}
+              handleQuickStart={handleQuickStart}
             />
           </div>
           <Stack
