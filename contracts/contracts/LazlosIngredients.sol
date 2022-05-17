@@ -17,6 +17,12 @@ contract LazlosIngredients is ERC1155U, Ownable {
         _;
     }
 
+    modifier onlyPizzaShopOrOwner() {
+        require(msg.sender == pizzaShopContractAddress || msg.sender == owner(),
+        'Only the pizza shop and owner can call this method.');
+        _;
+    }
+
     Counters.Counter public numIngredients;
     mapping(uint256 => Ingredient) public ingredients;
     address public pizzaShopContractAddress;
@@ -40,13 +46,13 @@ contract LazlosIngredients is ERC1155U, Ownable {
         ingredients[tokenId] = ingredient;
     }
 
-    function increaseIngredientSupply(uint256 tokenId, uint256 amount) public onlyPizzaShop {
+    function increaseIngredientSupply(uint256 tokenId, uint256 amount) public onlyPizzaShopOrOwner {
         unchecked {
             ingredients[tokenId].supply += uint256(amount);
         }
     }
 
-    function decreaseIngredientSupply(uint256 tokenId, uint256 amount) public onlyPizzaShop {
+    function decreaseIngredientSupply(uint256 tokenId, uint256 amount) public onlyPizzaShopOrOwner {
         unchecked {
             ingredients[tokenId].supply -= uint256(amount);
         }

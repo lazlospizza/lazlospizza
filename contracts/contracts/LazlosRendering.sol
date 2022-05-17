@@ -11,6 +11,7 @@ contract LazlosRendering is Ownable {
 
     address public ingredientsContractAddress;
     string public ingredientsIPFSHash;
+    string public baseURI;
 
     function setIngredientsContractAddress(address addr) public onlyOwner {
         ingredientsContractAddress = addr;
@@ -18,6 +19,10 @@ contract LazlosRendering is Ownable {
 
     function setIngredientsIPFSHash(string memory hash) public onlyOwner {
         ingredientsIPFSHash = hash;
+    }
+
+    function setBaseURI(string memory uri) public onlyOwner {
+        baseURI = uri;
     }
 
     function ingredientTokenMetadata(uint256 id) public view returns (string memory) {
@@ -35,8 +40,8 @@ contract LazlosRendering is Ownable {
         );
     }
 
-    function pizzaTokenMetadata(uint256 id) external pure returns (string memory) {
-        return "";
+    function pizzaTokenMetadata(uint256 id) external view returns (string memory) {
+        return string(abi.encodePacked(baseURI, "/tokens/", id.toString(), "/pizza_image.png"));
     }
 
     function uintToByteString(uint256 a, uint256 fixedLen)
