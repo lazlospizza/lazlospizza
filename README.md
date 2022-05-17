@@ -38,4 +38,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 - [Lazlos Pizza Shop](https://rinkeby.etherscan.io/address/0xCCfBa432675C7df224Fb80BAbC554e7B1aD7aFdB#code)
 - [Lazlos Ingredients ERC1155](https://rinkeby.etherscan.io/address/0x5ad74dFa0FBB86CEa43af0CfAB3153125171d38a#code)
 - [Lazlos Pizza ERC721](https://rinkeby.etherscan.io/address/0x432fD0D700034cF86720d68c3daA62db454dd87B#code)
-- [Lazlos Rendering](https://rinkeby.etherscan.io/address/0xC5fe2B9a35577930fe4317Ee97aAe9faCc646C91#code)
+- [Lazlos Rendering](https://rinkeby.etherscan.io/address/0xA5Df5c49F990A97689A9095bd3F9f55C091078bb#code)
