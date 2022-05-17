@@ -2,12 +2,16 @@ from PIL import Image
 import requests
 from io import BytesIO
 
+def table_cloth_img():
+    response = requests.get(f'https://lazlos-pizza.s3.amazonaws.com/pizza_layers/table_cloth.png')
+    return Image.open(BytesIO(response.content)).convert("RGBA")
+
 def get_ingredient_layer_img(token_id):
     response = requests.get(f'https://lazlos-pizza.s3.amazonaws.com/pizza_layers/{token_id}.png')
     return Image.open(BytesIO(response.content)).convert("RGBA")
 
 def combine_img_layers(layer_1, layer_2):
-    layer_1.paste(layer_2, (0, 0), layer_2)
+    layer_1.paste(layer_2, (100, 100), layer_2)
 
 def pizza_image_bytes(pizza):
     base = pizza[0]
@@ -16,9 +20,11 @@ def pizza_image_bytes(pizza):
     meats = pizza[3]
     toppings = pizza[4]
 
-    img = get_ingredient_layer_img(base)
-    sauce_img = get_ingredient_layer_img(sauce)
+    img = table_cloth_img()
+    base_img = get_ingredient_layer_img(base)
+    combine_img_layers(img, base_img)
 
+    sauce_img = get_ingredient_layer_img(sauce)
     combine_img_layers(img, sauce_img)
 
     for cheese in cheeses:
