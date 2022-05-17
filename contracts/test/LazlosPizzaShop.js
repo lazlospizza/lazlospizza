@@ -22,6 +22,7 @@ async function setup() {
     await ingredients.setRenderingContractAddress(rendering.address);
     await rendering.setIngredientsIPFSHash('FAKE_IPFS_HASH');
     await rendering.setIngredientsContractAddress(ingredients.address);
+    await rendering.setPizzasContractAddress(pizzas.address);
 
     // 1
     await ingredients.addIngredient({
@@ -178,11 +179,19 @@ describe("LazlosPizzaShop", function () {
             value: hre.ethers.BigNumber.from('1700000000000000000')
         });
 
+        await shop.bakePizza([1, 2, 4, 5, 6, 7, 8, 9], {
+            value: hre.ethers.BigNumber.from('10000000000000000')
+        });
+
         const metadata1 = await ingredients.uri(1);
         const metadata10 = await ingredients.uri(10);
         const metadata21 = await ingredients.uri(21);
         expect(metadata1).to.equal('data:application/json;base64,eyJuYW1lIjoiRG91Z2giLCJkZXNjcmlwdGlvbiI6ImJsYWggYmxhaCBibGFoIHNvbWV0aGluZyBhYm91dCBwaXp6YSIsImltYWdlIjoiaHR0cHM6Ly9nYXRld2F5LnBpbmF0YS5jbG91ZC9pcGZzL0ZBS0VfSVBGU19IQVNILzEucG5nIn0=');
         expect(metadata10).to.equal('data:application/json;base64,eyJuYW1lIjoiIiwiZGVzY3JpcHRpb24iOiJibGFoIGJsYWggYmxhaCBzb21ldGhpbmcgYWJvdXQgcGl6emEiLCJpbWFnZSI6Imh0dHBzOi8vZ2F0ZXdheS5waW5hdGEuY2xvdWQvaXBmcy9GQUtFX0lQRlNfSEFTSC8xMC5wbmcifQ==');
         expect(metadata21).to.equal('data:application/json;base64,eyJuYW1lIjoiIiwiZGVzY3JpcHRpb24iOiJibGFoIGJsYWggYmxhaCBzb21ldGhpbmcgYWJvdXQgcGl6emEiLCJpbWFnZSI6Imh0dHBzOi8vZ2F0ZXdheS5waW5hdGEuY2xvdWQvaXBmcy9GQUtFX0lQRlNfSEFTSC8yMS5wbmcifQ==');
+    
+    
+        const metadataPizza1 = await pizzas.tokenURI(1);
+        expect(metadataPizza1).to.equal('data:application/json;base64,eyJkZXNjcmlwdGlvbiI6ImJsYWggYmxhaCBibGFoIHNvbWV0aGluZyBhYm91dCBwaXp6YSIsImltYWdlIjoiL3Rva2Vucy8xL3BpenphX2ltYWdlLnBuZyIsImF0dHJpYnV0ZXMiOlt7InRyYWl0X3R5cGUiOiJCYXNlIiwidmFsdWUiOiJEb3VnaCJ9LHsidHJhaXRfdHlwZSI6IlNhdWNlIiwidmFsdWUiOiJNYXJpbmFyYSJ9LHsidHJhaXRfdHlwZSI6IkNoZWVzZSIsInZhbHVlIjoiTW96emFyZWxsYSJ9LHsidHJhaXRfdHlwZSI6IkNoZWVzZSIsInZhbHVlIjoiUmljb3R0YSJ9LHsidHJhaXRfdHlwZSI6Ik1lYXQiLCJ2YWx1ZSI6IlBlcHBlcm9uaSJ9LHsidHJhaXRfdHlwZSI6Ik1lYXQiLCJ2YWx1ZSI6IlNhdXNhZ2UifSx7InRyYWl0X3R5cGUiOiJUb3BwaW5nIiwidmFsdWUiOiJCYXNpbCJ9LHsidHJhaXRfdHlwZSI6IlRvcHBpbmciLCJ2YWx1ZSI6IlBpbmVhcHBsZSJ9XX0=');
     });
 });

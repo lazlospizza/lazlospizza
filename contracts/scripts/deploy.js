@@ -65,13 +65,14 @@ async function main() {
 
   await shop.setPizzaContractAddress(pizzas.address);
   await shop.setIngredientsContractAddress(ingredients.address);
+  await shop.setSystemAddress('0x5c1de450faecb6676de88330dc3974b9851b2f2f');
   await pizzas.setPizzaShopContractAddress(shop.address);
   await pizzas.setRenderingContractAddress(rendering.address);
   await ingredients.setPizzaShopContractAddress(shop.address);
   await ingredients.setRenderingContractAddress(rendering.address);
   await rendering.setIngredientsIPFSHash('QmPXfUXjCrvBm5aUaz6pNWp61CKHK4i2i4X3Q9SBguh1mJ');
   await rendering.setIngredientsContractAddress(ingredients.address);
-  await shop.setSystemAddress('0x5c1de450faecb6676de88330dc3974b9851b2f2f');
+  await rendering.setPizzasContractAddress(pizzas.address);
   await rendering.setBaseURI('http://lazlospizzaapi-dev.eba-t2m7znq3.us-east-1.elasticbeanstalk.com');
 
   console.log("LazlosPizzaShop deployed to:", shop.address);
