@@ -14,25 +14,26 @@ async function addIngredients(owner, ingredients) {
     { name: 'BBQ Sauce',	ingredientType: 1},       // 3
     { name: 'Chilli Sauce',	ingredientType: 1},     // 4
     { name: 'Tomato Sauce',	ingredientType: 1},     // 5
-    { name: 'Cheddar Cheese',	ingredientType: 2},   // 6
-    { name: 'Goat Cheese',	ingredientType: 2},     // 7
-    { name: 'Mozzarella',	ingredientType: 2},       // 8
-    { name: 'Anchovies',	ingredientType: 3},       // 9
-    { name: 'Beef',	ingredientType: 3},             // 10
-    { name: 'Chicken',	ingredientType: 3},         // 11
-    { name: 'Chorizo',	ingredientType: 3},         // 12
-    { name: 'Ham',	ingredientType: 3},             // 13
-    { name: 'Pepperonis',	ingredientType: 3},       // 14
-    { name: 'Salami',	ingredientType: 3},           // 15
-    { name: 'Tuna',	ingredientType: 3},             // 16
-    { name: 'Corn',	ingredientType: 4},             // 17
-    { name: 'Chillies',	ingredientType: 4},         // 18
-    { name: 'Green Peppers',	ingredientType: 4},   // 19
-    { name: 'Jalapenos',	ingredientType: 4},       // 20
-    { name: 'Mushroom',	ingredientType: 4},         // 21
-    { name: 'Onion',	ingredientType: 4},           // 22
-    { name: 'Pineapple',	ingredientType: 4},       // 23
-    { name: 'Red Pepper',	ingredientType: 4},       // 24
+    { name: 'Garlic Sauce',	ingredientType: 1},     // 6
+    { name: 'Cheddar Cheese',	ingredientType: 2},   // 7
+    { name: 'Goat Cheese',	ingredientType: 2},     // 8
+    { name: 'Mozzarella',	ingredientType: 2},       // 9
+    { name: 'Anchovies',	ingredientType: 3},       // 10
+    { name: 'Beef',	ingredientType: 3},             // 11
+    { name: 'Chicken',	ingredientType: 3},         // 12
+    { name: 'Chorizo',	ingredientType: 3},         // 13
+    { name: 'Ham',	ingredientType: 3},             // 14
+    { name: 'Pepperonis',	ingredientType: 3},       // 15
+    { name: 'Salami',	ingredientType: 3},           // 16
+    { name: 'Tuna',	ingredientType: 3},             // 17
+    { name: 'Corn',	ingredientType: 4},             // 18
+    { name: 'Chillies',	ingredientType: 4},         // 19
+    { name: 'Green Peppers',	ingredientType: 4},   // 20
+    { name: 'Jalapenos',	ingredientType: 4},       // 21
+    { name: 'Mushroom',	ingredientType: 4},         // 22
+    { name: 'Onion',	ingredientType: 4},           // 23
+    { name: 'Pineapple',	ingredientType: 4},       // 24
+    { name: 'Red Pepper',	ingredientType: 4},       // 25
   ]
 
   for (var i = 0; i < all_ingredients.length; i++) {
@@ -43,7 +44,7 @@ async function addIngredients(owner, ingredients) {
       ingredientType:	ingredient.ingredientType,
       artist: owner.address,
       price: hre.ethers.BigNumber.from('10000000000000000'),
-      supply: 3,
+      supply: 100,
     });
     await tx.wait();
 
@@ -64,12 +65,15 @@ async function main() {
 
   await shop.setPizzaContractAddress(pizzas.address);
   await shop.setIngredientsContractAddress(ingredients.address);
+  await shop.setSystemAddress('0x5c1de450faecb6676de88330dc3974b9851b2f2f');
   await pizzas.setPizzaShopContractAddress(shop.address);
   await pizzas.setRenderingContractAddress(rendering.address);
   await ingredients.setPizzaShopContractAddress(shop.address);
   await ingredients.setRenderingContractAddress(rendering.address);
-  await rendering.setIngredientsIPFSHash('QmS5P5ooGV2NYWThZ7YwPaxb8b4q9ntG248uMHp8Firzsy');
+  await rendering.setIngredientsIPFSHash('QmPXfUXjCrvBm5aUaz6pNWp61CKHK4i2i4X3Q9SBguh1mJ');
   await rendering.setIngredientsContractAddress(ingredients.address);
+  await rendering.setPizzasContractAddress(pizzas.address);
+  await rendering.setBaseURI('http://lazlospizzaapi-dev.eba-t2m7znq3.us-east-1.elasticbeanstalk.com');
 
   console.log("LazlosPizzaShop deployed to:", shop.address);
   console.log("LazlosIngredients deployed to:", ingredients.address);
@@ -78,7 +82,7 @@ async function main() {
 
   const [owner] = await ethers.getSigners();
 
-  await addIngredients(owner, ingredients);
+  await addIngredients(owner, ingredients);  
 }
 
 main()

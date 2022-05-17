@@ -54,4 +54,8 @@ contract LazlosPizzas is ERC721U, Ownable {
     function pizza(uint256 tokenId) external view returns (Pizza memory) {
         return pizzas[tokenId];
     }
+
+    function burn(uint256 tokenId) external onlyPizzaShop {
+        _burn(tokenId);
+    }
 }

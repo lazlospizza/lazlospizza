@@ -10,14 +10,24 @@ contract LazlosRendering is Ownable {
     using Strings for uint256;
 
     address public ingredientsContractAddress;
+    address public pizzasContractAddress;
     string public ingredientsIPFSHash;
+    string public baseURI;
 
     function setIngredientsContractAddress(address addr) public onlyOwner {
         ingredientsContractAddress = addr;
     }
 
+    function setPizzasContractAddress(address addr) public onlyOwner {
+        pizzasContractAddress = addr;
+    }
+
     function setIngredientsIPFSHash(string memory hash) public onlyOwner {
         ingredientsIPFSHash = hash;
+    }
+
+    function setBaseURI(string memory uri) public onlyOwner {
+        baseURI = uri;
     }
 
     function ingredientTokenMetadata(uint256 id) public view returns (string memory) {
@@ -35,8 +45,86 @@ contract LazlosRendering is Ownable {
         );
     }
 
-    function pizzaTokenMetadata(uint256 id) external pure returns (string memory) {
-        return "";
+    function pizzaTokenMetadata(uint256 id) external view returns (string memory) {
+        Pizza memory pizza = ILazlosPizzas(pizzasContractAddress).pizza(id);
+
+        string memory propertiesString;
+
+        propertiesString = string(abi.encodePacked(
+            '{"trait_type":"', getIngredientTypeName(pizza.base), '","value":"', getIngredientName(pizza.base), '"},'
+            '{"trait_type":"', getIngredientTypeName(pizza.sauce), '","value":"', getIngredientName(pizza.sauce), '"}'
+        ));
+
+        for (uint256 i = 0; i < pizza.cheeses.length; i++) {
+            uint16 cheese = pizza.cheeses[i];
+            if (cheese == 0) {
+                break;
+            }
+
+            propertiesString = string(abi.encodePacked(
+                propertiesString,
+                 ',{"trait_type":"', getIngredientTypeName(cheese), '","value":"', getIngredientName(cheese), '"}'
+            ));
+        }
+
+        for (uint256 i = 0; i < pizza.meats.length; i++) {
+            uint16 meat = pizza.meats[i];
+            if (meat == 0) {
+                break;
+            }
+
+            propertiesString = string(abi.encodePacked(
+                propertiesString,
+                 ',{"trait_type":"', getIngredientTypeName(meat), '","value":"', getIngredientName(meat), '"}'
+            ));
+        }
+
+        for (uint256 i = 0; i < pizza.toppings.length; i++) {
+            uint16 topping = pizza.toppings[i];
+            if (topping == 0) {
+                break;
+            }
+
+            propertiesString = string(abi.encodePacked(
+                propertiesString,
+                 ',{"trait_type":"', getIngredientTypeName(topping), '","value":"', getIngredientName(topping), '"}'
+            ));
+        }
+
+        return string(
+            abi.encodePacked(
+                "data:application/json;base64,",
+                Base64.encode(abi.encodePacked(
+                    '{"description":"blah blah blah something about pizza","image":"',
+                    baseURI, '/tokens/', id.toString(), '/pizza_image.png","attributes":[',
+                    propertiesString, ']}'
+                ))
+            )
+        );
+    }
+
+    function getIngredientName(uint256 ingredientTokenId) private view returns (string memory) {
+        return ILazlosIngredients(ingredientsContractAddress).getIngredient(ingredientTokenId).name;
+    }
+
+    function getIngredientTypeName(uint256 ingredientTokenId) private view returns (string memory) {
+        Ingredient memory ingredient = ILazlosIngredients(ingredientsContractAddress).getIngredient(ingredientTokenId);
+        
+        if (ingredient.ingredientType == IngredientType.Base) {
+            return "Base";
+        
+        } else if (ingredient.ingredientType == IngredientType.Sauce) {
+            return "Sauce";
+        
+        } else if (ingredient.ingredientType == IngredientType.Cheese) {
+            return "Cheese";
+        
+        } else if (ingredient.ingredientType == IngredientType.Meat) {
+            return "Meat";
+        
+        } else {
+            return "Topping";
+        }
     }
 
     function uintToByteString(uint256 a, uint256 fixedLen)

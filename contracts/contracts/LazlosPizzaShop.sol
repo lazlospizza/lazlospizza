@@ -387,6 +387,7 @@ contract LazlosPizzaShop is Ownable {
         }
 
         ILazlosIngredients(ingredientsContractAddress).mintIngredients(msg.sender, tokenIds, amounts);
+        ILazlosPizzas(pizzaContractAddress).burn(pizzaTokenId);
     }
 
     function rebakePizza(uint256 pizzaTokenId, uint256[] memory ingredientTokenIdsToAdd, uint256[] memory ingredientTokenIdsToRemove) public payable {
@@ -505,7 +506,9 @@ contract LazlosPizzaShop is Ownable {
         _addIngredientsToPizza(pizzaTokenId, pizza, ingredientTokenIdsToAdd, true);
     }
 
-    function bakeRandomPizza(uint256[] memory tokenIds, bytes memory signature) public payable returns (uint256) {
+    function bakeRandomPizza(uint256[] memory tokenIds, uint256 timestamp, bytes memory signature) public payable returns (uint256) {
+        require(block.timestamp - timestamp < 300, 'timestamp expired');
+
         bytes memory message;
         for (uint256 i; i<tokenIds.length;) {
             message = abi.encodePacked(message, ',' , tokenIds[i]);
@@ -514,6 +517,8 @@ contract LazlosPizzaShop is Ownable {
                 i++;
             }
         }
+
+        message = abi.encodePacked(message, ':', msg.sender, ':', timestamp);
 
         bytes32 hash = keccak256(message);
         bytes32 signedHash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash));
