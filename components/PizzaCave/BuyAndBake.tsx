@@ -1,5 +1,5 @@
 import { Box, Button, Center, Flex, Stack, Text } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   BAKING_FEE,
   BASE_LIMIT,
@@ -301,6 +301,7 @@ export enum BuyAndBakeTabs {
 export const BuyAndBake = () => {
   const isMobile = getIsMobile();
   const [pizza, setPizza] = useState<Pizza>(DefaultPizza);
+  const [resetPizza, setResetPizza] = useState(false);
   const [selectedTab, setSelectedTab] = useState(BuyAndBakeTabs.ingredients);
   const [selectedHalfTab, setSelectedHalfTab] = useState(
     BuyAndBakeTabs.selections,
@@ -315,27 +316,41 @@ export const BuyAndBake = () => {
   };
 
   const handleQuickStart = () => {
+    setResetPizza(true);
+    setPizza(DefaultPizza);
+  };
+
+  // handle adding quick ingredients AFTER pizza state is reset
+  useEffect(() => {
+    if (pizza.allIngredients.length || !resetPizza) return;
+    setResetPizza(false);
+    addRandIngredients();
+  }, [resetPizza]);
+
+  const addRandIngredients = () => {
     const bases = ingredientGroups[0].ingredients;
     const sauces = ingredientGroups[1].ingredients;
     const cheeses = ingredientGroups[2].ingredients;
     const meats = ingredientGroups[3].ingredients;
     const toppings = ingredientGroups[4].ingredients;
     // add base
-    console.log(bases);
-    const rand = getRandomInt(bases.length);
-    console.log('rand', rand);
-    handleAddIngredient(bases[rand]);
+    handleAddIngredient(bases[getRandomInt(bases.length)]);
     // add sauce
     handleAddIngredient(sauces[getRandomInt(sauces.length)]);
     // add cheese
     handleAddIngredient(cheeses[getRandomInt(cheeses.length)]);
-    // add meat
+    // add meat (first pick rand number of meats to add)
     const numMeatsToPick = getRandomInt(MEAT_LIMIT);
-    while (pizza.meats.length <= numMeatsToPick) {
-      handleAddIngredient(meats[getRandomInt(meats.length)]);
+    for (let i = 0; i < numMeatsToPick; i++) {
+      const randMeat = meats[getRandomInt(meats.length)];
+      handleAddIngredient(randMeat);
     }
-    // add toppings
-    handleAddIngredient(toppings[getRandomInt(toppings.length)]);
+    // add toppings (first pick rand number of toppings to add)
+    const numToppingsToPick = getRandomInt(TOPPING_LIMIT);
+    for (let i = 0; i < numToppingsToPick; i++) {
+      const randTopping = toppings[getRandomInt(toppings.length)];
+      handleAddIngredient(randTopping);
+    }
   };
 
   const renderTab = (tab: BuyAndBakeTabs) => {
@@ -348,7 +363,10 @@ export const BuyAndBake = () => {
             removeIngredient={handleRemoveIngredient}
             pizza={pizza}
             tab={PizzaCave.buyAndBake}
-            handleQuickStart={handleQuickStart}
+            handleQuickStart={() => {
+              setPizza(DefaultPizza);
+              handleQuickStart();
+            }}
           />
         );
       case BuyAndBakeTabs.selections:
