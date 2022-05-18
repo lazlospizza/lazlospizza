@@ -6,7 +6,7 @@ from contract.lazlos_pizza import pizza
 from pizza.image import pizza_image_bytes
 from pizza.random import random_pizza_ingredient_ids
 from web3.auto import w3
-from eth_account.messages import encode_defunct
+from eth_account.messages import encode_defunct, _hash_eip191_message
 import time
 
 privatekey = None
@@ -39,18 +39,23 @@ async def get_random_pizza(request):
     timestamp = int(time.time())
 
     token_ids_str = ','.join(map(str, token_ids)) 
-    message_body = f'{token_ids_str}:{addr}:{timestamp}'
+    message_body = f',{token_ids_str}:{addr}:{timestamp}'
 
     message = encode_defunct(text=message_body)
-
     signed_message = w3.eth.account.sign_message(message, private_key=privatekey)
+    hex_signature = signed_message.signature.hex()
+    sig = w3.toBytes(hexstr=hex_signature)
+    v, r, s = w3.toInt(sig[-1]), w3.toHex(sig[:32]), w3.toHex(sig[32:64])
+
+    joined = b'\x19' + message.version + message.header + message.body
 
     return json_response({
         'token_ids': token_ids,
         'address': addr,
         'timestamp': timestamp,
-        'signature': signed_message.signature.hex(),
-        'signed_message': message_body
+        'v': v,
+        'r': r,
+        's': s
     }, status=200)
 
 @app.route('/healthcheck', methods=["GET"])

@@ -4,12 +4,14 @@ pragma solidity 0.8.9;
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import '@openzeppelin/contracts/access/Ownable.sol';
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 import './Types/Types.sol';
 
 contract LazlosPizzaShop is Ownable {
     using ECDSA for bytes32;
     using Counters for Counters.Counter;
+    using Strings for uint256;
 
     uint256 public bakePizzaPrice = 0.01 ether;
     uint256 public unbakePizzaPrice = 0.05 ether;
@@ -506,26 +508,48 @@ contract LazlosPizzaShop is Ownable {
         _addIngredientsToPizza(pizzaTokenId, pizza, ingredientTokenIdsToAdd, true);
     }
 
-    function bakeRandomPizza(uint256[] memory tokenIds, uint256 timestamp, bytes memory signature) public payable returns (uint256) {
+    function bakeRandomPizza(uint256[] memory tokenIds, uint256 timestamp, bytes32 r, bytes32 s, uint8 v) public payable returns (uint256) {
         require(block.timestamp - timestamp < 300, 'timestamp expired');
 
         bytes memory message;
         for (uint256 i; i<tokenIds.length;) {
-            message = abi.encodePacked(message, ',' , tokenIds[i]);
+            message = abi.encodePacked(message, ',' , tokenIds[i].toString());
 
             unchecked {
                 i++;
             }
         }
 
-        message = abi.encodePacked(message, ':', msg.sender, ':', timestamp);
+        message = abi.encodePacked(message, ':0x', toAsciiString(msg.sender), ':', timestamp.toString());
 
-        bytes32 hash = keccak256(message);
-        bytes32 signedHash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash));
-        bool validSignature = signedHash.recover(signature) == systemAddress;
-
+        address signerAddress = verifyString(string(message), r, s, v);
+        bool validSignature = signerAddress == systemAddress;
         require(validSignature, 'Invalid signature.');
 
         return buyAndBakePizza(tokenIds);
+    }
+
+    function toAsciiString(address x) internal pure returns (string memory) {
+        bytes memory s = new bytes(40);
+        for (uint i = 0; i < 20; i++) {
+            bytes1 b = bytes1(uint8(uint(uint160(x)) / (2**(8*(19 - i)))));
+            bytes1 hi = bytes1(uint8(b) / 16);
+            bytes1 lo = bytes1(uint8(b) - 16 * uint8(hi));
+            s[2*i] = char(hi);
+            s[2*i+1] = char(lo);            
+        }
+        return string(s);
+    }
+
+    function char(bytes1 b) internal pure returns (bytes1 c) {
+        if (uint8(b) < 10) return bytes1(uint8(b) + 0x30);
+        else return bytes1(uint8(b) + 0x57);
+    }
+
+    function verifyString(string memory message, bytes32 r, bytes32 s, uint8 v) public pure returns (address) {
+        bytes memory prefix = "\x19Ethereum Signed Message:\n";
+        bytes memory prefixedMessage = abi.encodePacked(prefix, bytes(message).length.toString(), message);
+        bytes32 hashedMessage = keccak256(prefixedMessage);
+        return ecrecover(hashedMessage, v, r, s);
     }
 }
