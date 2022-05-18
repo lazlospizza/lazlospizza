@@ -10,7 +10,7 @@ import { Pizza, Ingredient, PizzaCave } from '../../types';
 import {
   addIngredient,
   DefaultPizza,
-  getIsMobile,
+  useIsMobile,
   removeIngredient,
 } from '../../utils/general';
 import { NavButton } from '../shared/NavButton';
@@ -22,7 +22,7 @@ import { YourSelections } from './YourSelections';
 export const Bake = () => {
   const { wallet, isConnected } = useWallet();
   const { ingredientsContract } = useIngredientsContract();
-  const isMobile = getIsMobile();
+  const isMobile = useIsMobile();
   const [pizza, setPizza] = useState<Pizza>(DefaultPizza);
   const [selectedTab, setSelectedTab] = useState(BuyAndBakeTabs.ingredients);
   const [selectedHalfTab, setSelectedHalfTab] = useState(

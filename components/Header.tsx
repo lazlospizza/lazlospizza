@@ -4,14 +4,16 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useWallet } from '../hooks/useWallet';
-import { getIsMobile } from '../utils/general';
+import { headerHeight } from '../styles/theme';
+import { useIsMobile } from '../utils/general';
 import { ConnectWalletButton } from './ConnectWalletButton';
+import { HeaderMenu } from './shared/HeaderMenu';
 
 export const Header = () => {
   const router = useRouter();
   const ref = useRef(null);
   const { isConnected } = useWallet();
-  const isMobile = getIsMobile();
+  const isMobile = useIsMobile();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const onClickOutside = () => {
@@ -35,6 +37,7 @@ export const Header = () => {
       <Box
         position="absolute"
         right={0}
+        top={120}
         zIndex={1000}
         p="16px"
         w="80%"
@@ -42,54 +45,22 @@ export const Header = () => {
         mt={0}
         backgroundColor={'background.brown'}
       >
-        <Stack className="menu" spacing={10}>
-          <Link href="/">
-            <a className={router.pathname === '/' ? 'current' : ''}>Home</a>
-          </Link>
-          <Link href="/pizza-cave">
-            <a
-              className={
-                router.pathname.startsWith('/pizza-cave') ? 'current' : ''
-              }
-            >
-              Pizza Cave
-            </a>
-          </Link>
-          <Link href="/meet-artists">
-            <a
-              className={
-                router.pathname.startsWith('/meet-artists')
-                  ? ''
-                  : // ? 'mobile-nav-item'
-                    'mobile-nav-item'
-              }
-            >
-              Meet Artists
-            </a>
-          </Link>
-          <Link href="/rarity-rewards">
-            <a
-              className={
-                router.pathname.startsWith('/rarity-rewards') ? 'current' : ''
-              }
-            >
-              Rarity Rewards
-            </a>
-          </Link>
-          {isConnected && (
-            <Link href="/my-wallet">
-              <a
-                className={
-                  router.pathname.startsWith('/my-wallet') ? 'current' : ''
-                }
-              >
-                My Wallet
-              </a>
-            </Link>
-          )}
-          <ConnectWalletButton />{' '}
-        </Stack>
+        <HeaderMenu
+          direction="column"
+          pathname={router.pathname}
+          isWalletConnected={isConnected}
+        />
       </Box>
+    );
+  };
+
+  const DesktopMenu = () => {
+    return (
+      <HeaderMenu
+        direction="row"
+        pathname={router.pathname}
+        isWalletConnected={isConnected}
+      />
     );
   };
 
@@ -99,7 +70,9 @@ export const Header = () => {
         <Link href="/">
           <a>
             <img
-              style={{ height: isMobile ? '120px' : '' }}
+              style={{
+                height: isMobile ? headerHeight.mobile : headerHeight.desktop,
+              }}
               src="/assets/logo.png"
               className="logo"
               alt="Logo"
@@ -116,67 +89,11 @@ export const Header = () => {
               {"Lazlo's Pizza"}
             </Heading>
             {/* Menu Desktop */}
-            {!isMobile && (
-              <Stack direction="row" className="menu">
-                <Link href="/">
-                  <a className={router.pathname === '/' ? 'current' : ''}>
-                    Home
-                  </a>
-                </Link>
-                <Link href="/pizza-cave">
-                  <a
-                    className={
-                      router.pathname.startsWith('/pizza-cave') ? 'current' : ''
-                    }
-                  >
-                    Pizza Cave
-                  </a>
-                </Link>
-                <Link href="/meet-artists">
-                  <a
-                    className={
-                      router.pathname.startsWith('/meet-artists')
-                        ? 'current'
-                        : ''
-                    }
-                  >
-                    Meet Artists
-                  </a>
-                </Link>
-                <Link href="/rarity-rewards">
-                  <a
-                    className={
-                      router.pathname.startsWith('/rarity-rewards')
-                        ? 'current'
-                        : ''
-                    }
-                  >
-                    Rarity Rewards
-                  </a>
-                </Link>
-                {isConnected && (
-                  <Link href="/my-wallet">
-                    <a
-                      className={
-                        router.pathname.startsWith('/my-wallet')
-                          ? 'current'
-                          : ''
-                      }
-                    >
-                      My Wallet
-                    </a>
-                  </Link>
-                )}
-              </Stack>
-            )}
+            {!isMobile && <DesktopMenu />}
           </Stack>
           {isMobile ? (
             <HamburgerIcon
               ref={ref}
-              style={{
-                transition: 'all 0.3s',
-                transform: showMobileMenu ? 'rotate(90deg)' : '',
-              }}
               onClick={() => {
                 setShowMobileMenu(prev => !prev);
               }}
@@ -189,9 +106,13 @@ export const Header = () => {
             <ConnectWalletButton />
           )}
         </Box>
+        {isMobile && showMobileMenu && <MobileMenu />}
       </Box>
-      {/* {true && <MobileMenu />} */}
-      {showMobileMenu && <MobileMenu />}
+      <div
+        style={{
+          height: isMobile ? headerHeight.mobile : headerHeight.desktop,
+        }}
+      />
     </Stack>
   );
 };

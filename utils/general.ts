@@ -1,15 +1,13 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { MEAT_LIMIT, TOPPING_LIMIT } from '../constants';
-import { Ingredient, IngredientType, Pizza } from '../types';
+import { Ingredient, IngredientType, PageRoutes, Pizza } from '../types';
 
-export const getIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  const handleResize = () => {
-    setIsMobile(window.innerWidth < 1200);
-  };
-
+export const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(true);
   useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1200);
+    };
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);

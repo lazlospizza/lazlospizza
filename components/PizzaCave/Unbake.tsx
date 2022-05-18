@@ -10,7 +10,7 @@ import { Pizza, Ingredient, PizzaCave } from '../../types';
 import {
   addIngredient,
   DefaultPizza,
-  getIsMobile,
+  useIsMobile,
   removeIngredient,
 } from '../../utils/general';
 import { NavButton } from '../shared/NavButton';
@@ -27,7 +27,7 @@ export enum UnbakeTabs {
 }
 
 export const Unbake = () => {
-  const isMobile = getIsMobile();
+  const isMobile = useIsMobile();
   const { wallet, isConnected } = useWallet();
   const { pizzaContract } = usePizzaContract();
   const [pizza, setPizza] = useState<Pizza>(null);
