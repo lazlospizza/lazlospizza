@@ -17,6 +17,7 @@ export const colors = {
   background: {
     light: '#F5F5F5',
     dark: '#EEEDED',
+    brown: '#3D3431',
   },
 };
 
@@ -35,7 +36,7 @@ export const styles = {
     },
     '#__next::before': {
       content: '""',
-      minHeight: '159px',
+      minHeight: '120px',
       maxHeight: '159px',
       width: '100%',
     },
@@ -56,11 +57,10 @@ export const styles = {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      flexWrap: 'wrap',
       padding: 4,
     },
     '.header .logo': {
-      height: '159px',
+      maxHeight: '159px',
       width: 'auto',
     },
     '.header .menu a': {
@@ -96,6 +96,11 @@ export const styles = {
         color: 'cheese.300',
         textDecoration: 'underline',
       },
+    },
+    '.mobile-nav-item': {
+      color: 'white',
+      fontWeight: 400,
+      fontSize: '24px',
     },
     '.footer': {
       display: 'flex',

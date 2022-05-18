@@ -5,11 +5,12 @@ import { Ingredient, IngredientType, Pizza } from '../types';
 export const getIsMobile = () => {
   const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 1200);
-    };
+  const handleResize = () => {
+    setIsMobile(window.innerWidth < 1200);
+  };
 
+  useEffect(() => {
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
