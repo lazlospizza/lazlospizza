@@ -1,6 +1,6 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { MEAT_LIMIT, TOPPING_LIMIT } from '../constants';
-import { Ingredient, IngredientType, PageRoutes, Pizza } from '../types';
+import { Ingredient, IngredientType, Pizza } from '../types';
 
 export const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(true);

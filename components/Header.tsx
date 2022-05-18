@@ -1,5 +1,5 @@
 import { HamburgerIcon } from '@chakra-ui/icons';
-import { Box, Button, Heading, Stack } from '@chakra-ui/react';
+import { Box, Heading, Stack } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
@@ -16,10 +16,7 @@ export const Header = () => {
   const isMobile = useIsMobile();
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
-  const onClickOutside = () => {
-    setShowMobileMenu(false);
-  };
-
+  // handle closing mobile drop menu
   useEffect(() => {
     const handleClickOutside = event => {
       if (ref.current && !ref.current.contains(event.target)) {
