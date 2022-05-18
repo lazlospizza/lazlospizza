@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Center, Flex, Stack, Text, useToast } from '@chakra-ui/react';
 import { flatten } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';

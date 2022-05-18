@@ -7,8 +7,6 @@ export const getIsMobile = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      //   console.log('window resized:', window.innerWidth);
-      //temp
       setIsMobile(window.innerWidth < 1200);
     };
 

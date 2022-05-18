@@ -1,12 +1,10 @@
-import { Box, Button, Center, Flex, Stack, Text } from '@chakra-ui/react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Box, Center, Flex, Stack, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import {
   BAKING_FEE,
-  BASE_LIMIT,
-  CHEESE_LIMIT,
   INGREDIENT_COST,
   MEAT_LIMIT,
-  SAUCE_LIMIT,
   TOPPING_LIMIT,
 } from '../../constants';
 import {
