@@ -14,6 +14,10 @@ export const colors = {
     medium: '#999999',
     dark: '#3D3431',
   },
+  background: {
+    light: '#F5F5F5',
+    dark: '#EEEDED',
+  },
 };
 
 export const styles = {
