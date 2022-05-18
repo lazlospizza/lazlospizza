@@ -1,9 +1,26 @@
+export const enum Pages {
+  home = 'Home',
+  pizzaCave = 'Pizza Cave',
+  meetArtists = 'Meet Artists',
+  rarityRewards = 'Rarity Rewards',
+  myWallet = 'My Wallet',
+}
+
+export const enum PageRoutes {
+  home = '/',
+  pizzaCave = '/pizza-cave',
+  meetArtists = '/meet-artists',
+  rarityRewards = '/rarity-rewards',
+  myWallet = '/my-wallet',
+}
+
 export const enum PizzaCave {
   buyAndBake = 'Buy & Bake',
   bake = 'Bake',
   unbake = 'Unbake',
   rebake = 'Rebake',
 }
+
 export const enum IngredientType {
   base = 'Base',
   sauce = 'Sauce',

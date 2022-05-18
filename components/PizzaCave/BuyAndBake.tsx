@@ -21,7 +21,7 @@ import { CheckRarity } from './CheckRarity';
 import {
   addIngredient,
   DefaultPizza,
-  getIsMobile,
+  useIsMobile,
   getRandomInt,
   removeIngredient,
 } from '../../utils/general';
@@ -297,7 +297,7 @@ export enum BuyAndBakeTabs {
 }
 
 export const BuyAndBake = () => {
-  const isMobile = getIsMobile();
+  const isMobile = useIsMobile();
   const [pizza, setPizza] = useState<Pizza>(DefaultPizza);
   const [resetPizza, setResetPizza] = useState(false);
   const [selectedTab, setSelectedTab] = useState(BuyAndBakeTabs.ingredients);

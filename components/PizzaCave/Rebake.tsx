@@ -15,7 +15,7 @@ import {
   addBurnIngredient,
   addIngredient,
   DefaultPizza,
-  getIsMobile,
+  useIsMobile,
   removeAdditionalIngredient,
   removeBurnIngredient,
   removeIngredient,
@@ -34,7 +34,7 @@ export enum RebakeTabs {
 }
 
 export const Rebake = () => {
-  const isMobile = getIsMobile();
+  const isMobile = useIsMobile();
   const { wallet, isConnected } = useWallet();
   const { pizzaContract } = usePizzaContract();
   const { ingredientsContract } = useIngredientsContract();
