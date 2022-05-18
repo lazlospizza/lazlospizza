@@ -18,7 +18,9 @@ interface Props {
   removeIngredient?: (Ingredient: Ingredient) => void;
   pizza: Pizza;
   tab: PizzaCave;
+  handleQuickStart?: () => void;
 }
+
 export const SelectYourIngredients = ({
   ingredientGroups,
   ownedIngredients,
@@ -26,6 +28,7 @@ export const SelectYourIngredients = ({
   removeIngredient,
   pizza,
   tab,
+  handleQuickStart,
 }: Props) => {
   const renderPizza = () => {
     return (
@@ -100,7 +103,11 @@ export const SelectYourIngredients = ({
             <Text color="gray.dark" fontWeight={700} fontSize={'xl'}>
               Select your Ingredients
             </Text>
-            <Button className="tomato-btn">Quick Start</Button>
+            {!!handleQuickStart && (
+              <Button onClick={handleQuickStart} className="tomato-btn">
+                Quick Start
+              </Button>
+            )}
           </Flex>
         )}
         {ingredientGroups &&

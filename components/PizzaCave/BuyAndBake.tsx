@@ -1,6 +1,12 @@
-import { Box, Button, Center, Flex, Stack, Text } from '@chakra-ui/react';
-import { useState } from 'react';
-import { BAKING_FEE, INGREDIENT_COST } from '../../constants';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Box, Center, Flex, Stack, Text } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import {
+  BAKING_FEE,
+  INGREDIENT_COST,
+  MEAT_LIMIT,
+  TOPPING_LIMIT,
+} from '../../constants';
 import {
   Ingredient,
   IngredientGroup,
@@ -16,6 +22,7 @@ import {
   addIngredient,
   DefaultPizza,
   getIsMobile,
+  getRandomInt,
   removeIngredient,
 } from '../../utils/general';
 import { colors } from '../../styles/theme';
@@ -292,6 +299,7 @@ export enum BuyAndBakeTabs {
 export const BuyAndBake = () => {
   const isMobile = getIsMobile();
   const [pizza, setPizza] = useState<Pizza>(DefaultPizza);
+  const [resetPizza, setResetPizza] = useState(false);
   const [selectedTab, setSelectedTab] = useState(BuyAndBakeTabs.ingredients);
   const [selectedHalfTab, setSelectedHalfTab] = useState(
     BuyAndBakeTabs.selections,
@@ -305,6 +313,44 @@ export const BuyAndBake = () => {
     removeIngredient({ item, pizza, setPizza });
   };
 
+  const handleQuickStart = () => {
+    setResetPizza(true);
+    setPizza(DefaultPizza);
+  };
+
+  // handle adding quick ingredients AFTER pizza state is reset
+  useEffect(() => {
+    if (pizza.allIngredients.length || !resetPizza) return;
+    setResetPizza(false);
+    addRandIngredients();
+  }, [resetPizza]);
+
+  const addRandIngredients = () => {
+    const bases = ingredientGroups[0].ingredients;
+    const sauces = ingredientGroups[1].ingredients;
+    const cheeses = ingredientGroups[2].ingredients;
+    const meats = ingredientGroups[3].ingredients;
+    const toppings = ingredientGroups[4].ingredients;
+    // add base
+    handleAddIngredient(bases[getRandomInt(bases.length)]);
+    // add sauce
+    handleAddIngredient(sauces[getRandomInt(sauces.length)]);
+    // add cheese
+    handleAddIngredient(cheeses[getRandomInt(cheeses.length)]);
+    // add meat (first pick rand number of meats to add)
+    const numMeatsToPick = getRandomInt(MEAT_LIMIT);
+    for (let i = 0; i < numMeatsToPick; i++) {
+      const randMeat = meats[getRandomInt(meats.length)];
+      handleAddIngredient(randMeat);
+    }
+    // add toppings (first pick rand number of toppings to add)
+    const numToppingsToPick = getRandomInt(TOPPING_LIMIT);
+    for (let i = 0; i < numToppingsToPick; i++) {
+      const randTopping = toppings[getRandomInt(toppings.length)];
+      handleAddIngredient(randTopping);
+    }
+  };
+
   const renderTab = (tab: BuyAndBakeTabs) => {
     switch (tab) {
       case BuyAndBakeTabs.ingredients:
@@ -315,6 +361,10 @@ export const BuyAndBake = () => {
             removeIngredient={handleRemoveIngredient}
             pizza={pizza}
             tab={PizzaCave.buyAndBake}
+            handleQuickStart={() => {
+              setPizza(DefaultPizza);
+              handleQuickStart();
+            }}
           />
         );
       case BuyAndBakeTabs.selections:
@@ -385,6 +435,7 @@ export const BuyAndBake = () => {
               removeIngredient={handleRemoveIngredient}
               pizza={pizza}
               tab={PizzaCave.buyAndBake}
+              handleQuickStart={handleQuickStart}
             />
           </div>
           <Stack
