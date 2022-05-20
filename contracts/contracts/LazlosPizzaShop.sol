@@ -526,18 +526,13 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
         require(randomBakePrice == msg.value, 'Invalid price.');
         require(block.timestamp - timestamp < 300, 'timestamp expired');
 
-        bytes memory message;
-        for (uint256 i; i<tokenIds.length;) {
-            message = abi.encodePacked(message, ',' , tokenIds[i].toString());
+        bytes32 messageHash = keccak256(abi.encodePacked(
+            msg.sender,
+            timestamp,
+            tokenIds
+        ));
 
-            unchecked {
-                i++;
-            }
-        }
-
-        message = abi.encodePacked(message, ':0x', toAsciiString(msg.sender), ':', timestamp.toString());
-
-        address signerAddress = verifyString(string(message), r, s, v);
+        address signerAddress = verifyString(messageHash, r, s, v);
         bool validSignature = signerAddress == systemAddress;
         require(validSignature, 'Invalid signature.');
 
@@ -577,9 +572,9 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
         else return bytes1(uint8(b) + 0x57);
     }
 
-    function verifyString(string memory message, bytes32 r, bytes32 s, uint8 v) public pure returns (address) {
-        bytes memory prefix = "\x19Ethereum Signed Message:\n";
-        bytes memory prefixedMessage = abi.encodePacked(prefix, bytes(message).length.toString(), message);
+    function verifyString(bytes32 messageHash, bytes32 r, bytes32 s, uint8 v) public pure returns (address) {
+        bytes memory prefix = "\x19Ethereum Signed Message:\n32";
+        bytes memory prefixedMessage = abi.encodePacked(prefix, messageHash);
         bytes32 hashedMessage = keccak256(prefixedMessage);
         return ecrecover(hashedMessage, v, r, s);
     }
@@ -620,8 +615,12 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
     }
 
     function redeemPayout(uint256 payoutBlock ,uint256 amount, bytes32 r, bytes32 s, uint8 v) public nonReentrant {
-        bytes memory message = abi.encodePacked(payoutBlock.toString(), ':0x', toAsciiString(msg.sender), ':', amount.toString());
-        address signerAddress = verifyString(string(message), r, s, v);
+        bytes32 messageHash = keccak256(abi.encodePacked(
+            payoutBlock,
+            msg.sender,
+            amount
+        ));
+        address signerAddress = verifyString(messageHash, r, s, v);
         bool validSignature = signerAddress == systemAddress;
         require(validSignature, 'Invalid signature.');
 

@@ -67,7 +67,7 @@ async function main() {
 
     await shop.setPizzaContractAddress(pizzas.address);
     await shop.setIngredientsContractAddress(ingredients.address);
-    await shop.setSystemAddress('0x2F9EFbE3BfdFd0dC274311a4B2A29c421b0F4ae5');
+    await shop.setSystemAddress('0x5c1de450faecb6676de88330dc3974b9851b2f2f');
     await pizzas.setPizzaShopContractAddress(shop.address);
     await pizzas.setRenderingContractAddress(rendering.address);
     await ingredients.setPizzaShopContractAddress(shop.address);
@@ -87,11 +87,11 @@ async function main() {
     await addIngredients(owner, ingredients);
     
     await shop.bakeRandomPizza(
-        [2,3,6,8,14,11],
-        1652910800,
-        '0x28df45477c8abeee7f0ec588a2992bdfd74986482d570fda45d7cb377cb5aeba',
-        '0x6c0108b06477031902e38be93b0f07995ffd942056791c29aa0cc1dad219c7b0',
-        28
+        [2,3,7,14,13,22,20],
+        1653013716,
+        '0x77c739749c90e4c8341223ad1493daa8458486483b9b21eef95eb134832771d1',
+        '0x3fded7ac7f82419095924ea94b97b7f599df7107bcc0320729533000ef00988f',
+        27
     );
 }
 

@@ -13,6 +13,9 @@ privatekey = None
 with open("privatekey.txt") as f:
     privatekey = f.read()
 
+def to_32byte_hex(val):
+   return w3.toHex(w3.toBytes(val).rjust(32, b'\0'))
+
 app = Sanic(name="Lazlos Pizza API")
 CORS(app)
 
@@ -38,16 +41,19 @@ async def get_random_pizza(request):
     token_ids = random_pizza_ingredient_ids()
     timestamp = int(time.time())
 
-    token_ids_str = ','.join(map(str, token_ids)) 
-    message_body = f',{token_ids_str}:{addr}:{timestamp}'
+    hashed_message = w3.soliditySha3(
+        ['address', 'uint256', 'uint256[]'],
+        [w3.toChecksumAddress(addr), timestamp, token_ids]
+    )
 
-    message = encode_defunct(text=message_body)
+    message = encode_defunct(hashed_message)
     signed_message = w3.eth.account.sign_message(message, private_key=privatekey)
-    hex_signature = signed_message.signature.hex()
-    sig = w3.toBytes(hexstr=hex_signature)
-    v, r, s = w3.toInt(sig[-1]), w3.toHex(sig[:32]), w3.toHex(sig[32:64])
-
-    joined = b'\x19' + message.version + message.header + message.body
+    
+    (v, r, s) = (
+       signed_message.v,
+       to_32byte_hex(signed_message.r),
+       to_32byte_hex(signed_message.s),
+    )
 
     return json_response({
         'token_ids': token_ids,
