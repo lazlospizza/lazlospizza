@@ -1,15 +1,5 @@
-import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  Heading,
-  Stack,
-  Text,
-} from '@chakra-ui/react';
+import { Box, Button, Center, Stack, Text } from '@chakra-ui/react';
 import { RADOM_BAKE_FEE, REBAKE_FEE } from '../../constants';
-import { PizzaCave } from '../../types';
-import { removeBurnIngredient, addBurnIngredient } from '../../utils/general';
 
 export const RandomBake = () => {
   const handleRandomBake = () => {

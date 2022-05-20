@@ -7,13 +7,7 @@ import {
   MEAT_LIMIT,
   TOPPING_LIMIT,
 } from '../../constants';
-import {
-  Ingredient,
-  IngredientGroup,
-  IngredientType,
-  Pizza,
-  PizzaCave,
-} from '../../types';
+import { Ingredient, Pizza, PizzaCave } from '../../types';
 import { NavButton } from '../shared/NavButton';
 import { SelectYourIngredients } from './SelectYourIngredients';
 import { YourSelections } from './YourSelections';
@@ -26,269 +20,7 @@ import {
   removeIngredient,
 } from '../../utils/general';
 import { colors } from '../../styles/theme';
-
-export const ingredientGroups: IngredientGroup[] = [
-  {
-    name: 'Base',
-    namePlural: 'Bases',
-    type: IngredientType.base,
-    ingredients: [
-      {
-        tokenId: 1,
-        type: IngredientType.base,
-        name: 'Gluten Free Base',
-        cost: 0.01,
-        numAvailable: 0,
-        numOwned: 0,
-        imgUrl: 'Gluten-Free-Base.png',
-      },
-      {
-        tokenId: 2,
-        type: IngredientType.base,
-        name: 'Plain Base',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Plain-Base.png',
-      },
-    ],
-  },
-  {
-    name: 'Sauce',
-    namePlural: 'Sauces',
-    type: IngredientType.sauce,
-    ingredients: [
-      {
-        tokenId: 3,
-        type: IngredientType.sauce,
-        name: 'BBQ Sauce',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'BBQ-Sauce.png',
-      },
-      {
-        tokenId: 4,
-        type: IngredientType.sauce,
-        name: 'Chilli Sauce',
-        cost: 0.01,
-        numAvailable: 2,
-        numOwned: 0,
-        imgUrl: 'Chilli-Sauce.png',
-      },
-      {
-        tokenId: 5,
-        type: IngredientType.sauce,
-        name: 'Tomato Sauce',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Tomato-Sauce.png',
-      },
-      // {
-      //   tokenId: 1,
-      //   type: IngredientType.sauce,
-      //   name: 'Garlic',
-      //   cost: 0.01,
-      //   numAvailable: 3,
-      //   numOwned: 0,
-      //   imgUrl: 'Garlic-Sauce.png',
-      // },
-    ],
-  },
-  {
-    name: 'Cheese',
-    namePlural: 'Cheese',
-    type: IngredientType.cheese,
-    ingredients: [
-      {
-        tokenId: 6,
-        type: IngredientType.cheese,
-        name: 'Cheddar Cheese',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Cheddar-Cheese.png',
-      },
-      {
-        tokenId: 7,
-        type: IngredientType.cheese,
-        name: 'Goat Cheese',
-        cost: 0.01,
-        numAvailable: 2,
-        numOwned: 0,
-        imgUrl: 'Goat-Cheese.png',
-      },
-      {
-        tokenId: 8,
-        type: IngredientType.cheese,
-        name: 'Mozzarella',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Mozzarella.png',
-      },
-    ],
-  },
-  {
-    name: 'Meat',
-    namePlural: 'Meats',
-    type: IngredientType.meat,
-    ingredients: [
-      {
-        tokenId: 9,
-        type: IngredientType.meat,
-        name: 'Anchovies',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Anchovies.png',
-      },
-      {
-        tokenId: 10,
-        type: IngredientType.meat,
-        name: 'Beef',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Beef.png',
-      },
-      {
-        tokenId: 11,
-        type: IngredientType.meat,
-        name: 'Chicken',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Chicken.png',
-      },
-      {
-        tokenId: 12,
-        type: IngredientType.meat,
-        name: 'Chorizo',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Chorizo.png',
-      },
-      {
-        tokenId: 13,
-        type: IngredientType.meat,
-        name: 'Ham',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Ham.png',
-      },
-      {
-        tokenId: 14,
-        type: IngredientType.meat,
-        name: 'Pepperonis',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Pepperoni.png',
-      },
-      {
-        tokenId: 15,
-        type: IngredientType.meat,
-        name: 'Salami',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Salami.png',
-      },
-      {
-        tokenId: 16,
-        type: IngredientType.meat,
-        name: 'Tuna',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Tuna.png',
-      },
-    ],
-  },
-  {
-    name: 'Topping',
-    namePlural: 'Toppings',
-    type: IngredientType.topping,
-    ingredients: [
-      {
-        tokenId: 17,
-        type: IngredientType.topping,
-        name: 'Corn',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Corn.png',
-      },
-      {
-        tokenId: 18,
-        type: IngredientType.topping,
-        name: 'Chillies',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Chillies.png',
-      },
-      {
-        tokenId: 19,
-        type: IngredientType.topping,
-        name: 'Green Peppers',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Green-Peppers.png',
-      },
-      {
-        tokenId: 20,
-        type: IngredientType.topping,
-        name: 'Jalapenos',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Jalapenos.png',
-      },
-      {
-        tokenId: 21,
-        type: IngredientType.topping,
-        name: 'Mushroom',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Mushrooms.png',
-      },
-      {
-        tokenId: 22,
-        type: IngredientType.topping,
-        name: 'Onion',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Onion.png',
-      },
-      {
-        tokenId: 23,
-        type: IngredientType.topping,
-        name: 'Pineapple',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Pineapple.png',
-      },
-      {
-        tokenId: 24,
-        type: IngredientType.topping,
-        name: 'Red Pepper',
-        cost: 0.01,
-        numAvailable: 3,
-        numOwned: 0,
-        imgUrl: 'Red-Peppers.png',
-      },
-    ],
-  },
-];
+import { useWallet } from '../../hooks/useWallet';
 
 export enum BuyAndBakeTabs {
   ingredients = 'Ingredients',
@@ -297,6 +29,7 @@ export enum BuyAndBakeTabs {
 }
 
 export const BuyAndBake = () => {
+  const { ingredientGroups } = useWallet();
   const isMobile = useIsMobile();
   const [pizza, setPizza] = useState<Pizza>(DefaultPizza);
   const [resetPizza, setResetPizza] = useState(false);
@@ -320,7 +53,7 @@ export const BuyAndBake = () => {
 
   // handle adding quick ingredients AFTER pizza state is reset
   useEffect(() => {
-    if (pizza.allIngredients.length || !resetPizza) return;
+    if (pizza?.allIngredients.length || !resetPizza) return;
     setResetPizza(false);
     addRandIngredients();
   }, [resetPizza]);

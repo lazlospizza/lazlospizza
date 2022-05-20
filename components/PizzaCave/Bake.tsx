@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Center, Flex, Stack, Text, useToast } from '@chakra-ui/react';
-import { flatten } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { BAKING_FEE } from '../../constants';
 import { useIngredientsContract } from '../../hooks/useContract';
@@ -14,13 +13,13 @@ import {
   removeIngredient,
 } from '../../utils/general';
 import { NavButton } from '../shared/NavButton';
-import { BuyAndBakeTabs, ingredientGroups } from './BuyAndBake';
+import { BuyAndBakeTabs } from './BuyAndBake';
 import { CheckRarity } from './CheckRarity';
 import { SelectYourIngredients } from './SelectYourIngredients';
 import { YourSelections } from './YourSelections';
 
 export const Bake = () => {
-  const { wallet, isConnected } = useWallet();
+  const { wallet, ingredientGroups, ingredients } = useWallet();
   const { ingredientsContract } = useIngredientsContract();
   const isMobile = useIsMobile();
   const [pizza, setPizza] = useState<Pizza>(DefaultPizza);
@@ -36,22 +35,19 @@ export const Bake = () => {
   const provider = wallet?.web3Provider;
 
   const getIngredients = useCallback(async () => {
-    if (!provider) return;
+    if (!provider || !ingredients.length) return;
     try {
       setErrorMessage(null);
-      const allIngredients = flatten(
-        ingredientGroups.map(group => group.ingredients),
-      );
       const results = await ingredientsContract.balanceOfBatch(
-        allIngredients.map(() => wallet?.address),
-        allIngredients.map(ingredient => ingredient.tokenId),
+        ingredients.map(() => wallet?.address),
+        ingredients.map(ingredient => ingredient.tokenId),
       );
       const parsedResults = results.map(bigNumber =>
         parseInt(bigNumber._hex, 16),
       );
 
       setOwnedIngredients(
-        allIngredients.map(({ tokenId }, index) => ({
+        ingredients.map(({ tokenId }, index) => ({
           tokenId,
           amount: parsedResults[index],
         })),
@@ -65,7 +61,7 @@ export const Bake = () => {
     } finally {
       // setIsMinting(false);
     }
-  }, [ingredientsContract, provider, pizza]);
+  }, [ingredientsContract, provider, pizza, ingredients]);
 
   useEffect(() => {
     getIngredients();

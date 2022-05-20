@@ -5,10 +5,10 @@ import { IngredientItem } from './IngredientItem';
 interface Props {
   ingredientGroup: IngredientGroup;
   ownedIngredients?: { tokenId: number; amount: number }[];
-  addIngredient: (ingredient: Ingredient) => void;
-  removeIngredient: (ingredient: Ingredient) => void;
-  pizza: Pizza;
-  tab: PizzaCave;
+  addIngredient?: (ingredient: Ingredient) => void;
+  removeIngredient?: (ingredient: Ingredient) => void;
+  pizza?: Pizza;
+  tab?: PizzaCave;
 }
 export const IngredientList = ({
   ingredientGroup,
@@ -22,7 +22,7 @@ export const IngredientList = ({
     <Box>
       <Stack>
         <Text color="tomato.500" fontWeight={900} fontSize={'xl'}>
-          {ingredientGroup.namePlural}
+          {ingredientGroup.name}
         </Text>
         <Flex>
           <Text color="gray.dark">{`A Pizza must have`}</Text>
