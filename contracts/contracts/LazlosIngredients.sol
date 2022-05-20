@@ -8,6 +8,16 @@ import '@openzeppelin/contracts/access/Ownable.sol';
 import './ERC1155/ERC1155U.sol';
 import './Types/Types.sol';
 
+/*
+   __           _      _        ___ _                __ _                 
+  / /  __ _ ___| | ___( )__    / _ (_)__________ _  / _\ |__   ___  _ __  
+ / /  / _` |_  / |/ _ \/ __|  / /_)/ |_  /_  / _` | \ \| '_ \ / _ \| '_ \ 
+/ /__| (_| |/ /| | (_) \__ \ / ___/| |/ / / / (_| | _\ \ | | | (_) | |_) |
+\____/\__,_/___|_|\___/|___/ \/    |_/___/___\__,_| \__/_| |_|\___/| .__/ 
+                                                                   |_|    
+
+LazlosIngredients is an ERC115 implementation for selling ingredients out of Lazlo's kitchen.
+*/
 contract LazlosIngredients is ERC1155U, Ownable {
     using ECDSA for bytes32;
     using Counters for Counters.Counter;

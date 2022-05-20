@@ -9,6 +9,16 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 import './Types/Types.sol';
 
+/*
+   __           _      _        ___ _                __ _                 
+  / /  __ _ ___| | ___( )__    / _ (_)__________ _  / _\ |__   ___  _ __  
+ / /  / _` |_  / |/ _ \/ __|  / /_)/ |_  /_  / _` | \ \| '_ \ / _ \| '_ \ 
+/ /__| (_| |/ /| | (_) \__ \ / ___/| |/ / / / (_| | _\ \ | | | (_) | |_) |
+\____/\__,_/___|_|\___/|___/ \/    |_/___/___\__,_| \__/_| |_|\___/| .__/ 
+                                                                   |_|    
+
+LazlosPizzaShop is the main contract for buying ingredients and baking pizza's out of Lazlo's kitchen.
+*/
 contract LazlosPizzaShop is Ownable, ReentrancyGuard {
     using ECDSA for bytes32;
     using Counters for Counters.Counter;

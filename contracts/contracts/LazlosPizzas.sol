@@ -7,6 +7,16 @@ import '@openzeppelin/contracts/access/Ownable.sol';
 import './ERC721/ERC721U.sol';
 import './Types/Types.sol';
 
+/*
+   __           _      _        ___ _                __ _                 
+  / /  __ _ ___| | ___( )__    / _ (_)__________ _  / _\ |__   ___  _ __  
+ / /  / _` |_  / |/ _ \/ __|  / /_)/ |_  /_  / _` | \ \| '_ \ / _ \| '_ \ 
+/ /__| (_| |/ /| | (_) \__ \ / ___/| |/ / / / (_| | _\ \ | | | (_) | |_) |
+\____/\__,_/___|_|\___/|___/ \/    |_/___/___\__,_| \__/_| |_|\___/| .__/ 
+                                                                   |_|    
+
+LazlosPizzas is an ERC721 implementation for baking pizza's out of Lazlo's kitchen.
+*/
 contract LazlosPizzas is ERC721U, Ownable {
     using Counters for Counters.Counter;
 

@@ -6,6 +6,16 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 import './Types/Types.sol';
 
+/*
+   __           _      _        ___ _                __ _                 
+  / /  __ _ ___| | ___( )__    / _ (_)__________ _  / _\ |__   ___  _ __  
+ / /  / _` |_  / |/ _ \/ __|  / /_)/ |_  /_  / _` | \ \| '_ \ / _ \| '_ \ 
+/ /__| (_| |/ /| | (_) \__ \ / ___/| |/ / / / (_| | _\ \ | | | (_) | |_) |
+\____/\__,_/___|_|\___/|___/ \/    |_/___/___\__,_| \__/_| |_|\___/| .__/ 
+                                                                   |_|    
+
+LazlosRendering is the rendering contract used for rendering tokenURI's in Lazlo's kitchen.
+*/
 contract LazlosRendering is Ownable {
     using Strings for uint256;
 
@@ -55,7 +65,7 @@ contract LazlosRendering is Ownable {
             '{"trait_type":"', getIngredientTypeName(pizza.sauce), '","value":"', getIngredientName(pizza.sauce), '"}'
         ));
 
-        for (uint256 i = 0; i < pizza.cheeses.length; i++) {
+        for (uint256 i = 0; i < 3; i++) {
             uint16 cheese = pizza.cheeses[i];
             if (cheese == 0) {
                 break;
@@ -67,7 +77,7 @@ contract LazlosRendering is Ownable {
             ));
         }
 
-        for (uint256 i = 0; i < pizza.meats.length; i++) {
+        for (uint256 i = 0; i < 4; i++) {
             uint16 meat = pizza.meats[i];
             if (meat == 0) {
                 break;
@@ -79,7 +89,7 @@ contract LazlosRendering is Ownable {
             ));
         }
 
-        for (uint256 i = 0; i < pizza.toppings.length; i++) {
+        for (uint256 i = 0; i < 4; i++) {
             uint16 topping = pizza.toppings[i];
             if (topping == 0) {
                 break;
