@@ -2,10 +2,9 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import { providers } from 'ethers';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Web3Modal from 'web3modal';
-import { getMainContractAddress } from '../utils/network';
-import { LazlosPizzaShop__factory } from '../contracts/typechain-types';
-import { isEmpty } from 'lodash';
 import { useRouter } from 'next/router';
+import { Ingredient, IngredientGroup, IngredientType, Pizza } from '../types';
+import axios from 'axios';
 
 export const PROVIDER_OPTIONS = {
   walletconnect: {
@@ -25,6 +24,11 @@ export const WalletContext = React.createContext<WalletContextValue>({
   loading: true,
   error: null,
   clearError: () => {},
+  ingredients: [],
+  pizzas: [],
+  ingredientGroups: [],
+  isLoadingIngredients: true,
+  isLoadingPizzas: true,
 });
 
 let web3Modal: Web3Modal;
@@ -51,6 +55,11 @@ export interface WalletContextValue {
   wallet: WalletStatus | null;
   error: string | null;
   clearError: () => void;
+  ingredients: Ingredient[];
+  pizzas: Pizza[];
+  ingredientGroups: IngredientGroup[];
+  isLoadingIngredients: boolean;
+  isLoadingPizzas: boolean;
 }
 
 export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
@@ -58,8 +67,37 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
   const [wallet, setWallet] = useState<WalletStatus | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const [isLoadingIngredients, setIsLoadingIngredients] = useState(true);
+  const [pizzas, setPizzas] = useState<Pizza[]>([]);
+  const [isLoadingPizzas, setIsLoadingPizzas] = useState(true);
 
-  const connect = useCallback(async function () {
+  const fetchIngredients = useCallback(async () => {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_DOMAIN_URL}/api/ingredients`,
+    );
+    setIngredients(res.data.ingredients);
+    setIsLoadingIngredients(false);
+  }, []);
+
+  const fetchPizzas = useCallback(async () => {
+    if (!wallet?.address) return null;
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_DOMAIN_URL}/api/${wallet.address}/pizzas`,
+    );
+    setPizzas(res.data.pizzas);
+    setIsLoadingPizzas(false);
+  }, [wallet?.address]);
+
+  useEffect(() => {
+    fetchIngredients();
+  }, [fetchIngredients]);
+
+  useEffect(() => {
+    fetchPizzas();
+  }, [fetchPizzas]);
+
+  const connect = useCallback(async () => {
     setLoading(true);
 
     try {
@@ -98,7 +136,6 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     if (!provider?.on) return;
 
     const handleAccountsChanged = (accounts: string[]) => {
-      console.log('accountsChanged', accounts);
       setWallet(wallet => {
         if (wallet === null) return null;
         const newAccount = accounts[0];
@@ -113,7 +150,6 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
 
     const handleChainChanged = (chainId: string) => {
       const parsedChainId = parseInt(chainId, 16);
-      console.log('chainChanged', parsedChainId);
       setWallet(wallet => {
         if (wallet === null) return null;
 
@@ -125,7 +161,6 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     };
 
     const handleDisconnect = (error: { code: number; message: string }) => {
-      console.log('disconnect', error);
       disconnect();
     };
 
@@ -143,6 +178,48 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     };
   }, [provider, disconnect]);
 
+  const ingredientGroups = useMemo(
+    () =>
+      [
+        {
+          name: 'Base',
+          type: IngredientType.base,
+          ingredients: ingredients.filter(
+            ingredient => ingredient.ingredientType === IngredientType.base,
+          ),
+        },
+        {
+          name: 'Sauce',
+          type: IngredientType.sauce,
+          ingredients: ingredients.filter(
+            ingredient => ingredient.ingredientType === IngredientType.sauce,
+          ),
+        },
+        {
+          name: 'Cheeses',
+          type: IngredientType.cheese,
+          ingredients: ingredients.filter(
+            ingredient => ingredient.ingredientType === IngredientType.cheese,
+          ),
+        },
+        {
+          name: 'Meats',
+          type: IngredientType.meat,
+          ingredients: ingredients.filter(
+            ingredient => ingredient.ingredientType === IngredientType.meat,
+          ),
+        },
+        {
+          name: 'Toppings',
+          type: IngredientType.topping,
+          ingredients: ingredients.filter(
+            ingredient => ingredient.ingredientType === IngredientType.topping,
+          ),
+        },
+      ] as IngredientGroup[],
+    [ingredients],
+  );
+
   return (
     <WalletContext.Provider
       value={{
@@ -152,6 +229,11 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         loading,
         error,
         clearError: () => setError(null),
+        ingredients,
+        pizzas,
+        ingredientGroups,
+        isLoadingIngredients,
+        isLoadingPizzas,
       }}
     >
       {children}

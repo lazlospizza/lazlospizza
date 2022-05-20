@@ -49,30 +49,24 @@ export const SelectYourIngredients = ({
               height: 150,
             }}
           >
-            <img src="/assets/tablecloth.svg" alt="tablecloth" />
-            {(
-              pizza?.allIngredients?.sort((a, b) => a.tokenId - b.tokenId) ?? []
-            ).map(item => (
-              <div
-                key={item.tokenId}
-                style={{
-                  position: 'absolute',
-                  width: '90%',
-                  height: '90%',
-                  backgroundImage: `url(/assets/ingredients/baked/${item.imgUrl})`,
-                  backgroundSize: 'contain',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center center',
-                }}
-              />
-            ))}
+            <div
+              style={{
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                backgroundImage: `url(${pizza.image})`,
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center center',
+              }}
+            />
           </Center>
           {/* Right of Image */}
           <Flex width={'100%'} justifyContent={'space-between'}>
             {/* Name and Cost */}
             <Flex direction={'column'} px="8" py="3">
               <Stack spacing={3}>
-                {pizza.allIngredients.map(ingredient => (
+                {pizza?.allIngredients.map(ingredient => (
                   <Heading
                     key={ingredient.tokenId}
                     size={'sm'}

@@ -1,12 +1,12 @@
 {
   "hardhat": {
-    "mainContractAddress": "0xCCfBa432675C7df224Fb80BAbC554e7B1aD7aFdB",
-    "ingredientsContractAddress": "0x5ad74dFa0FBB86CEa43af0CfAB3153125171d38a",
-    "pizzaContractAddress": "0x432fD0D700034cF86720d68c3daA62db454dd87B"
+    "mainContractAddress": "0x6d1F3f3C3f2A8aA12E3df5a520780C6c477CFAE2",
+    "ingredientsContractAddress": "0xc64061da1830eD1A5730FD8312F3Ed0cd873C94a",
+    "pizzaContractAddress": "0x081C7421351180D2Aa62B963d9a1391195347769"
   },
   "localhost": {
-    "mainContractAddress": "0xCCfBa432675C7df224Fb80BAbC554e7B1aD7aFdB",
-    "ingredientsContractAddress": "0x5ad74dFa0FBB86CEa43af0CfAB3153125171d38a",
-    "pizzaContractAddress": "0x432fD0D700034cF86720d68c3daA62db454dd87B"
+    "mainContractAddress": "0x6d1F3f3C3f2A8aA12E3df5a520780C6c477CFAE2",
+    "ingredientsContractAddress": "0xc64061da1830eD1A5730FD8312F3Ed0cd873C94a",
+    "pizzaContractAddress": "0x081C7421351180D2Aa62B963d9a1391195347769"
   }
 }

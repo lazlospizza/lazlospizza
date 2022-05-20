@@ -1,22 +1,11 @@
 import { Box, Center, Flex, Stack, Text, useToast } from '@chakra-ui/react';
-import { flatten } from 'lodash';
-import { useCallback, useEffect, useState } from 'react';
-import { BAKING_FEE } from '../../constants';
-import { PizzaStructOutput } from '../../contracts/typechain-types/contracts/LazlosPizzas';
-import { usePizzaContract } from '../../hooks/useContract';
+import { useEffect, useState } from 'react';
 import { useWallet } from '../../hooks/useWallet';
 import { colors } from '../../styles/theme';
-import { Pizza, Ingredient, PizzaCave } from '../../types';
-import {
-  addIngredient,
-  DefaultPizza,
-  useIsMobile,
-  removeIngredient,
-} from '../../utils/general';
+import { Pizza, PizzaCave } from '../../types';
+import { useIsMobile } from '../../utils/general';
 import { NavButton } from '../shared/NavButton';
-import { ingredientGroups } from './BuyAndBake';
 import { CheckRarity } from './CheckRarity';
-import { SelectYourIngredients } from './SelectYourIngredients';
 import { SelectYourPizza } from './SelectYourPizza';
 import { YourSelections } from './YourSelections';
 
@@ -28,64 +17,12 @@ export enum UnbakeTabs {
 
 export const Unbake = () => {
   const isMobile = useIsMobile();
-  const { wallet, isConnected } = useWallet();
-  const { pizzaContract } = usePizzaContract();
+  const { pizzas } = useWallet();
   const [pizza, setPizza] = useState<Pizza>(null);
   const [selectedTab, setSelectedTab] = useState(UnbakeTabs.pizzas);
   const [selectedHalfTab, setSelectedHalfTab] = useState(UnbakeTabs.selection);
   const [errorMessage, setErrorMessage] = useState('');
-  const [pizzas, setPizzas] = useState<Pizza[]>([]);
   const toast = useToast();
-  const provider = wallet?.web3Provider;
-
-  const getPizzas = useCallback(async () => {
-    if (!provider || !isConnected) return;
-    try {
-      setErrorMessage(null);
-      const numberOfPizzasBigNumber = await pizzaContract.numPizzas();
-      const numberOfPizzas = parseInt(numberOfPizzasBigNumber._hex, 16);
-      const allIngredients = flatten(
-        ingredientGroups.map(group => group.ingredients),
-      );
-      const _pizzas = await Promise.all(
-        Array.from(Array(numberOfPizzas).keys()).map(async i => {
-          const tokenId = i + 1;
-          const owner = await pizzaContract.ownerOf(tokenId);
-          if (owner === wallet?.address) {
-            const ingredients = await pizzaContract.pizza(tokenId);
-            const flattenedIngredients = flatten(ingredients);
-            return {
-              tokenId,
-              base: allIngredients.find(i => i.tokenId === ingredients[0]),
-              sauce: allIngredients.find(i => i.tokenId === ingredients[1]),
-              cheese: allIngredients.find(
-                i => i.tokenId === ingredients[2].filter(_i => !!_i)[0],
-              ),
-              meats: allIngredients.filter(i =>
-                ingredients[3].find(_i => _i === i.tokenId),
-              ),
-              toppings: allIngredients.filter(i =>
-                ingredients[3].find(_i => _i === i.tokenId),
-              ),
-              allIngredients: allIngredients.filter(_i =>
-                flattenedIngredients.includes(_i.tokenId),
-              ),
-            } as Pizza;
-          }
-          return null;
-        }),
-      );
-      const pizzasOwned = _pizzas.filter(_pizza => !!_pizza);
-      console.log(pizzasOwned);
-      setPizzas(pizzasOwned);
-    } catch (e) {
-      console.log(e);
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      window.MM_ERR = e;
-      setErrorMessage('Unexpected Error');
-    }
-  }, [pizzaContract, provider, pizza, wallet?.address]);
 
   useEffect(() => {
     if (!!errorMessage) {
@@ -99,10 +36,6 @@ export const Unbake = () => {
       });
     }
   }, [errorMessage, toast]);
-
-  useEffect(() => {
-    getPizzas();
-  }, [getPizzas]);
 
   const renderTab = (tab: UnbakeTabs) => {
     switch (tab) {

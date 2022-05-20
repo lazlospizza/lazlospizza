@@ -32,19 +32,15 @@ export const enum IngredientType {
 export interface Ingredient {
   tokenId: number;
   name: string;
-  namePlural?: string;
-  cost: number;
-  numOwned: number;
-  numAvailable: number;
-  type: IngredientType;
-  imgUrl?: string;
-  rarity?: number;
-  numPizzas?: number;
+  price: number;
+  balance: number;
+  supply: number;
+  ingredientType: IngredientType;
+  image?: string;
 }
 
 export interface IngredientGroup {
   name: string;
-  namePlural: string;
   type?: IngredientType;
   ingredients: Ingredient[];
 }
@@ -53,11 +49,11 @@ export interface Pizza {
   tokenId?: number;
   base?: Ingredient | null;
   sauce?: Ingredient | null;
-  cheese?: Ingredient | null;
+  cheeses?: Ingredient[];
   meats?: Ingredient[];
   toppings?: Ingredient[];
+  image?: string;
   allIngredients: Ingredient[];
   additionalIngredients?: Ingredient[];
   burnIngredients?: Ingredient[];
-  totalCost: number;
 }
