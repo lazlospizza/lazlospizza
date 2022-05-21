@@ -12,7 +12,13 @@ import {
 import { parseEther } from 'ethers/lib/utils';
 import { isEmpty } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
-import { BAKING_FEE, REBAKE_FEE, UNBAKE_FEE } from '../../constants';
+import {
+  BAKING_FEE,
+  MEAT_LIMIT,
+  REBAKE_FEE,
+  TOPPING_LIMIT,
+  UNBAKE_FEE,
+} from '../../constants';
 import { useMainContract } from '../../hooks/useContract';
 import { useWallet } from '../../hooks/useWallet';
 import { Ingredient, Pizza, PizzaCave } from '../../types';
@@ -45,8 +51,8 @@ export const YourSelections = ({
     if (!pizza?.base) return setDisableBake(true);
     if (!pizza?.sauce) return setDisableBake(true);
     if (!pizza?.cheeses) return setDisableBake(true);
-    // add checks for other ingredients
-    console.log('Bake and Bake Allowed!');
+    if (pizza?.meats?.length > MEAT_LIMIT) return setDisableBake(true);
+    if (pizza?.toppings?.length > TOPPING_LIMIT) return setDisableBake(true);
     setDisableBake(false);
   };
 
