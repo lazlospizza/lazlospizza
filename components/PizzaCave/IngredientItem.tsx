@@ -18,7 +18,7 @@ export const IngredientItem = ({
   pizza,
   tab,
 }: Props) => {
-  const { name, price, balance, supply, image } = ingredient;
+  const { name, price, supply } = ingredient;
 
   const handleAdd = () => {
     addIngredient(ingredient);
@@ -97,7 +97,7 @@ export const IngredientItem = ({
           {/* Count and Add Button */}
           <Flex direction={'column'} justifyContent={'space-between'} py="2">
             <Text size={'sm'} color="gray.dark" align={'right'}>
-              {supply}
+              {supply}/10,000
             </Text>
             {!!addIngredient && !!removeIngredient && (
               <Button

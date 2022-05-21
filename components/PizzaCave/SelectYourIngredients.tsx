@@ -13,7 +13,7 @@ import { IngredientList } from './IngredientList';
 
 interface Props {
   ingredientGroups: IngredientGroup[];
-  ownedIngredients?: { tokenId: number; amount: number }[];
+  ownedIngredients?: Ingredient[];
   addIngredient: (ingredient: Ingredient) => void;
   removeIngredient?: (Ingredient: Ingredient) => void;
   pizza: Pizza;
@@ -111,7 +111,7 @@ export const SelectYourIngredients = ({
                 ownedIngredients?.find(
                   ownedIngredient =>
                     ingredient.tokenId === ownedIngredient.tokenId &&
-                    ownedIngredient.amount > 0,
+                    !!ownedIngredient.balance,
                 ),
               ) || [];
             return ownedFromGroup.length || !ownedIngredients ? (

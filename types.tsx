@@ -37,6 +37,8 @@ export interface Ingredient {
   supply: number;
   ingredientType: IngredientType;
   image?: string;
+  rarity?: number;
+  numberOfPizzas?: number;
 }
 
 export interface IngredientGroup {
@@ -55,6 +57,7 @@ export interface Pizza {
   meats?: Ingredient[];
   toppings?: Ingredient[];
   image?: string;
+  owner?: string;
   allIngredients: Ingredient[];
   additionalIngredients?: Ingredient[];
   burnIngredients?: Ingredient[];

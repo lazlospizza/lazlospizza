@@ -31,25 +31,20 @@ export default async function pizzas(
     const ingredientsRes = await axios.get(
       process.env.NEXT_PUBLIC_DOMAIN_URL + '/api/ingredients',
     );
-    const ingredients = ingredientsRes.data.ingredients;
+    const _ingredients = ingredientsRes.data.ingredients;
 
-    const pizzas = await Promise.all(
+    const _pizzas = await Promise.all(
       Array.from(Array(numberOfPizzas).keys()).map(async i => {
         const tokenId = i + 1;
         const _pizza = await contract.pizza(tokenId);
         const uri = await contract.tokenURI(tokenId);
+        const owner = await contract.ownerOf(tokenId);
         const pizza = { allIngredients: [] };
         for (let i = 0; i < 5; i += 1) {
+          pizza[PizzaKey[i]] = _pizza[i];
           if (i <= 1) {
-            pizza[PizzaKey[i]] = ingredients.find(
-              ingredient => ingredient.tokenId === _pizza[i],
-            );
-            if (pizza[PizzaKey[i]])
-              pizza?.allIngredients.push(pizza[PizzaKey[i]]);
+            if (pizza[PizzaKey[i]]) pizza?.allIngredients.push(_pizza[i]);
           } else {
-            pizza[PizzaKey[i]] = ingredients.filter(ingredient =>
-              (_pizza[i] as unknown as number[]).includes(ingredient.tokenId),
-            );
             if (pizza[PizzaKey[i]])
               pizza?.allIngredients.push(...pizza[PizzaKey[i]]);
           }
@@ -60,12 +55,45 @@ export default async function pizzas(
         );
         const uriJson = JSON.parse(uriString);
 
-        return { ...pizza, ...uriJson, tokenId };
+        return { ...uriJson, ...pizza, tokenId, owner };
+      }),
+    );
+
+    const ingredients = _ingredients.map(ingredient => {
+      const numberOfPizzas = _pizzas.filter(pizza =>
+        pizza.allIngredients.find(tokenId => tokenId === ingredient.tokenId),
+      ).length;
+      const rarity = (numberOfPizzas / _pizzas.length) * 100;
+      return { ...ingredient, numberOfPizzas, rarity };
+    });
+
+    const pizzas = await Promise.all(
+      _pizzas.map(async _pizza => {
+        const pizza = { ..._pizza, allIngredients: [] };
+        for (let i = 0; i < 5; i += 1) {
+          if (i <= 1) {
+            pizza[PizzaKey[i]] = ingredients.find(
+              ingredient => ingredient.tokenId === _pizza[PizzaKey[i]],
+            );
+            if (pizza[PizzaKey[i]])
+              pizza?.allIngredients.push(pizza[PizzaKey[i]]);
+          } else {
+            pizza[PizzaKey[i]] = ingredients.filter(ingredient =>
+              (_pizza[PizzaKey[i]] as unknown as number[]).includes(
+                ingredient.tokenId,
+              ),
+            );
+            if (pizza[PizzaKey[i]])
+              pizza?.allIngredients.push(...pizza[PizzaKey[i]]);
+          }
+        }
+
+        return pizza;
       }),
     );
 
     res.statusCode = 201;
-    res.json({ pizzas });
+    res.json({ pizzas, ingredients });
     return res.end();
   } catch (e) {
     console.log(e);

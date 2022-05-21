@@ -29,7 +29,7 @@ export const CheckRarity = ({ pizza }: Props) => {
             return (
               <Center key={item.name}>
                 <Heading size={'xs'} color={'gray.dark'} pt="4">
-                  {`${'0.00'}%`}
+                  {`${item.rarity.toFixed(2)}%`}
                 </Heading>
               </Center>
             );
@@ -43,7 +43,7 @@ export const CheckRarity = ({ pizza }: Props) => {
             return (
               <Center key={item.name}>
                 <Heading size={'xs'} color={'gray.dark'} pt="4">
-                  {`${'0'}`}
+                  {item.numberOfPizzas || 0}
                 </Heading>
               </Center>
             );

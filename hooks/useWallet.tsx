@@ -12,6 +12,8 @@ import {
   SAUCE_LIMIT,
   TOPPING_LIMIT,
 } from '../constants';
+import { LazlosIngredients__factory } from '../contracts/typechain-types';
+import { getIngredientsContractAddress } from '../utils/network';
 
 export const PROVIDER_OPTIONS = {
   walletconnect: {
@@ -33,6 +35,8 @@ export const WalletContext = React.createContext<WalletContextValue>({
   clearError: () => {},
   ingredients: [],
   pizzas: [],
+  myIngredients: [],
+  myPizzas: [],
   ingredientGroups: [],
   isLoadingIngredients: true,
   isLoadingPizzas: true,
@@ -64,6 +68,8 @@ export interface WalletContextValue {
   clearError: () => void;
   ingredients: Ingredient[];
   pizzas: Pizza[];
+  myIngredients: Ingredient[];
+  myPizzas: Pizza[];
   ingredientGroups: IngredientGroup[];
   isLoadingIngredients: boolean;
   isLoadingPizzas: boolean;
@@ -75,30 +81,20 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const [myIngredients, setMyIngredients] = useState<Ingredient[]>([]);
   const [isLoadingIngredients, setIsLoadingIngredients] = useState(true);
   const [pizzas, setPizzas] = useState<Pizza[]>([]);
   const [isLoadingPizzas, setIsLoadingPizzas] = useState(true);
 
-  const fetchIngredients = useCallback(async () => {
-    const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_DOMAIN_URL}/api/ingredients`,
-    );
-    setIngredients(res.data.ingredients);
-    setIsLoadingIngredients(false);
-  }, []);
-
   const fetchPizzas = useCallback(async () => {
-    if (!wallet?.address) return null;
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_DOMAIN_URL}/api/${wallet.address}/pizzas`,
+      `${process.env.NEXT_PUBLIC_DOMAIN_URL}/api/pizzas`,
     );
+    console.log(res);
     setPizzas(res.data.pizzas);
+    setIngredients(res.data.ingredients);
     setIsLoadingPizzas(false);
-  }, [wallet?.address]);
-
-  useEffect(() => {
-    fetchIngredients();
-  }, [fetchIngredients]);
+  }, []);
 
   useEffect(() => {
     fetchPizzas();
@@ -237,6 +233,43 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     [ingredients],
   );
 
+  const myPizzas = useMemo(() => {
+    if (!wallet?.address) return [];
+    return pizzas.filter(p => p.owner === wallet?.address);
+  }, [pizzas, wallet?.address]);
+
+  const getMyIngredients = useCallback(async () => {
+    if (!wallet?.address || !wallet?.web3Provider || !ingredients.length)
+      return;
+    try {
+      const ingredientsContract = LazlosIngredients__factory.connect(
+        getIngredientsContractAddress(),
+        wallet.web3Provider,
+      );
+      const results = await ingredientsContract.balanceOfBatch(
+        ingredients.map(() => wallet?.address),
+        ingredients.map(ingredient => ingredient.tokenId),
+      );
+      const parsedIngredients = results.map((bigNumber, index) => ({
+        ...ingredients[index],
+        balance: parseInt(bigNumber._hex, 16),
+      }));
+
+      console.log(parsedIngredients);
+
+      setMyIngredients(parsedIngredients.filter(({ balance }) => !!balance));
+    } catch (e) {
+      console.log(e);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      window.MM_ERR = e;
+    }
+  }, [wallet?.address, wallet?.web3Provider, ingredients]);
+
+  useEffect(() => {
+    getMyIngredients();
+  }, [getMyIngredients]);
+
   return (
     <WalletContext.Provider
       value={{
@@ -248,6 +281,8 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         clearError: () => setError(null),
         ingredients,
         pizzas,
+        myIngredients,
+        myPizzas,
         ingredientGroups,
         isLoadingIngredients,
         isLoadingPizzas,

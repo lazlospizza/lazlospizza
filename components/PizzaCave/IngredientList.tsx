@@ -4,7 +4,7 @@ import { IngredientItem } from './IngredientItem';
 
 interface Props {
   ingredientGroup: IngredientGroup;
-  ownedIngredients?: { tokenId: number; amount: number }[];
+  ownedIngredients?: Ingredient[];
   addIngredient?: (ingredient: Ingredient) => void;
   removeIngredient?: (ingredient: Ingredient) => void;
   pizza?: Pizza;
@@ -46,7 +46,7 @@ export const IngredientList = ({
               ownedIngredients.find(
                 ownedIngredient =>
                   ownedIngredient.tokenId === ingredient.tokenId &&
-                  ownedIngredient.amount > 0,
+                  !!ownedIngredient.balance,
               ),
             )
           : ingredientGroup.ingredients

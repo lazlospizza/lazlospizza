@@ -1,7 +1,5 @@
 import { Box, Center, Flex, Stack, Text, useToast } from '@chakra-ui/react';
-import { flatten } from 'lodash';
-import { useCallback, useEffect, useState } from 'react';
-import { useIngredientsContract } from '../../hooks/useContract';
+import { useEffect, useState } from 'react';
 import { useWallet } from '../../hooks/useWallet';
 import { colors } from '../../styles/theme';
 import { Pizza, Ingredient, PizzaCave } from '../../types';
@@ -26,49 +24,12 @@ export enum RebakeTabs {
 
 export const Rebake = () => {
   const isMobile = useIsMobile();
-  const { wallet, ingredientGroups, pizzas } = useWallet();
-  const { ingredientsContract } = useIngredientsContract();
+  const { ingredientGroups, myPizzas: pizzas, myIngredients } = useWallet();
   const [pizza, setPizza] = useState<Pizza>(null);
-  const [ownedIngredients, setOwnedIngredients] = useState<
-    { tokenId: number; amount: number }[]
-  >([]);
   const [selectedTab, setSelectedTab] = useState(RebakeTabs.pizzas);
   const [selectedHalfTab, setSelectedHalfTab] = useState(RebakeTabs.selection);
   const [errorMessage, setErrorMessage] = useState('');
   const toast = useToast();
-  const provider = wallet?.web3Provider;
-
-  const getIngredients = useCallback(async () => {
-    if (!provider) return;
-    try {
-      setErrorMessage(null);
-      const allIngredients = flatten(
-        ingredientGroups.map(group => group.ingredients),
-      );
-      const results = await ingredientsContract.balanceOfBatch(
-        allIngredients.map(() => wallet?.address),
-        allIngredients.map(ingredient => ingredient.tokenId),
-      );
-      const parsedResults = results.map(bigNumber =>
-        parseInt(bigNumber._hex, 16),
-      );
-
-      setOwnedIngredients(
-        allIngredients.map(({ tokenId }, index) => ({
-          tokenId,
-          amount: parsedResults[index],
-        })),
-      );
-    } catch (e) {
-      console.log(e);
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      window.MM_ERR = e;
-      setErrorMessage('Unexpected Error');
-    } finally {
-      // setIsMinting(false);
-    }
-  }, [ingredientGroups, ingredientsContract, provider]);
 
   useEffect(() => {
     if (!!errorMessage) {
@@ -82,10 +43,6 @@ export const Rebake = () => {
       });
     }
   }, [errorMessage, toast]);
-
-  useEffect(() => {
-    getIngredients();
-  }, [getIngredients]);
 
   const handleAddAdditionalIngredient = (item: Ingredient) => {
     addAdditionalIngredient({ item, setPizza });
@@ -109,7 +66,7 @@ export const Rebake = () => {
         return pizza ? (
           <SelectYourIngredients
             ingredientGroups={ingredientGroups}
-            ownedIngredients={ownedIngredients}
+            ownedIngredients={myIngredients}
             addIngredient={() => {}}
             removeIngredient={() => {}}
             pizza={pizza}
@@ -194,7 +151,7 @@ export const Rebake = () => {
             {pizza ? (
               <SelectYourIngredients
                 ingredientGroups={ingredientGroups}
-                ownedIngredients={ownedIngredients}
+                ownedIngredients={myIngredients}
                 addIngredient={handleAddAdditionalIngredient}
                 removeIngredient={handleRemoveAdditionalIngredient}
                 pizza={pizza}

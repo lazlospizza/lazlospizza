@@ -1,5 +1,5 @@
-import { Box, Center, Flex, Stack, Text, useToast } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { Box, Center, Flex, Stack, Text } from '@chakra-ui/react';
+import { useState } from 'react';
 import { useWallet } from '../../hooks/useWallet';
 import { colors } from '../../styles/theme';
 import { Pizza, PizzaCave } from '../../types';
@@ -17,25 +17,10 @@ export enum UnbakeTabs {
 
 export const Unbake = () => {
   const isMobile = useIsMobile();
-  const { pizzas } = useWallet();
+  const { myPizzas: pizzas } = useWallet();
   const [pizza, setPizza] = useState<Pizza>(null);
   const [selectedTab, setSelectedTab] = useState(UnbakeTabs.pizzas);
   const [selectedHalfTab, setSelectedHalfTab] = useState(UnbakeTabs.selection);
-  const [errorMessage, setErrorMessage] = useState('');
-  const toast = useToast();
-
-  useEffect(() => {
-    if (!!errorMessage) {
-      toast({
-        title: 'Error',
-        description: errorMessage,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-        onCloseComplete: () => setErrorMessage(null),
-      });
-    }
-  }, [errorMessage, toast]);
 
   const renderTab = (tab: UnbakeTabs) => {
     switch (tab) {
