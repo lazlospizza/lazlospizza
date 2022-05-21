@@ -103,7 +103,7 @@ export const BuyAndBake = () => {
       case BuyAndBakeTabs.selections:
         return <YourSelections pizza={pizza} tab={PizzaCave.buyAndBake} />;
       case BuyAndBakeTabs.checkRarity:
-        return <CheckRarity pizza={pizza} />;
+        return <CheckRarity />;
       default:
         break;
     }

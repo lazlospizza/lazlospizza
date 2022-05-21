@@ -35,7 +35,7 @@ export const Unbake = () => {
       case UnbakeTabs.selection:
         return <YourSelections pizza={pizza} tab={PizzaCave.unbake} />;
       case UnbakeTabs.checkRarity:
-        return <CheckRarity pizza={pizza} />;
+        return <CheckRarity />;
       default:
         break;
     }

@@ -89,7 +89,7 @@ export const Rebake = () => {
           />
         );
       case RebakeTabs.checkRarity:
-        return <CheckRarity pizza={pizza} />;
+        return <CheckRarity />;
       default:
         break;
     }
