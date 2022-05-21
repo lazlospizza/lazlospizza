@@ -23,6 +23,8 @@ contract LazlosRendering is Ownable {
     address public pizzasContractAddress;
     string public ingredientsIPFSHash;
     string public baseURI;
+    string private ingredientsDescription;
+    string private pizzaDescription;
 
     function setIngredientsContractAddress(address addr) public onlyOwner {
         ingredientsContractAddress = addr;
@@ -40,6 +42,14 @@ contract LazlosRendering is Ownable {
         baseURI = uri;
     }
 
+    function setIngredientsDescription(string memory description) public onlyOwner {
+        ingredientsDescription = description;
+    }
+
+    function setPizzaDescription(string memory description) public onlyOwner {
+        pizzaDescription = description;
+    }
+
     function ingredientTokenMetadata(uint256 id) public view returns (string memory) {
         Ingredient memory ingredient = ILazlosIngredients(ingredientsContractAddress).getIngredient(id);
 
@@ -48,7 +58,7 @@ contract LazlosRendering is Ownable {
                 "data:application/json;base64,",
                 Base64.encode(abi.encodePacked(
                     '{"name":"', ingredient.name,
-                    '","description":"blah blah blah something about pizza","image":"https://gateway.pinata.cloud/ipfs/',
+                    '","description":"', ingredientsDescription, '","image":"https://gateway.pinata.cloud/ipfs/',
                     ingredientsIPFSHash, '/', id.toString(), '.png"}'
                 ))
             )
@@ -57,47 +67,22 @@ contract LazlosRendering is Ownable {
 
     function pizzaTokenMetadata(uint256 id) external view returns (string memory) {
         Pizza memory pizza = ILazlosPizzas(pizzasContractAddress).pizza(id);
-
+        uint256 numIngredients = ILazlosIngredients(ingredientsContractAddress).getNumIngredients();
+        
         string memory propertiesString;
+        for (uint256 ingredientId = 1; ingredientId <= numIngredients; ingredientId++) {
+            string memory comma = ",";
+            if (ingredientId == 1) {
+                comma = "";
+            }
 
-        propertiesString = string(abi.encodePacked(
-            '{"trait_type":"', getIngredientTypeName(pizza.base), '","value":"', getIngredientName(pizza.base), '"},'
-            '{"trait_type":"', getIngredientTypeName(pizza.sauce), '","value":"', getIngredientName(pizza.sauce), '"}'
-        ));
-
-        for (uint256 i = 0; i < 3; i++) {
-            uint16 cheese = pizza.cheeses[i];
-            if (cheese == 0) {
-                break;
+            string memory value = "No";
+            if (pizzaContainsIngredient(pizza, ingredientId)) {
+                value = "Yes";
             }
 
             propertiesString = string(abi.encodePacked(
-                propertiesString,
-                 ',{"trait_type":"', getIngredientTypeName(cheese), '","value":"', getIngredientName(cheese), '"}'
-            ));
-        }
-
-        for (uint256 i = 0; i < 4; i++) {
-            uint16 meat = pizza.meats[i];
-            if (meat == 0) {
-                break;
-            }
-
-            propertiesString = string(abi.encodePacked(
-                propertiesString,
-                 ',{"trait_type":"', getIngredientTypeName(meat), '","value":"', getIngredientName(meat), '"}'
-            ));
-        }
-
-        for (uint256 i = 0; i < 4; i++) {
-            uint16 topping = pizza.toppings[i];
-            if (topping == 0) {
-                break;
-            }
-
-            propertiesString = string(abi.encodePacked(
-                propertiesString,
-                 ',{"trait_type":"', getIngredientTypeName(topping), '","value":"', getIngredientName(topping), '"}'
+                propertiesString, comma, '{"trait_type":"', getIngredientName(ingredientId), '","value":"', value, '"}'
             ));
         }
 
@@ -105,7 +90,7 @@ contract LazlosRendering is Ownable {
             abi.encodePacked(
                 "data:application/json;base64,",
                 Base64.encode(abi.encodePacked(
-                    '{"description":"blah blah blah something about pizza","image":"',
+                    '{"description":"', pizzaDescription, '","image":"',
                     baseURI, '/tokens/', id.toString(), '/pizza_image.png","attributes":[',
                     propertiesString, ']}'
                 ))
@@ -115,6 +100,53 @@ contract LazlosRendering is Ownable {
 
     function getIngredientName(uint256 ingredientTokenId) private view returns (string memory) {
         return ILazlosIngredients(ingredientsContractAddress).getIngredient(ingredientTokenId).name;
+    }
+
+    function pizzaContainsIngredient(Pizza memory pizza, uint256 ingredientId) private pure returns (bool) {
+        if (pizza.base == ingredientId) {
+            return true;
+        
+        }
+        
+        if (pizza.sauce == ingredientId) {
+            return true;
+        
+        }
+
+        for (uint256 i = 0; i < 3; i++) {
+            uint16 cheese = pizza.cheeses[i];
+            if (cheese == 0) {
+                break;
+            }
+
+            if (cheese == ingredientId) {
+                return true;
+            }
+        }
+
+        for (uint256 i = 0; i < 4; i++) {
+            uint16 meat = pizza.meats[i];
+            if (meat == 0) {
+                break;
+            }
+
+            if (meat == ingredientId) {
+                return true;
+            }
+        }
+
+        for (uint256 i = 0; i < 4; i++) {
+            uint16 topping = pizza.toppings[i];
+            if (topping == 0) {
+                break;
+            }
+
+            if (topping == ingredientId) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     function getIngredientTypeName(uint256 ingredientTokenId) private view returns (string memory) {
