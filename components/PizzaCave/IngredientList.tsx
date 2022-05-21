@@ -19,17 +19,28 @@ export const IngredientList = ({
   tab,
 }: Props) => {
   return (
-    <Box>
+    <Box mt={4}>
       <Stack>
         <Text color="tomato.500" fontWeight={900} fontSize={'xl'}>
           {ingredientGroup.name}
         </Text>
-        <Flex>
-          <Text color="gray.dark">{`A Pizza must have`}</Text>
-          <Text color="tomato.500">
-            &nbsp;{`only 1 ${ingredientGroup.name}`}
-          </Text>
-        </Flex>
+        {!!ingredientGroup.max && (
+          <Flex>
+            <Text color="gray.dark">{`A Pizza must have`}</Text>
+            {ingredientGroup.min === ingredientGroup.max ? (
+              <Text color="tomato.500">
+                &nbsp;{`only ${ingredientGroup.max} ${ingredientGroup.name}`}
+              </Text>
+            ) : (
+              <Text color="tomato.500">
+                &nbsp;
+                {ingredientGroup.min
+                  ? `${ingredientGroup.min} to ${ingredientGroup.max} ${ingredientGroup.name}`
+                  : `up to ${ingredientGroup.max} ${ingredientGroup.name}`}
+              </Text>
+            )}
+          </Flex>
+        )}
         {(!!ownedIngredients
           ? ingredientGroup.ingredients.filter(ingredient =>
               ownedIngredients.find(

@@ -1,12 +1,13 @@
 import { Box, Heading, Stack, useToast } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import { IngredientList } from '../components/PizzaCave/IngredientList';
+import { SelectYourPizza } from '../components/PizzaCave/SelectYourPizza';
 import { useIngredientsContract } from '../hooks/useContract';
 import { useWallet } from '../hooks/useWallet';
 
 export default function MyWallet() {
   const { ingredientsContract } = useIngredientsContract();
-  const { wallet, ingredients, ingredientGroups } = useWallet();
+  const { wallet, ingredients, ingredientGroups, pizzas } = useWallet();
   const [ownedIngredients, setOwnedIngredients] = useState<
     { tokenId: number; amount: number }[]
   >([]);
@@ -52,27 +53,26 @@ export default function MyWallet() {
       <Heading fontFamily="Lato" size="lg" color="tomato.500">
         My Wallet
       </Heading>
+      <SelectYourPizza pizzas={pizzas} />
       <Box style={{ marginTop: 20, padding: 10 }}>
-        <Stack>
-          {ingredientGroups &&
-            ingredientGroups.map(_group => {
-              const ownedFromGroup =
-                _group.ingredients?.filter(ingredient =>
-                  ownedIngredients?.find(
-                    ownedIngredient =>
-                      ingredient.tokenId === ownedIngredient.tokenId &&
-                      ownedIngredient.amount > 0,
-                  ),
-                ) || [];
-              return ownedFromGroup.length || !ownedIngredients ? (
-                <IngredientList
-                  ingredientGroup={_group}
-                  ownedIngredients={ownedIngredients}
-                  key={_group.name}
-                />
-              ) : null;
-            })}
-        </Stack>
+        {ingredientGroups &&
+          ingredientGroups.map(_group => {
+            const ownedFromGroup =
+              _group.ingredients?.filter(ingredient =>
+                ownedIngredients?.find(
+                  ownedIngredient =>
+                    ingredient.tokenId === ownedIngredient.tokenId &&
+                    ownedIngredient.amount > 0,
+                ),
+              ) || [];
+            return ownedFromGroup.length || !ownedIngredients ? (
+              <IngredientList
+                ingredientGroup={_group}
+                ownedIngredients={ownedIngredients}
+                key={_group.name}
+              />
+            ) : null;
+          })}
       </Box>
     </Box>
   );

@@ -5,6 +5,13 @@ import Web3Modal from 'web3modal';
 import { useRouter } from 'next/router';
 import { Ingredient, IngredientGroup, IngredientType, Pizza } from '../types';
 import axios from 'axios';
+import {
+  BASE_LIMIT,
+  CHEESE_LIMIT,
+  MEAT_LIMIT,
+  SAUCE_LIMIT,
+  TOPPING_LIMIT,
+} from '../constants';
 
 export const PROVIDER_OPTIONS = {
   walletconnect: {
@@ -184,6 +191,8 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         {
           name: 'Base',
           type: IngredientType.base,
+          min: 1,
+          max: BASE_LIMIT,
           ingredients: ingredients.filter(
             ingredient => ingredient.ingredientType === IngredientType.base,
           ),
@@ -191,6 +200,8 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         {
           name: 'Sauce',
           type: IngredientType.sauce,
+          min: 1,
+          max: SAUCE_LIMIT,
           ingredients: ingredients.filter(
             ingredient => ingredient.ingredientType === IngredientType.sauce,
           ),
@@ -198,6 +209,8 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         {
           name: 'Cheeses',
           type: IngredientType.cheese,
+          min: 1,
+          max: CHEESE_LIMIT,
           ingredients: ingredients.filter(
             ingredient => ingredient.ingredientType === IngredientType.cheese,
           ),
@@ -205,6 +218,8 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         {
           name: 'Meats',
           type: IngredientType.meat,
+          min: 0,
+          max: MEAT_LIMIT,
           ingredients: ingredients.filter(
             ingredient => ingredient.ingredientType === IngredientType.meat,
           ),
@@ -212,6 +227,8 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         {
           name: 'Toppings',
           type: IngredientType.topping,
+          min: 1,
+          max: TOPPING_LIMIT,
           ingredients: ingredients.filter(
             ingredient => ingredient.ingredientType === IngredientType.topping,
           ),

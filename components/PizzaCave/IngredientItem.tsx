@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Flex, Heading, Text } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { colors } from '../../styles/theme';
 import { Ingredient, Pizza, PizzaCave } from '../../types';
@@ -47,7 +47,30 @@ export const IngredientItem = ({
       p="2"
     >
       <Flex>
-        <img style={{ height: 100 }} src={image} alt="ingredient" />
+        <Center
+          style={{
+            position: 'relative',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 100,
+            height: 100,
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              backgroundImage: `url(/assets/ingredients/raw/${ingredient.name
+                .split(' ')
+                .join('-')}.png)`,
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center center',
+            }}
+          />
+        </Center>
         {/* Right of Image */}
         <Flex width={'100%'} justifyContent={'space-between'}>
           {/* Name and Cost */}

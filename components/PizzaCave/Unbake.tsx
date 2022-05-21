@@ -45,7 +45,6 @@ export const Unbake = () => {
             selectPizza={p => setPizza(p)}
             pizzas={pizzas}
             selectedPizza={pizza}
-            tab={PizzaCave.unbake}
           />
         );
       case UnbakeTabs.selection:
@@ -114,7 +113,6 @@ export const Unbake = () => {
               selectPizza={p => setPizza(p)}
               pizzas={pizzas}
               selectedPizza={pizza}
-              tab={PizzaCave.unbake}
             />
           </div>
           <Stack

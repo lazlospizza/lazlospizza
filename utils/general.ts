@@ -1,5 +1,5 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
-import { MEAT_LIMIT, TOPPING_LIMIT } from '../constants';
+import { CHEESE_LIMIT, MEAT_LIMIT, TOPPING_LIMIT } from '../constants';
 import { Ingredient, IngredientType, Pizza } from '../types';
 
 export const useIsMobile = () => {
@@ -33,7 +33,7 @@ const ingredientsWithoutDupe = (
   ];
 };
 
-const getTotalCost = (ingredients: Ingredient[]) => {
+export const getTotalCost = (ingredients: Ingredient[]) => {
   return ingredients.reduce((partialSum, item) => partialSum + item.price, 0);
 };
 
@@ -70,7 +70,7 @@ export const addIngredient = ({
       }));
       break;
     case IngredientType.cheese:
-      if (pizza.cheeses) return;
+      if (pizza.cheeses?.length >= CHEESE_LIMIT) return;
       setPizza(pizza => ({
         ...pizza,
         cheeses: ingredientsWithoutDupe(pizza.cheeses, item),

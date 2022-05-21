@@ -42,6 +42,8 @@ export interface Ingredient {
 export interface IngredientGroup {
   name: string;
   type?: IngredientType;
+  min?: number | null;
+  max?: number | null;
   ingredients: Ingredient[];
 }
 

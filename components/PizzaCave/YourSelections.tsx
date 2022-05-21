@@ -16,6 +16,7 @@ import { BAKING_FEE, REBAKE_FEE, UNBAKE_FEE } from '../../constants';
 import { useMainContract } from '../../hooks/useContract';
 import { useWallet } from '../../hooks/useWallet';
 import { Ingredient, Pizza, PizzaCave } from '../../types';
+import { getTotalCost } from '../../utils/general';
 
 interface Props {
   pizza?: Pizza | null;
@@ -43,7 +44,7 @@ export const YourSelections = ({
     if (isEmpty(pizza?.allIngredients)) return setDisableBake(true);
     if (!pizza?.base) return setDisableBake(true);
     if (!pizza?.sauce) return setDisableBake(true);
-    if (!pizza?.cheese) return setDisableBake(true);
+    if (!pizza?.cheeses) return setDisableBake(true);
     // add checks for other ingredients
     console.log('Bake and Bake Allowed!');
     setDisableBake(false);
@@ -166,6 +167,9 @@ export const YourSelections = ({
       );
       setIsMinting(true);
       setErrorMessage(null);
+      const totalCost = pizza?.allIngredients?.length
+        ? getTotalCost(pizza.allIngredients)
+        : 0;
       const signer = provider.getSigner();
       const contractWithSigner = mainContract.connect(signer);
       const result = await contractWithSigner.buyAndBakePizza(
@@ -173,7 +177,7 @@ export const YourSelections = ({
         {
           from: signer._address,
           value: parseEther(
-            (Math.round((pizza.totalCost + BAKING_FEE) * 100) / 100).toFixed(2),
+            (Math.round((totalCost + BAKING_FEE) * 100) / 100).toFixed(2),
           ),
         },
       );
@@ -208,6 +212,9 @@ export const YourSelections = ({
       );
       setIsMinting(true);
       setErrorMessage(null);
+      const totalCost = pizza?.allIngredients?.length
+        ? getTotalCost(pizza.allIngredients)
+        : 0;
       const signer = provider.getSigner();
       const contractWithSigner = mainContract.connect(signer);
       const result = await contractWithSigner.buyIngredients(
@@ -215,9 +222,7 @@ export const YourSelections = ({
         ingredientTokenIds.map(() => 1),
         {
           from: signer._address,
-          value: parseEther(
-            (Math.round(pizza?.totalCost * 100) / 100).toFixed(2),
-          ),
+          value: parseEther((Math.round(totalCost * 100) / 100).toFixed(2)),
         },
       );
 
@@ -242,17 +247,20 @@ export const YourSelections = ({
   }, [mainContract, provider, pizza]);
 
   const renderButtons = () => {
+    const totalCost = pizza?.allIngredients?.length
+      ? getTotalCost(pizza.allIngredients)
+      : 0;
     switch (tab) {
       case PizzaCave.buyAndBake:
         return (
           <Stack pt={8}>
             <Button
-              disabled={pizza?.totalCost === 0 || !isConnected}
+              disabled={totalCost === 0 || !isConnected}
               className="tomato-btn"
               onClick={handleBuyIngredients}
               isLoading={isMinting}
             >{`Buy Ingredients only at ${
-              Math.round((pizza?.totalCost || 0) * 100) / 100
+              Math.round((totalCost || 0) * 100) / 100
             }`}</Button>
             <Button
               disabled={disableBake || !isConnected}
@@ -260,7 +268,7 @@ export const YourSelections = ({
               onClick={handleBuyAndBake}
               isLoading={isMinting}
             >{`Buy & Bake at ${
-              Math.round(((pizza?.totalCost || 0) + BAKING_FEE) * 100) / 100
+              Math.round(((totalCost || 0) + BAKING_FEE) * 100) / 100
             }`}</Button>
           </Stack>
         );
@@ -334,7 +342,9 @@ export const YourSelections = ({
                 position: 'absolute',
                 width: '80%',
                 height: '80%',
-                backgroundImage: `url(/assets/ingredients/baked/${item.imgUrl})`,
+                backgroundImage: `url(/assets/ingredients/baked/${item.name
+                  .split(' ')
+                  .join('-')}.png)`,
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center center',
@@ -370,9 +380,9 @@ export const YourSelections = ({
                   {item.name}
                 </Heading>
               )}
-              {(tab === PizzaCave.buyAndBake || tab === PizzaCave.bake) && (
+              {tab === PizzaCave.buyAndBake && (
                 <Heading size={'sm'} color={'tomato.500'}>
-                  {item.cost}
+                  {item.price}
                 </Heading>
               )}
               {tab === PizzaCave.rebake &&

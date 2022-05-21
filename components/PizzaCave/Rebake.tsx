@@ -120,7 +120,6 @@ export const Rebake = () => {
             selectPizza={p => setPizza(p)}
             pizzas={pizzas}
             selectedPizza={pizza}
-            tab={PizzaCave.rebake}
           />
         );
       case RebakeTabs.selection:
@@ -206,7 +205,6 @@ export const Rebake = () => {
                 selectPizza={p => setPizza(p)}
                 pizzas={pizzas}
                 selectedPizza={pizza}
-                tab={PizzaCave.rebake}
               />
             )}
           </div>

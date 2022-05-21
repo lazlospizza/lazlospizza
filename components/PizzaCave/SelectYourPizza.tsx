@@ -11,15 +11,13 @@ import { colors } from '../../styles/theme';
 import { Pizza, PizzaCave } from '../../types';
 
 interface Props {
-  selectPizza: (pizza: Pizza) => void;
+  selectPizza?: (pizza: Pizza) => void;
   pizzas: Pizza[];
-  selectedPizza: Pizza;
-  tab: PizzaCave;
+  selectedPizza?: Pizza;
 }
 export const SelectYourPizza = ({
   selectPizza,
   pizzas,
-  tab,
   selectedPizza,
 }: Props) => {
   console.log(pizzas);
@@ -79,19 +77,21 @@ export const SelectYourPizza = ({
                     ))}
                   </Stack>
                 </Flex>
-                <Flex
-                  direction={'column'}
-                  justifyContent={'space-between'}
-                  py="2"
-                >
-                  <Button
-                    className="tomato-btn"
-                    onClick={() => selectPizza(pizza)}
-                    disabled={pizza.tokenId === selectedPizza?.tokenId}
+                {!!selectPizza && (
+                  <Flex
+                    direction={'column'}
+                    justifyContent={'space-between'}
+                    py="2"
                   >
-                    Select
-                  </Button>
-                </Flex>
+                    <Button
+                      className="tomato-btn"
+                      onClick={() => selectPizza(pizza)}
+                      disabled={pizza.tokenId === selectedPizza?.tokenId}
+                    >
+                      Select
+                    </Button>
+                  </Flex>
+                )}
               </Flex>
             </Flex>
           </Box>
