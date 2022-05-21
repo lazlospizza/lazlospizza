@@ -580,16 +580,20 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
     }
 
     function artistWithdraw() public nonReentrant {
-        uint256 earnedCommission = artistTotalCommission(msg.sender);
-        uint256 amountWithdrawn = artistWithdrawalAmount[msg.sender];
-
-        require(earnedCommission > amountWithdrawn, "Hasn't earned any more commission.");
-
-        uint256 amountToBePayed = earnedCommission - amountWithdrawn;
+        uint256 amountToBePayed = artistAllowedWithdrawalAmount(msg.sender);
         artistWithdrawalAmount[msg.sender] += amountToBePayed;
 
         (bool success,) = msg.sender.call{value : amountToBePayed}('');
         require(success, "Withdrawal failed.");
+    }
+
+    function artistAllowedWithdrawalAmount(address artist) public view returns( uint256) {
+        uint256 earnedCommission = artistTotalCommission(artist);
+        uint256 amountWithdrawn = artistWithdrawalAmount[artist];
+
+        require(earnedCommission > amountWithdrawn, "Hasn't earned any more commission.");
+        uint256 withdrawalAmount = earnedCommission - amountWithdrawn;
+        return withdrawalAmount;
     }
 
     function artistTotalCommission(address artist) public view returns (uint256) {
@@ -614,7 +618,7 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
         return artistCommission;
     }
 
-    function redeemPayout(uint256 payoutBlock ,uint256 amount, bytes32 r, bytes32 s, uint8 v) public nonReentrant {
+    function redeemPayout(uint256 payoutBlock, uint256 amount, bytes32 r, bytes32 s, uint8 v) public nonReentrant {
         bytes32 messageHash = keccak256(abi.encodePacked(
             payoutBlock,
             msg.sender,
@@ -630,5 +634,9 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
 
         (bool success,) = msg.sender.call{value : amount}('');
         require(success, "Withdrawal failed.");
+    }
+
+    function isPaidOutForBlock(address addr, uint256 payoutBlock) public view returns (bool) {
+        return isPaidByBlockAndAddress[payoutBlock][addr];
     }
 }
