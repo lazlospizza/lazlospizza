@@ -138,13 +138,13 @@ export const styles = {
     '.cave-nav-btn': {
       color: 'gray.dark',
       border: '1px',
-      marginRight: 5,
+      margin: 2,
     },
     '.cave-nav-btn-selected': {
       color: '#FFD232',
       background: '#3D3431',
       border: '1px',
-      marginRight: 5,
+      margin: 2,
     },
     '.artist-card': {
       color: 'tomato.500',
