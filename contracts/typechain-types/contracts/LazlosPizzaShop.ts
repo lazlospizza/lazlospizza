@@ -27,6 +27,30 @@ import type {
   OnEvent,
 } from "../common";
 
+export declare namespace LazlosPizzaShop {
+  export type PayoutStruct = {
+    payoutBlock: BigNumberish;
+    amount: BigNumberish;
+    r: BytesLike;
+    s: BytesLike;
+    v: BigNumberish;
+  };
+
+  export type PayoutStructOutput = [
+    BigNumber,
+    BigNumber,
+    string,
+    string,
+    number
+  ] & {
+    payoutBlock: BigNumber;
+    amount: BigNumber;
+    r: string;
+    s: string;
+    v: number;
+  };
+}
+
 export interface LazlosPizzaShopInterface extends utils.Interface {
   functions: {
     "artistAllowedWithdrawalAmount(address)": FunctionFragment;
@@ -35,24 +59,28 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
     "bakePizza(uint256[])": FunctionFragment;
     "bakePizzaPrice()": FunctionFragment;
     "bakeRandomPizza(uint256[],uint256,bytes32,bytes32,uint8)": FunctionFragment;
+    "bakeRandomPizzaOn()": FunctionFragment;
     "buyAndBakePizza(uint256[])": FunctionFragment;
     "buyIngredients(uint256[],uint256[])": FunctionFragment;
     "ingredientsContractAddress()": FunctionFragment;
     "isPaidOutForBlock(address,uint256)": FunctionFragment;
+    "mintingOn()": FunctionFragment;
     "owner()": FunctionFragment;
     "pizzaContractAddress()": FunctionFragment;
     "randomBakePrice()": FunctionFragment;
     "rebakePizza(uint256,uint256[],uint256[])": FunctionFragment;
     "rebakePizzaPrice()": FunctionFragment;
-    "redeemPayout(uint256,uint256,bytes32,bytes32,uint8)": FunctionFragment;
+    "redeemPayout((uint256,uint256,bytes32,bytes32,uint8)[])": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "setBakeRandomPizzaOn(bool)": FunctionFragment;
     "setIngredientsContractAddress(address)": FunctionFragment;
+    "setMintingOn(bool)": FunctionFragment;
     "setPizzaContractAddress(address)": FunctionFragment;
     "setSystemAddress(address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unbakePizza(uint256)": FunctionFragment;
     "unbakePizzaPrice()": FunctionFragment;
-    "verifyString(bytes32,bytes32,bytes32,uint8)": FunctionFragment;
+    "verifySignature(bytes32,bytes32,bytes32,uint8)": FunctionFragment;
   };
 
   getFunction(
@@ -63,10 +91,12 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
       | "bakePizza"
       | "bakePizzaPrice"
       | "bakeRandomPizza"
+      | "bakeRandomPizzaOn"
       | "buyAndBakePizza"
       | "buyIngredients"
       | "ingredientsContractAddress"
       | "isPaidOutForBlock"
+      | "mintingOn"
       | "owner"
       | "pizzaContractAddress"
       | "randomBakePrice"
@@ -74,13 +104,15 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
       | "rebakePizzaPrice"
       | "redeemPayout"
       | "renounceOwnership"
+      | "setBakeRandomPizzaOn"
       | "setIngredientsContractAddress"
+      | "setMintingOn"
       | "setPizzaContractAddress"
       | "setSystemAddress"
       | "transferOwnership"
       | "unbakePizza"
       | "unbakePizzaPrice"
-      | "verifyString"
+      | "verifySignature"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -108,6 +140,10 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
     values: [BigNumberish[], BigNumberish, BytesLike, BytesLike, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "bakeRandomPizzaOn",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "buyAndBakePizza",
     values: [BigNumberish[]]
   ): string;
@@ -123,6 +159,7 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
     functionFragment: "isPaidOutForBlock",
     values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "mintingOn", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "pizzaContractAddress",
@@ -142,15 +179,23 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "redeemPayout",
-    values: [BigNumberish, BigNumberish, BytesLike, BytesLike, BigNumberish]
+    values: [LazlosPizzaShop.PayoutStruct[]]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "setBakeRandomPizzaOn",
+    values: [boolean]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setIngredientsContractAddress",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setMintingOn",
+    values: [boolean]
   ): string;
   encodeFunctionData(
     functionFragment: "setPizzaContractAddress",
@@ -173,7 +218,7 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "verifyString",
+    functionFragment: "verifySignature",
     values: [BytesLike, BytesLike, BytesLike, BigNumberish]
   ): string;
 
@@ -199,6 +244,10 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "bakeRandomPizzaOn",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "buyAndBakePizza",
     data: BytesLike
   ): Result;
@@ -214,6 +263,7 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
     functionFragment: "isPaidOutForBlock",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "mintingOn", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "pizzaContractAddress",
@@ -240,7 +290,15 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setBakeRandomPizzaOn",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setIngredientsContractAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setMintingOn",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -264,7 +322,7 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "verifyString",
+    functionFragment: "verifySignature",
     data: BytesLike
   ): Result;
 
@@ -344,6 +402,8 @@ export interface LazlosPizzaShop extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    bakeRandomPizzaOn(overrides?: CallOverrides): Promise<[boolean]>;
+
     buyAndBakePizza(
       tokenIds: BigNumberish[],
       overrides?: PayableOverrides & { from?: string | Promise<string> }
@@ -363,6 +423,8 @@ export interface LazlosPizzaShop extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    mintingOn(overrides?: CallOverrides): Promise<[boolean]>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     pizzaContractAddress(overrides?: CallOverrides): Promise<[string]>;
@@ -379,11 +441,7 @@ export interface LazlosPizzaShop extends BaseContract {
     rebakePizzaPrice(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     redeemPayout(
-      payoutBlock: BigNumberish,
-      amount: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      v: BigNumberish,
+      payouts: LazlosPizzaShop.PayoutStruct[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -391,8 +449,18 @@ export interface LazlosPizzaShop extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    setBakeRandomPizzaOn(
+      on: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     setIngredientsContractAddress(
       addr: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setMintingOn(
+      on: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -418,7 +486,7 @@ export interface LazlosPizzaShop extends BaseContract {
 
     unbakePizzaPrice(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    verifyString(
+    verifySignature(
       messageHash: BytesLike,
       r: BytesLike,
       s: BytesLike,
@@ -457,6 +525,8 @@ export interface LazlosPizzaShop extends BaseContract {
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  bakeRandomPizzaOn(overrides?: CallOverrides): Promise<boolean>;
+
   buyAndBakePizza(
     tokenIds: BigNumberish[],
     overrides?: PayableOverrides & { from?: string | Promise<string> }
@@ -476,6 +546,8 @@ export interface LazlosPizzaShop extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  mintingOn(overrides?: CallOverrides): Promise<boolean>;
+
   owner(overrides?: CallOverrides): Promise<string>;
 
   pizzaContractAddress(overrides?: CallOverrides): Promise<string>;
@@ -492,11 +564,7 @@ export interface LazlosPizzaShop extends BaseContract {
   rebakePizzaPrice(overrides?: CallOverrides): Promise<BigNumber>;
 
   redeemPayout(
-    payoutBlock: BigNumberish,
-    amount: BigNumberish,
-    r: BytesLike,
-    s: BytesLike,
-    v: BigNumberish,
+    payouts: LazlosPizzaShop.PayoutStruct[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -504,8 +572,18 @@ export interface LazlosPizzaShop extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  setBakeRandomPizzaOn(
+    on: boolean,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   setIngredientsContractAddress(
     addr: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setMintingOn(
+    on: boolean,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -531,7 +609,7 @@ export interface LazlosPizzaShop extends BaseContract {
 
   unbakePizzaPrice(overrides?: CallOverrides): Promise<BigNumber>;
 
-  verifyString(
+  verifySignature(
     messageHash: BytesLike,
     r: BytesLike,
     s: BytesLike,
@@ -568,6 +646,8 @@ export interface LazlosPizzaShop extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    bakeRandomPizzaOn(overrides?: CallOverrides): Promise<boolean>;
+
     buyAndBakePizza(
       tokenIds: BigNumberish[],
       overrides?: CallOverrides
@@ -587,6 +667,8 @@ export interface LazlosPizzaShop extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    mintingOn(overrides?: CallOverrides): Promise<boolean>;
+
     owner(overrides?: CallOverrides): Promise<string>;
 
     pizzaContractAddress(overrides?: CallOverrides): Promise<string>;
@@ -603,20 +685,20 @@ export interface LazlosPizzaShop extends BaseContract {
     rebakePizzaPrice(overrides?: CallOverrides): Promise<BigNumber>;
 
     redeemPayout(
-      payoutBlock: BigNumberish,
-      amount: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      v: BigNumberish,
+      payouts: LazlosPizzaShop.PayoutStruct[],
       overrides?: CallOverrides
     ): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
+    setBakeRandomPizzaOn(on: boolean, overrides?: CallOverrides): Promise<void>;
+
     setIngredientsContractAddress(
       addr: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    setMintingOn(on: boolean, overrides?: CallOverrides): Promise<void>;
 
     setPizzaContractAddress(
       addr: string,
@@ -637,7 +719,7 @@ export interface LazlosPizzaShop extends BaseContract {
 
     unbakePizzaPrice(overrides?: CallOverrides): Promise<BigNumber>;
 
-    verifyString(
+    verifySignature(
       messageHash: BytesLike,
       r: BytesLike,
       s: BytesLike,
@@ -688,6 +770,8 @@ export interface LazlosPizzaShop extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    bakeRandomPizzaOn(overrides?: CallOverrides): Promise<BigNumber>;
+
     buyAndBakePizza(
       tokenIds: BigNumberish[],
       overrides?: PayableOverrides & { from?: string | Promise<string> }
@@ -707,6 +791,8 @@ export interface LazlosPizzaShop extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    mintingOn(overrides?: CallOverrides): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     pizzaContractAddress(overrides?: CallOverrides): Promise<BigNumber>;
@@ -723,11 +809,7 @@ export interface LazlosPizzaShop extends BaseContract {
     rebakePizzaPrice(overrides?: CallOverrides): Promise<BigNumber>;
 
     redeemPayout(
-      payoutBlock: BigNumberish,
-      amount: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      v: BigNumberish,
+      payouts: LazlosPizzaShop.PayoutStruct[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -735,8 +817,18 @@ export interface LazlosPizzaShop extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    setBakeRandomPizzaOn(
+      on: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     setIngredientsContractAddress(
       addr: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setMintingOn(
+      on: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -762,7 +854,7 @@ export interface LazlosPizzaShop extends BaseContract {
 
     unbakePizzaPrice(overrides?: CallOverrides): Promise<BigNumber>;
 
-    verifyString(
+    verifySignature(
       messageHash: BytesLike,
       r: BytesLike,
       s: BytesLike,
@@ -802,6 +894,8 @@ export interface LazlosPizzaShop extends BaseContract {
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    bakeRandomPizzaOn(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     buyAndBakePizza(
       tokenIds: BigNumberish[],
       overrides?: PayableOverrides & { from?: string | Promise<string> }
@@ -823,6 +917,8 @@ export interface LazlosPizzaShop extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    mintingOn(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     pizzaContractAddress(
@@ -841,11 +937,7 @@ export interface LazlosPizzaShop extends BaseContract {
     rebakePizzaPrice(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     redeemPayout(
-      payoutBlock: BigNumberish,
-      amount: BigNumberish,
-      r: BytesLike,
-      s: BytesLike,
-      v: BigNumberish,
+      payouts: LazlosPizzaShop.PayoutStruct[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -853,8 +945,18 @@ export interface LazlosPizzaShop extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    setBakeRandomPizzaOn(
+      on: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     setIngredientsContractAddress(
       addr: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setMintingOn(
+      on: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -880,7 +982,7 @@ export interface LazlosPizzaShop extends BaseContract {
 
     unbakePizzaPrice(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    verifyString(
+    verifySignature(
       messageHash: BytesLike,
       r: BytesLike,
       s: BytesLike,
