@@ -205,18 +205,28 @@ export default function Home() {
   };
 
   return (
-    <Box p="20px" w="full">
-      <Stack spacing="20px">
+    <Box p="0px" w="full">
+      <Stack>
         <PromoHeader></PromoHeader>
-        <Heading fontFamily="Lato" size="lg" color="tomato.500">
-          Get Started
-        </Heading>
 
-        {/* First card */}
-        {size < 700 ? firstBoxMobile() : firstBoxDesktop()}
+        <Stack
+          zIndex={10}
+          borderTop={'2px'}
+          borderColor="background.brown"
+          p="20px"
+          spacing="20px"
+          backgroundColor="background.light"
+        >
+          <Heading fontFamily="Lato" size={'lg'} color="tomato.500">
+            Get Started
+          </Heading>
 
-        {/* Second card */}
-        {secondBox()}
+          {/* First card */}
+          {size < 700 ? firstBoxMobile() : firstBoxDesktop()}
+
+          {/* Second card */}
+          {secondBox()}
+        </Stack>
       </Stack>
     </Box>
   );
