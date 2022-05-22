@@ -8,7 +8,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-export const ErrorModal = ({
+export const SuccessModal = ({
   isOpen,
   setIsOpen,
 }: {
@@ -29,8 +29,9 @@ export const ErrorModal = ({
           <Center>
             <Text
               textAlign={'center'}
+              color={'cheese.200'}
               fontSize={'2xl'}
-            >{`Something's Gone Wrong`}</Text>
+            >{`Transaction done Successfully`}</Text>
           </Center>
           <Center mt={8}>
             <Button
