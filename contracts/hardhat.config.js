@@ -39,7 +39,8 @@ module.exports = {
     rinkeby: {
       allowUnlimitedContractSize: true,
       url: "https://rinkeby.infura.io/v3/67198f4f15244598b1a3980106ce8fe3",
-      accounts: [privatekey]
+      accounts: [privatekey],
+      gasPrice: 35000000000
     },
   },
   etherscan: {
