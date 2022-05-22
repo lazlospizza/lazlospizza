@@ -55,6 +55,7 @@ export const Bake = () => {
         return (
           <SelectYourIngredients
             ingredientGroups={ingredientGroups}
+            ownedIngredients={myIngredients}
             addIngredient={handleAddIngredient}
             removeIngredient={handleRemoveIngredient}
             pizza={pizza}
@@ -130,7 +131,7 @@ export const Bake = () => {
               addIngredient={handleAddIngredient}
               removeIngredient={handleRemoveIngredient}
               pizza={pizza}
-              tab={PizzaCave.buyAndBake}
+              tab={PizzaCave.bake}
             />
           </div>
           <Stack
