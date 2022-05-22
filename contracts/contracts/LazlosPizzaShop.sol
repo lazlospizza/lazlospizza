@@ -627,6 +627,7 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
     }
 
     function redeemPayout(Payout[] memory payouts) public nonReentrant {
+        uint256 totalPayout;
         for (uint256 i; i < payouts.length; i++) {
             Payout memory payout = payouts[i];
 
@@ -642,8 +643,11 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
             require(!isPaidByBlockAndAddress[payout.payoutBlock][msg.sender], 'Address already been paid for this block.');
 
             isPaidByBlockAndAddress[payout.payoutBlock][msg.sender] = true;
+            totalPayout += payout.amount;
+        }
 
-            (bool success,) = msg.sender.call{value : payout.amount}('');
+        if (totalPayout > 0) {
+            (bool success,) = msg.sender.call{value : totalPayout}('');
             require(success, "Withdrawal failed.");
         }
     }

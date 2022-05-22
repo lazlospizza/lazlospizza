@@ -1,12 +1,12 @@
 {
   "rinkeby": {
-    "mainContractAddress": "0x80B39de84D97C98bD1D58717502dBB5253885682",
-    "ingredientsContractAddress": "0x1F68C55Cf9A7B458E73906347cAe6d8cA2236e79",
-    "pizzaContractAddress": "0x45Fa7B1fB74011D6258d388fD665B1f55E73464f"
+    "mainContractAddress": "0x4c52Ce7553B140cd12834235634E6352FEbfbfB7",
+    "ingredientsContractAddress": "0x8F6AE469e19f7adCC225D86B57Ad8d41869591d0",
+    "pizzaContractAddress": "0xF3a089Ad57Eb3b7667CBFFFb417Ac35B051e6431"
   },
   "mainnet": {
-    "mainContractAddress": "0x80B39de84D97C98bD1D58717502dBB5253885682",
-    "ingredientsContractAddress": "0x1F68C55Cf9A7B458E73906347cAe6d8cA2236e79",
-    "pizzaContractAddress": "0x45Fa7B1fB74011D6258d388fD665B1f55E73464f"
+    "mainContractAddress": "0x4c52Ce7553B140cd12834235634E6352FEbfbfB7",
+    "ingredientsContractAddress": "0x8F6AE469e19f7adCC225D86B57Ad8d41869591d0",
+    "pizzaContractAddress": "0xF3a089Ad57Eb3b7667CBFFFb417Ac35B051e6431"
   }
 }

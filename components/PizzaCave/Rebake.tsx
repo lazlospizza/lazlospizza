@@ -103,7 +103,7 @@ export const Rebake = () => {
           Rebake ({REBAKE_FEE} ETH)
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
-          {`Disassemble a pizza held in your wallet and return the constituent fresh ingredient NFTs to your wallet for trading or baking new pizzas.`}
+          {`Customize a pizza you already hold. Add ingredients from your wallet or remove* ingredients to improve your Rarity Reward Score.`}
         </Text>
       </Stack>
       {/* deterime which view */}

@@ -71,6 +71,7 @@ export const IngredientItem = ({
               width: '100%',
               height: '100%',
               backgroundImage: `url(/assets/ingredients/raw/${ingredient.name
+                .toLowerCase()
                 .replace(/'/g, '')
                 .split(' ')
                 .join('-')}.png)`,
@@ -121,7 +122,7 @@ export const IngredientItem = ({
           {/* Count and Add Button */}
           <Flex direction={'column'} justifyContent={'space-between'} py="2">
             <Text size={'sm'} color="gray.dark" align={'right'}>
-              {supply}/10,000
+              {supply}/10,000 sold
             </Text>
             {!!addIngredient && !!removeIngredient && (
               <Button
