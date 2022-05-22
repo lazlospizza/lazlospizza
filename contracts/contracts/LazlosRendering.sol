@@ -71,18 +71,38 @@ contract LazlosRendering is Ownable {
         
         string memory propertiesString;
         for (uint256 ingredientId = 1; ingredientId <= numIngredients; ingredientId++) {
+
             string memory comma = ",";
             if (ingredientId == 1) {
                 comma = "";
             }
 
-            string memory value = "No";
-            if (pizzaContainsIngredient(pizza, ingredientId)) {
-                value = "Yes";
+            Ingredient memory ingredient = ILazlosIngredients(ingredientsContractAddress).getIngredient(ingredientId);
+            
+            string memory traitType;
+            string memory value;
+            if (ingredient.ingredientType == IngredientType.Base ||
+                ingredient.ingredientType == IngredientType.Sauce) {
+                if (!(pizzaContainsIngredient(pizza, ingredientId))) {
+                    continue;
+                }
+
+                traitType = getIngredientTypeName(ingredientId);
+                value = getIngredientName(ingredientId);
+
+            } else {
+                traitType = getIngredientName(ingredientId);
+
+                if (pizzaContainsIngredient(pizza, ingredientId)) {
+                    value = "Yes";
+
+                } else {
+                    value = "No";
+                }
             }
 
             propertiesString = string(abi.encodePacked(
-                propertiesString, comma, '{"trait_type":"', getIngredientName(ingredientId), '","value":"', value, '"}'
+                propertiesString, comma, '{"trait_type":"', traitType, '","value":"', value, '"}'
             ));
         }
 
