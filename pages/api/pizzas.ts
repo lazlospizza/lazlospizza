@@ -4,6 +4,7 @@ import { getPizzaContractAddress } from '../../utils/network';
 import { LazlosPizzas__factory } from '../../contracts/typechain-types';
 import axios from 'axios';
 import { Ingredient, IngredientType, Pizza } from '../../types';
+import { getAddress } from 'ethers/lib/utils';
 
 export enum PizzaKey {
   base,
@@ -12,6 +13,8 @@ export enum PizzaKey {
   meats,
   toppings,
 }
+
+const BURN_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export default async function pizzas(
   req: NextApiRequest,
@@ -34,31 +37,34 @@ export default async function pizzas(
     );
     const _ingredients = ingredientsRes.data.ingredients;
 
-    const _pizzas = await Promise.all(
-      Array.from(Array(numberOfPizzas).keys()).map(async i => {
-        const tokenId = i + 1;
-        const _pizza = await contract.pizza(tokenId);
-        const uri = await contract.tokenURI(tokenId);
-        const owner = await contract.ownerOf(tokenId);
-        const pizza = { allIngredients: [] };
-        for (let i = 0; i < 5; i += 1) {
-          pizza[PizzaKey[i]] = _pizza[i];
-          if (i <= 1) {
-            if (pizza[PizzaKey[i]]) pizza?.allIngredients.push(_pizza[i]);
-          } else {
-            if (pizza[PizzaKey[i]])
-              pizza?.allIngredients.push(...pizza[PizzaKey[i]]);
+    const _pizzas = (
+      await Promise.all(
+        Array.from(Array(numberOfPizzas).keys()).map(async i => {
+          const tokenId = i + 1;
+          const owner = await contract.ownerOf(tokenId);
+          if (owner === BURN_ADDRESS) return null;
+          const _pizza = await contract.pizza(tokenId);
+          const uri = await contract.tokenURI(tokenId);
+          const pizza = { allIngredients: [] };
+          for (let i = 0; i < 5; i += 1) {
+            pizza[PizzaKey[i]] = _pizza[i];
+            if (i <= 1) {
+              if (pizza[PizzaKey[i]]) pizza?.allIngredients.push(_pizza[i]);
+            } else {
+              if (pizza[PizzaKey[i]])
+                pizza?.allIngredients.push(...pizza[PizzaKey[i]]);
+            }
           }
-        }
 
-        const uriString = Buffer.from(uri.split(',')[1], 'base64').toString(
-          'ascii',
-        );
-        const uriJson = JSON.parse(uriString);
+          const uriString = Buffer.from(uri.split(',')[1], 'base64').toString(
+            'ascii',
+          );
+          const uriJson = JSON.parse(uriString);
 
-        return { ...uriJson, ...pizza, tokenId, owner };
-      }),
-    );
+          return { ...uriJson, ...pizza, tokenId, owner };
+        }),
+      )
+    ).filter(p => !!p);
 
     const ingredients: Ingredient[] = _ingredients.map(ingredient => {
       const numberOfPizzas = _pizzas.filter(pizza =>

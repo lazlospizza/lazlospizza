@@ -349,6 +349,7 @@ export const YourSelections = ({
                 width: '80%',
                 height: '80%',
                 backgroundImage: `url(/assets/ingredients/baked/${item.name
+                  .replace(/'/g, '')
                   .split(' ')
                   .join('-')}.png)`,
                 backgroundSize: 'contain',
