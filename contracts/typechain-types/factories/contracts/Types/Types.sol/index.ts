@@ -3,3 +3,4 @@
 /* eslint-disable */
 export { ILazlosIngredients__factory } from "./ILazlosIngredients__factory";
 export { ILazlosPizzas__factory } from "./ILazlosPizzas__factory";
+export { ILazlosRendering__factory } from "./ILazlosRendering__factory";

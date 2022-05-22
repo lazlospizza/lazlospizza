@@ -45,6 +45,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.LazlosPizzaShop__factory>;
     getContractFactory(
+      name: "LazlosRendering",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.LazlosRendering__factory>;
+    getContractFactory(
       name: "ILazlosIngredients",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ILazlosIngredients__factory>;
@@ -52,6 +56,10 @@ declare module "hardhat/types/runtime" {
       name: "ILazlosPizzas",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.ILazlosPizzas__factory>;
+    getContractFactory(
+      name: "ILazlosRendering",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.ILazlosRendering__factory>;
 
     getContractAt(
       name: "Ownable",
@@ -94,6 +102,11 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.LazlosPizzaShop>;
     getContractAt(
+      name: "LazlosRendering",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.LazlosRendering>;
+    getContractAt(
       name: "ILazlosIngredients",
       address: string,
       signer?: ethers.Signer
@@ -103,6 +116,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.ILazlosPizzas>;
+    getContractAt(
+      name: "ILazlosRendering",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.ILazlosRendering>;
 
     // default types
     getContractFactory(

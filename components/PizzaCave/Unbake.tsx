@@ -93,7 +93,7 @@ export const Unbake = () => {
       ) : (
         // desktop view
         <Flex borderTop="2px" borderColor={'gray.light'}>
-          <div style={{ width: '50%', height: '800px', overflowY: 'scroll' }}>
+          <div style={{ width: '50%' }}>
             <SelectYourPizza
               selectPizza={p => setPizza(p)}
               pizzas={pizzas}

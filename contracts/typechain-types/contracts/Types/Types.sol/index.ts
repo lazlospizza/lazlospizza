@@ -3,3 +3,4 @@
 /* eslint-disable */
 export type { ILazlosIngredients } from "./ILazlosIngredients";
 export type { ILazlosPizzas } from "./ILazlosPizzas";
+export type { ILazlosRendering } from "./ILazlosRendering";

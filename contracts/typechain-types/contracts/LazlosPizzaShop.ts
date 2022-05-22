@@ -29,44 +29,72 @@ import type {
 
 export interface LazlosPizzaShopInterface extends utils.Interface {
   functions: {
+    "artistAllowedWithdrawalAmount(address)": FunctionFragment;
+    "artistTotalCommission(address)": FunctionFragment;
+    "artistWithdraw()": FunctionFragment;
     "bakePizza(uint256[])": FunctionFragment;
     "bakePizzaPrice()": FunctionFragment;
-    "bakeRandomPizza(uint256[],bytes)": FunctionFragment;
+    "bakeRandomPizza(uint256[],uint256,bytes32,bytes32,uint8)": FunctionFragment;
     "buyAndBakePizza(uint256[])": FunctionFragment;
     "buyIngredients(uint256[],uint256[])": FunctionFragment;
     "ingredientsContractAddress()": FunctionFragment;
+    "isPaidOutForBlock(address,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "pizzaContractAddress()": FunctionFragment;
+    "randomBakePrice()": FunctionFragment;
     "rebakePizza(uint256,uint256[],uint256[])": FunctionFragment;
     "rebakePizzaPrice()": FunctionFragment;
+    "redeemPayout(uint256,uint256,bytes32,bytes32,uint8)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "setIngredientsContractAddress(address)": FunctionFragment;
     "setPizzaContractAddress(address)": FunctionFragment;
+    "setSystemAddress(address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unbakePizza(uint256)": FunctionFragment;
     "unbakePizzaPrice()": FunctionFragment;
+    "verifyString(bytes32,bytes32,bytes32,uint8)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "artistAllowedWithdrawalAmount"
+      | "artistTotalCommission"
+      | "artistWithdraw"
       | "bakePizza"
       | "bakePizzaPrice"
       | "bakeRandomPizza"
       | "buyAndBakePizza"
       | "buyIngredients"
       | "ingredientsContractAddress"
+      | "isPaidOutForBlock"
       | "owner"
       | "pizzaContractAddress"
+      | "randomBakePrice"
       | "rebakePizza"
       | "rebakePizzaPrice"
+      | "redeemPayout"
       | "renounceOwnership"
       | "setIngredientsContractAddress"
       | "setPizzaContractAddress"
+      | "setSystemAddress"
       | "transferOwnership"
       | "unbakePizza"
       | "unbakePizzaPrice"
+      | "verifyString"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "artistAllowedWithdrawalAmount",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "artistTotalCommission",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "artistWithdraw",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "bakePizza",
     values: [BigNumberish[]]
@@ -77,7 +105,7 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "bakeRandomPizza",
-    values: [BigNumberish[], BytesLike]
+    values: [BigNumberish[], BigNumberish, BytesLike, BytesLike, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "buyAndBakePizza",
@@ -91,9 +119,17 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
     functionFragment: "ingredientsContractAddress",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "isPaidOutForBlock",
+    values: [string, BigNumberish]
+  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "pizzaContractAddress",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "randomBakePrice",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -103,6 +139,10 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "rebakePizzaPrice",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "redeemPayout",
+    values: [BigNumberish, BigNumberish, BytesLike, BytesLike, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -117,6 +157,10 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
+    functionFragment: "setSystemAddress",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
   ): string;
@@ -128,7 +172,23 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
     functionFragment: "unbakePizzaPrice",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "verifyString",
+    values: [BytesLike, BytesLike, BytesLike, BigNumberish]
+  ): string;
 
+  decodeFunctionResult(
+    functionFragment: "artistAllowedWithdrawalAmount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "artistTotalCommission",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "artistWithdraw",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "bakePizza", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "bakePizzaPrice",
@@ -150,9 +210,17 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
     functionFragment: "ingredientsContractAddress",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "isPaidOutForBlock",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "pizzaContractAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "randomBakePrice",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -161,6 +229,10 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "rebakePizzaPrice",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "redeemPayout",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -176,6 +248,10 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setSystemAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
@@ -185,6 +261,10 @@ export interface LazlosPizzaShopInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "unbakePizzaPrice",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "verifyString",
     data: BytesLike
   ): Result;
 
@@ -234,6 +314,20 @@ export interface LazlosPizzaShop extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    artistAllowedWithdrawalAmount(
+      artist: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    artistTotalCommission(
+      artist: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    artistWithdraw(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     bakePizza(
       tokenIds: BigNumberish[],
       overrides?: PayableOverrides & { from?: string | Promise<string> }
@@ -243,7 +337,10 @@ export interface LazlosPizzaShop extends BaseContract {
 
     bakeRandomPizza(
       tokenIds: BigNumberish[],
-      signature: BytesLike,
+      timestamp: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      v: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -260,9 +357,17 @@ export interface LazlosPizzaShop extends BaseContract {
 
     ingredientsContractAddress(overrides?: CallOverrides): Promise<[string]>;
 
+    isPaidOutForBlock(
+      addr: string,
+      payoutBlock: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     pizzaContractAddress(overrides?: CallOverrides): Promise<[string]>;
+
+    randomBakePrice(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     rebakePizza(
       pizzaTokenId: BigNumberish,
@@ -272,6 +377,15 @@ export interface LazlosPizzaShop extends BaseContract {
     ): Promise<ContractTransaction>;
 
     rebakePizzaPrice(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    redeemPayout(
+      payoutBlock: BigNumberish,
+      amount: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      v: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -287,6 +401,11 @@ export interface LazlosPizzaShop extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    setSystemAddress(
+      addr: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -298,7 +417,29 @@ export interface LazlosPizzaShop extends BaseContract {
     ): Promise<ContractTransaction>;
 
     unbakePizzaPrice(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    verifyString(
+      messageHash: BytesLike,
+      r: BytesLike,
+      s: BytesLike,
+      v: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
   };
+
+  artistAllowedWithdrawalAmount(
+    artist: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  artistTotalCommission(
+    artist: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  artistWithdraw(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   bakePizza(
     tokenIds: BigNumberish[],
@@ -309,7 +450,10 @@ export interface LazlosPizzaShop extends BaseContract {
 
   bakeRandomPizza(
     tokenIds: BigNumberish[],
-    signature: BytesLike,
+    timestamp: BigNumberish,
+    r: BytesLike,
+    s: BytesLike,
+    v: BigNumberish,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -326,9 +470,17 @@ export interface LazlosPizzaShop extends BaseContract {
 
   ingredientsContractAddress(overrides?: CallOverrides): Promise<string>;
 
+  isPaidOutForBlock(
+    addr: string,
+    payoutBlock: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   owner(overrides?: CallOverrides): Promise<string>;
 
   pizzaContractAddress(overrides?: CallOverrides): Promise<string>;
+
+  randomBakePrice(overrides?: CallOverrides): Promise<BigNumber>;
 
   rebakePizza(
     pizzaTokenId: BigNumberish,
@@ -338,6 +490,15 @@ export interface LazlosPizzaShop extends BaseContract {
   ): Promise<ContractTransaction>;
 
   rebakePizzaPrice(overrides?: CallOverrides): Promise<BigNumber>;
+
+  redeemPayout(
+    payoutBlock: BigNumberish,
+    amount: BigNumberish,
+    r: BytesLike,
+    s: BytesLike,
+    v: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -349,6 +510,11 @@ export interface LazlosPizzaShop extends BaseContract {
   ): Promise<ContractTransaction>;
 
   setPizzaContractAddress(
+    addr: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setSystemAddress(
     addr: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -365,7 +531,27 @@ export interface LazlosPizzaShop extends BaseContract {
 
   unbakePizzaPrice(overrides?: CallOverrides): Promise<BigNumber>;
 
+  verifyString(
+    messageHash: BytesLike,
+    r: BytesLike,
+    s: BytesLike,
+    v: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   callStatic: {
+    artistAllowedWithdrawalAmount(
+      artist: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    artistTotalCommission(
+      artist: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    artistWithdraw(overrides?: CallOverrides): Promise<void>;
+
     bakePizza(
       tokenIds: BigNumberish[],
       overrides?: CallOverrides
@@ -375,7 +561,10 @@ export interface LazlosPizzaShop extends BaseContract {
 
     bakeRandomPizza(
       tokenIds: BigNumberish[],
-      signature: BytesLike,
+      timestamp: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      v: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -392,9 +581,17 @@ export interface LazlosPizzaShop extends BaseContract {
 
     ingredientsContractAddress(overrides?: CallOverrides): Promise<string>;
 
+    isPaidOutForBlock(
+      addr: string,
+      payoutBlock: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     owner(overrides?: CallOverrides): Promise<string>;
 
     pizzaContractAddress(overrides?: CallOverrides): Promise<string>;
+
+    randomBakePrice(overrides?: CallOverrides): Promise<BigNumber>;
 
     rebakePizza(
       pizzaTokenId: BigNumberish,
@@ -404,6 +601,15 @@ export interface LazlosPizzaShop extends BaseContract {
     ): Promise<void>;
 
     rebakePizzaPrice(overrides?: CallOverrides): Promise<BigNumber>;
+
+    redeemPayout(
+      payoutBlock: BigNumberish,
+      amount: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      v: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -417,6 +623,8 @@ export interface LazlosPizzaShop extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    setSystemAddress(addr: string, overrides?: CallOverrides): Promise<void>;
+
     transferOwnership(
       newOwner: string,
       overrides?: CallOverrides
@@ -428,6 +636,14 @@ export interface LazlosPizzaShop extends BaseContract {
     ): Promise<void>;
 
     unbakePizzaPrice(overrides?: CallOverrides): Promise<BigNumber>;
+
+    verifyString(
+      messageHash: BytesLike,
+      r: BytesLike,
+      s: BytesLike,
+      v: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
   };
 
   filters: {
@@ -442,6 +658,20 @@ export interface LazlosPizzaShop extends BaseContract {
   };
 
   estimateGas: {
+    artistAllowedWithdrawalAmount(
+      artist: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    artistTotalCommission(
+      artist: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    artistWithdraw(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     bakePizza(
       tokenIds: BigNumberish[],
       overrides?: PayableOverrides & { from?: string | Promise<string> }
@@ -451,7 +681,10 @@ export interface LazlosPizzaShop extends BaseContract {
 
     bakeRandomPizza(
       tokenIds: BigNumberish[],
-      signature: BytesLike,
+      timestamp: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      v: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -468,9 +701,17 @@ export interface LazlosPizzaShop extends BaseContract {
 
     ingredientsContractAddress(overrides?: CallOverrides): Promise<BigNumber>;
 
+    isPaidOutForBlock(
+      addr: string,
+      payoutBlock: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     pizzaContractAddress(overrides?: CallOverrides): Promise<BigNumber>;
+
+    randomBakePrice(overrides?: CallOverrides): Promise<BigNumber>;
 
     rebakePizza(
       pizzaTokenId: BigNumberish,
@@ -480,6 +721,15 @@ export interface LazlosPizzaShop extends BaseContract {
     ): Promise<BigNumber>;
 
     rebakePizzaPrice(overrides?: CallOverrides): Promise<BigNumber>;
+
+    redeemPayout(
+      payoutBlock: BigNumberish,
+      amount: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      v: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -495,6 +745,11 @@ export interface LazlosPizzaShop extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    setSystemAddress(
+      addr: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -506,9 +761,31 @@ export interface LazlosPizzaShop extends BaseContract {
     ): Promise<BigNumber>;
 
     unbakePizzaPrice(overrides?: CallOverrides): Promise<BigNumber>;
+
+    verifyString(
+      messageHash: BytesLike,
+      r: BytesLike,
+      s: BytesLike,
+      v: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    artistAllowedWithdrawalAmount(
+      artist: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    artistTotalCommission(
+      artist: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    artistWithdraw(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     bakePizza(
       tokenIds: BigNumberish[],
       overrides?: PayableOverrides & { from?: string | Promise<string> }
@@ -518,7 +795,10 @@ export interface LazlosPizzaShop extends BaseContract {
 
     bakeRandomPizza(
       tokenIds: BigNumberish[],
-      signature: BytesLike,
+      timestamp: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      v: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -537,11 +817,19 @@ export interface LazlosPizzaShop extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    isPaidOutForBlock(
+      addr: string,
+      payoutBlock: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     pizzaContractAddress(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    randomBakePrice(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     rebakePizza(
       pizzaTokenId: BigNumberish,
@@ -551,6 +839,15 @@ export interface LazlosPizzaShop extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     rebakePizzaPrice(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    redeemPayout(
+      payoutBlock: BigNumberish,
+      amount: BigNumberish,
+      r: BytesLike,
+      s: BytesLike,
+      v: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -566,6 +863,11 @@ export interface LazlosPizzaShop extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    setSystemAddress(
+      addr: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -577,5 +879,13 @@ export interface LazlosPizzaShop extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     unbakePizzaPrice(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    verifyString(
+      messageHash: BytesLike,
+      r: BytesLike,
+      s: BytesLike,
+      v: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
   };
 }

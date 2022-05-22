@@ -1,7 +1,7 @@
 export const BAKING_FEE = 0.01;
 export const INGREDIENT_COST = 0.01;
 export const REBAKE_FEE = 0.01;
-export const RADOM_BAKE_FEE = 0.05;
+export const RANDOM_BAKE_FEE = 0.05;
 export const UNBAKE_FEE = 0.05;
 
 export const BASE_LIMIT = 1;

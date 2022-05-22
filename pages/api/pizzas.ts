@@ -3,6 +3,7 @@ import { providers } from 'ethers';
 import { getPizzaContractAddress } from '../../utils/network';
 import { LazlosPizzas__factory } from '../../contracts/typechain-types';
 import axios from 'axios';
+import { Ingredient, IngredientType, Pizza } from '../../types';
 
 export enum PizzaKey {
   base,
@@ -59,7 +60,7 @@ export default async function pizzas(
       }),
     );
 
-    const ingredients = _ingredients.map(ingredient => {
+    const ingredients: Ingredient[] = _ingredients.map(ingredient => {
       const numberOfPizzas = _pizzas.filter(pizza =>
         pizza.allIngredients.find(tokenId => tokenId === ingredient.tokenId),
       ).length;
@@ -69,7 +70,7 @@ export default async function pizzas(
 
     const pizzas = await Promise.all(
       _pizzas.map(async _pizza => {
-        const pizza = { ..._pizza, allIngredients: [] };
+        const pizza: Pizza = { ..._pizza, allIngredients: [] };
         for (let i = 0; i < 5; i += 1) {
           if (i <= 1) {
             pizza[PizzaKey[i]] = ingredients.find(
@@ -88,7 +89,30 @@ export default async function pizzas(
           }
         }
 
-        return pizza;
+        const ingredientsMissing = ingredients
+          .filter(
+            ingredient =>
+              ingredient.ingredientType !== IngredientType.base &&
+              ingredient.ingredientType !== IngredientType.sauce &&
+              !pizza.allIngredients.find(i => i.tokenId === ingredient.tokenId),
+          )
+          .map(ingredient => ({
+            ...ingredient,
+            rarity: 100 - (ingredient.rarity || 0),
+          }));
+
+        const rarityIngredients = [
+          ...pizza.allIngredients,
+          ...ingredientsMissing,
+        ];
+
+        const raritySum = rarityIngredients.reduce(
+          (prev, current) => prev + current.rarity,
+          0,
+        );
+        const rarity = raritySum / rarityIngredients.length;
+
+        return { ...pizza, rarity };
       }),
     );
 

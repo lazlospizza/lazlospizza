@@ -28,12 +28,14 @@ export type IngredientStruct = {
   artist: string;
   price: BigNumberish;
   supply: BigNumberish;
+  initialSupply: BigNumberish;
 };
 
 export type IngredientStructOutput = [
   string,
   number,
   string,
+  BigNumber,
   BigNumber,
   BigNumber
 ] & {
@@ -42,6 +44,7 @@ export type IngredientStructOutput = [
   artist: string;
   price: BigNumber;
   supply: BigNumber;
+  initialSupply: BigNumber;
 };
 
 export interface ILazlosIngredientsInterface extends utils.Interface {
@@ -50,6 +53,7 @@ export interface ILazlosIngredientsInterface extends utils.Interface {
     "burnIngredients(address,uint256[],uint256[])": FunctionFragment;
     "decreaseIngredientSupply(uint256,uint256)": FunctionFragment;
     "getIngredient(uint256)": FunctionFragment;
+    "getNumIngredients()": FunctionFragment;
     "increaseIngredientSupply(uint256,uint256)": FunctionFragment;
     "mintIngredients(address,uint256[],uint256[])": FunctionFragment;
   };
@@ -60,6 +64,7 @@ export interface ILazlosIngredientsInterface extends utils.Interface {
       | "burnIngredients"
       | "decreaseIngredientSupply"
       | "getIngredient"
+      | "getNumIngredients"
       | "increaseIngredientSupply"
       | "mintIngredients"
   ): FunctionFragment;
@@ -79,6 +84,10 @@ export interface ILazlosIngredientsInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getIngredient",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getNumIngredients",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "increaseIngredientSupply",
@@ -103,6 +112,10 @@ export interface ILazlosIngredientsInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getIngredient",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getNumIngredients",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -168,6 +181,8 @@ export interface ILazlosIngredients extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[IngredientStructOutput]>;
 
+    getNumIngredients(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     increaseIngredientSupply(
       tokenId: BigNumberish,
       amount: BigNumberish,
@@ -206,6 +221,8 @@ export interface ILazlosIngredients extends BaseContract {
     overrides?: CallOverrides
   ): Promise<IngredientStructOutput>;
 
+  getNumIngredients(overrides?: CallOverrides): Promise<BigNumber>;
+
   increaseIngredientSupply(
     tokenId: BigNumberish,
     amount: BigNumberish,
@@ -243,6 +260,8 @@ export interface ILazlosIngredients extends BaseContract {
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<IngredientStructOutput>;
+
+    getNumIngredients(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseIngredientSupply(
       tokenId: BigNumberish,
@@ -285,6 +304,8 @@ export interface ILazlosIngredients extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getNumIngredients(overrides?: CallOverrides): Promise<BigNumber>;
+
     increaseIngredientSupply(
       tokenId: BigNumberish,
       amount: BigNumberish,
@@ -323,6 +344,8 @@ export interface ILazlosIngredients extends BaseContract {
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    getNumIngredients(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     increaseIngredientSupply(
       tokenId: BigNumberish,
