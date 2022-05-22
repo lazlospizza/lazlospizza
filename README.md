@@ -35,7 +35,7 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 ## rinkeby
-- [Lazlos Pizza Shop](https://rinkeby.etherscan.io/address/0x19CB2B7570882BB3d4208F08d25f1fc8f744D076#code)
-- [Lazlos Ingredients ERC1155](https://rinkeby.etherscan.io/address/0x7740371D1fcCB0E27f0f3aD032542D879787Af9F#code)
-- [Lazlos Pizza ERC721](https://rinkeby.etherscan.io/address/0x8B53217d952e758C0701545E34943C69722Af79d#code)
-- [Lazlos Rendering](https://rinkeby.etherscan.io/address/0x3dF939a5A6A744Fc60Dcc3B1E19c5DaC8490e23D#code)
+- [Lazlos Pizza Shop](https://rinkeby.etherscan.io/address/0x338586d0648E860c3C453Bf942e6E93381F3f6B1#code)
+- [Lazlos Ingredients ERC1155](https://rinkeby.etherscan.io/address/0x601714827450936AeD2342f24937AdD71e91C8b6#code)
+- [Lazlos Pizza ERC721](https://rinkeby.etherscan.io/address/0x52033612E110eB13A1d18bef1b6311EBc6d8203f#code)
+- [Lazlos Rendering](https://rinkeby.etherscan.io/address/0x55fd4857a4066C9d549F9a3989BcCF7B811Caecc#code)

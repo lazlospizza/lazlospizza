@@ -73,7 +73,7 @@ contract LazlosRendering is Ownable {
         for (uint256 ingredientId = 1; ingredientId <= numIngredients; ingredientId++) {
 
             string memory comma = ",";
-            if (ingredientId == 1) {
+            if (bytes(propertiesString).length == 0) {
                 comma = "";
             }
 

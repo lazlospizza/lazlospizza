@@ -38,8 +38,8 @@ async function addIngredients(owner, ingredients) {
         ingredientType:	ingredient.ingredientType,
         artist: owner.address,
         price: hre.ethers.BigNumber.from('10000000000000000'),
-        supply: 10,
-        initialSupply: 10,
+        supply: 100,
+        initialSupply: 100,
       });
       await tx.wait();
     }

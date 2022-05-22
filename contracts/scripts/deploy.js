@@ -44,8 +44,8 @@ async function addIngredients(owner, ingredients) {
       ingredientType:	ingredient.ingredientType,
       artist: ingredient.artist,
       price: hre.ethers.BigNumber.from('10000000000000000'),
-      supply: 100,
-      initialSupply: 100,
+      supply: 10,
+      initialSupply: 10,
     });
     await tx.wait();
 
