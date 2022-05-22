@@ -1,16 +1,33 @@
-import { Box, Button, Center, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Stack, Text, useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { parseEther } from 'ethers/lib/utils';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RANDOM_BAKE_FEE } from '../../constants';
 import { useMainContract } from '../../hooks/useContract';
 import { useWallet } from '../../hooks/useWallet';
+import { SuccessModal } from './SuccessModal';
 
 export const RandomBake = () => {
-  const { wallet, ingredients, pizzas } = useWallet();
+  const { wallet, pizzas, fetchPizzas } = useWallet();
   const { mainContract } = useMainContract();
   const [loading, setLoading] = useState(false);
   const [tokenId, setTokenId] = useState<number | null>(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const toast = useToast();
+
+  useEffect(() => {
+    if (!!errorMessage) {
+      toast({
+        title: 'Error',
+        description: errorMessage,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        onCloseComplete: () => setErrorMessage(null),
+      });
+    }
+  }, [errorMessage, toast]);
 
   const handleRandomBake = async () => {
     if (!wallet?.address || !wallet.web3Provider) return null;
@@ -47,8 +64,14 @@ export const RandomBake = () => {
         ?.map(({ topics }) => (topics?.[3] ? parseInt(topics?.[3], 16) : null))
         .filter(id => !!id);
       setTokenId(mintedId);
+      await fetchPizzas();
+      setShowSuccessModal(true);
     } catch (e) {
       console.log(e);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      window.MM_ERR = e;
+      setErrorMessage('Unexpected Error');
     }
     setLoading(false);
   };
@@ -102,6 +125,11 @@ export const RandomBake = () => {
           </Center>
         </Stack>
       </Box>
+      <SuccessModal
+        isOpen={showSuccessModal}
+        setIsOpen={setShowSuccessModal}
+        pizzaTokenId={tokenId}
+      />
     </Stack>
   );
 };

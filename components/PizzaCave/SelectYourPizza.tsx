@@ -87,7 +87,7 @@ export const SelectYourPizza = ({
                   {!!selectPizza && (
                     <Flex
                       direction={'column'}
-                      justifyContent={'space-between'}
+                      justifyContent={'flex-end'}
                       py="2"
                     >
                       <Button
