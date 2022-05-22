@@ -53,7 +53,9 @@ export const IngredientList = ({
         ).map(item => (
           <IngredientItem
             key={item.name}
-            ingredient={item}
+            ingredient={
+              ownedIngredients?.find(i => i.tokenId === item.tokenId) || item
+            }
             addIngredient={addIngredient}
             removeIngredient={removeIngredient}
             pizza={pizza}

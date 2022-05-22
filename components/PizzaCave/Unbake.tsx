@@ -1,5 +1,6 @@
 import { Box, Center, Flex, Stack, Text } from '@chakra-ui/react';
 import { useState } from 'react';
+import { UNBAKE_FEE } from '../../constants';
 import { useWallet } from '../../hooks/useWallet';
 import { colors } from '../../styles/theme';
 import { Pizza, PizzaCave } from '../../types';
@@ -45,7 +46,7 @@ export const Unbake = () => {
     <Box>
       <Stack m="10px">
         <Text color="tomato.500" fontWeight={700} fontSize={'xl'}>
-          Unbake a Pizza (0.05 ETH)
+          Unbake a Pizza ({UNBAKE_FEE} ETH)
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
           {`Customize a pizza you already hold. Add ingredients from your wallet or remove* ingredients to improve your Rarity Reward Score.`}

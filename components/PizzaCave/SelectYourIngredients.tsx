@@ -19,6 +19,7 @@ interface Props {
   pizza: Pizza;
   tab: PizzaCave;
   handleQuickStart?: () => void;
+  unselectPizza?: () => void;
 }
 
 export const SelectYourIngredients = ({
@@ -29,6 +30,7 @@ export const SelectYourIngredients = ({
   pizza,
   tab,
   handleQuickStart,
+  unselectPizza,
 }: Props) => {
   const renderPizza = () => {
     return (
@@ -78,8 +80,8 @@ export const SelectYourIngredients = ({
               </Stack>
             </Flex>
             <Flex direction={'column'} justifyContent={'space-between'} py="2">
-              <Button className="tomato-btn" onClick={() => {}} disabled>
-                Select
+              <Button className="tomato-btn" onClick={unselectPizza}>
+                Selected
               </Button>
             </Flex>
           </Flex>

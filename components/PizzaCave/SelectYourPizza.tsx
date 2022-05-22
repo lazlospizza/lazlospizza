@@ -14,18 +14,20 @@ interface Props {
   selectPizza?: (pizza: Pizza) => void;
   pizzas: Pizza[];
   selectedPizza?: Pizza;
+  hideTitle?: boolean;
 }
 export const SelectYourPizza = ({
   selectPizza,
   pizzas,
   selectedPizza,
+  hideTitle,
 }: Props) => {
   return (
     <Box style={{ marginTop: 20, padding: 10 }}>
       <Stack>
         <Flex justify={'space-between'} alignItems="center">
           <Text color="gray.dark" fontWeight={700} fontSize={'xl'}>
-            Your Pizzas
+            {!hideTitle && 'Your Pizzas'}
           </Text>
         </Flex>
         {pizzas.map(pizza => {
@@ -39,6 +41,8 @@ export const SelectYourPizza = ({
                   : ''
               }
               p="2"
+              position="relative"
+              overflow="hidden"
             >
               <Flex>
                 <Center
@@ -80,15 +84,12 @@ export const SelectYourPizza = ({
                     </Stack>
                   </Flex>
 
-                  <Flex
-                    direction={'column'}
-                    justifyContent={'space-between'}
-                    py="2"
-                  >
-                    <Text color="red" fontWeight="bold">
-                      {pizza.rarity.toFixed(3)}
-                    </Text>
-                    {!!selectPizza && (
+                  {!!selectPizza && (
+                    <Flex
+                      direction={'column'}
+                      justifyContent={'flex-end'}
+                      py="2"
+                    >
                       <Button
                         className="tomato-btn"
                         onClick={() => selectPizza(pizza)}
@@ -96,8 +97,21 @@ export const SelectYourPizza = ({
                       >
                         Select
                       </Button>
-                    )}
-                  </Flex>
+                    </Flex>
+                  )}
+                  <Text
+                    color="white"
+                    bg="tomato.500"
+                    fontWeight="bold"
+                    position="absolute"
+                    top={0}
+                    right={0}
+                    py="2"
+                    px="4"
+                    fontSize="lg"
+                  >
+                    {pizza.rarity.toFixed(3)}
+                  </Text>
                 </Flex>
               </Flex>
             </Box>
