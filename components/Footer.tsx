@@ -1,4 +1,6 @@
 import { Box, Center, Heading, Stack } from '@chakra-ui/react';
+import Link from 'next/link';
+import { PageRoutes } from '../types';
 
 export const Footer = () => {
   return (
@@ -8,9 +10,18 @@ export const Footer = () => {
           {'Join Our Community'}
         </Heading>
         <Stack spacing={10}>
-          <Heading size={'xs'}>Meet Artists</Heading>
-          <Heading size={'xs'}>FAQ</Heading>
-          <Heading size={'xs'}>OpenSea</Heading>
+          <Link href={PageRoutes.meetArtists}>
+            <a>Meet Artists</a>
+          </Link>
+          <Link href={''}>
+            <a>FAQ</a>
+          </Link>
+          <Link href={''}>
+            <a>OpenSea</a>
+          </Link>
+          <Link href={''}>
+            <a>Meet Artists</a>
+          </Link>
         </Stack>
         <Center w="100%">
           <Heading size={'xs'}>Copyright 2022</Heading>
