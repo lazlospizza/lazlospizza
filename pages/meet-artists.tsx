@@ -9,11 +9,12 @@ export default function MeetArtists() {
           Meet Artist
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
-          {`Meet our Awesome Artist`}
+          {`Coming Soon`}
+          {/* {`Meet our Awesome Artist`} */}
         </Text>
       </Stack>
 
-      <Stack m="20px" spacing={'20px'}>
+      {/* <Stack m="20px" spacing={'20px'}>
         <Artist
           name={'Artist Name'}
           about={`I am an artist. I love art. Check out my work`}
@@ -34,7 +35,7 @@ export default function MeetArtists() {
           name={'Artist Name'}
           about={`I am an artist. I love art. Check out my work`}
         />
-      </Stack>
+      </Stack> */}
     </Box>
   );
 }
