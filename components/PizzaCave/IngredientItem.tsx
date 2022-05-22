@@ -122,7 +122,7 @@ export const IngredientItem = ({
           {/* Count and Add Button */}
           <Flex direction={'column'} justifyContent={'space-between'} py="2">
             <Text size={'sm'} color="gray.dark" align={'right'}>
-              {supply}/10,000
+              {supply}/10,000 sold
             </Text>
             {!!addIngredient && !!removeIngredient && (
               <Button
