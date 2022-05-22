@@ -1,6 +1,25 @@
-import { Box, Heading, Stack, Text } from '@chakra-ui/react';
+import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/react';
+import { useMemo, useState } from 'react';
+import { SelectYourPizza } from '../components/PizzaCave/SelectYourPizza';
+import { NavButton } from '../components/shared/NavButton';
+import { useWallet } from '../hooks/useWallet';
+import { colors } from '../styles/theme';
+
+enum Tabs {
+  'winners',
+  'topPizzas',
+}
 
 export default function RarityRewards() {
+  const { pizzas } = useWallet();
+  const [selectedTab, setSelectedTab] = useState(Tabs.topPizzas);
+
+  const rarestPizzas = useMemo(
+    () =>
+      pizzas.sort((a, b) => (a.rarity || 100) - (b.rarity || 100)).slice(0, 10),
+    [pizzas],
+  );
+
   return (
     <Box p="20px" w="full">
       <Heading fontFamily="Lato" size="lg" color="tomato.500">
@@ -23,6 +42,28 @@ export default function RarityRewards() {
           contract minus any unclaimed rewards and developer allowances.)
         </Text>
       </Stack>
+
+      <Flex pt="4" px="8" alignContent={'center'} justifyContent={'center'}>
+        <NavButton
+          title="Previous Winners"
+          isSelected={selectedTab === Tabs.winners}
+          onClick={() => {
+            setSelectedTab(Tabs.winners);
+          }}
+          bgColor={colors.gray.background}
+        />
+        <NavButton
+          title="Current Rarest Pizzas"
+          isSelected={selectedTab === Tabs.topPizzas}
+          onClick={() => {
+            setSelectedTab(Tabs.topPizzas);
+          }}
+          bgColor={colors.gray.background}
+        />
+      </Flex>
+      {selectedTab === Tabs.topPizzas && (
+        <SelectYourPizza pizzas={rarestPizzas} hideTitle />
+      )}
     </Box>
   );
 }

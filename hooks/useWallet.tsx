@@ -40,6 +40,7 @@ export const WalletContext = React.createContext<WalletContextValue>({
   ingredientGroups: [],
   isLoadingIngredients: true,
   isLoadingPizzas: true,
+  fetchPizzas: () => Promise.resolve(),
 });
 
 let web3Modal: Web3Modal;
@@ -73,6 +74,7 @@ export interface WalletContextValue {
   ingredientGroups: IngredientGroup[];
   isLoadingIngredients: boolean;
   isLoadingPizzas: boolean;
+  fetchPizzas: () => Promise<void>;
 }
 
 export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
@@ -286,6 +288,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         ingredientGroups,
         isLoadingIngredients,
         isLoadingPizzas,
+        fetchPizzas,
       }}
     >
       {children}

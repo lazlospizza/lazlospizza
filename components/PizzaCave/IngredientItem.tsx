@@ -1,4 +1,12 @@
-import { Box, Button, Center, Flex, Heading, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Heading,
+  Stack,
+  Text,
+} from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { colors } from '../../styles/theme';
 import { Ingredient, Pizza, PizzaCave } from '../../types';
@@ -18,7 +26,7 @@ export const IngredientItem = ({
   pizza,
   tab,
 }: Props) => {
-  const { name, price, supply } = ingredient;
+  const { name, price, supply, balance } = ingredient;
 
   const handleAdd = () => {
     addIngredient(ingredient);
@@ -63,6 +71,7 @@ export const IngredientItem = ({
               width: '100%',
               height: '100%',
               backgroundImage: `url(/assets/ingredients/raw/${ingredient.name
+                .replace(/'/g, '')
                 .split(' ')
                 .join('-')}.png)`,
               backgroundSize: 'contain',
@@ -82,9 +91,24 @@ export const IngredientItem = ({
             px="8"
             py="2"
           >
-            <Heading size={'sm'} color="gray.dark">
-              {name}
-            </Heading>
+            <Stack direction="row" alignItems="center">
+              <Heading size={'sm'} color="gray.dark">
+                {name}
+              </Heading>
+              {!!balance && (
+                <Text
+                  fontSize="md"
+                  color="white"
+                  bg="tomato.500"
+                  py={1}
+                  px={3}
+                  borderRadius="full"
+                  fontWeight="bold"
+                >
+                  {balance}
+                </Text>
+              )}
+            </Stack>
             {tab === PizzaCave.buyAndBake && (
               <Flex>
                 <Heading size={'sm'} color="gray.500" mr="2">

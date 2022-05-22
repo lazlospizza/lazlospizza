@@ -1,5 +1,6 @@
 import { Box, Center, Flex, Stack, Text, useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { REBAKE_FEE } from '../../constants';
 import { useWallet } from '../../hooks/useWallet';
 import { colors } from '../../styles/theme';
 import { Pizza, Ingredient, PizzaCave } from '../../types';
@@ -99,7 +100,7 @@ export const Rebake = () => {
     <Box>
       <Stack m="10px">
         <Text color="tomato.500" fontWeight={700} fontSize={'xl'}>
-          Rebake (0.01 ETH)
+          Rebake ({REBAKE_FEE} ETH)
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
           {`Disassemble a pizza held in your wallet and return the constituent fresh ingredient NFTs to your wallet for trading or baking new pizzas.`}
@@ -156,6 +157,7 @@ export const Rebake = () => {
                 removeIngredient={handleRemoveAdditionalIngredient}
                 pizza={pizza}
                 tab={PizzaCave.rebake}
+                unselectPizza={() => setPizza(null)}
               />
             ) : (
               <SelectYourPizza

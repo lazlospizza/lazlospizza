@@ -23,6 +23,7 @@ import { useMainContract } from '../../hooks/useContract';
 import { useWallet } from '../../hooks/useWallet';
 import { Ingredient, Pizza, PizzaCave } from '../../types';
 import { getTotalCost } from '../../utils/general';
+import { SuccessModal } from './SuccessModal';
 
 interface Props {
   pizza?: Pizza | null;
@@ -36,12 +37,13 @@ export const YourSelections = ({
   removeBurnIngredient,
   addBurnIngredient,
 }: Props) => {
-  const { wallet, isConnected } = useWallet();
+  const { wallet, isConnected, fetchPizzas } = useWallet();
   const { mainContract } = useMainContract();
   const [disableBake, setDisableBake] = useState(true);
   const [isMinting, setIsMinting] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [mintingTxn, setMintingTxn] = useState<string | null>(null);
-  const [tokenIds, setTokenIds] = useState([]);
+  const [mintedTokenId, setMintedTokenId] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const toast = useToast();
   const provider = wallet?.web3Provider;
@@ -91,11 +93,13 @@ export const YourSelections = ({
       setMintingTxn(result.hash);
       const receipt = await result.wait();
 
-      const mintedIds = receipt.events
-        ?.map(({ args }) => (args?.[2] ? parseInt(args?.[2]) : null))
+      const [mintedId] = receipt.events
+        ?.map(({ topics }) => (topics?.[3] ? parseInt(topics?.[3], 16) : null))
         .filter(id => !!id);
 
-      setTokenIds(mintedIds);
+      setMintedTokenId(mintedId);
+      await fetchPizzas();
+      setShowSuccessModal(true);
     } catch (e) {
       console.log(e);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -122,6 +126,8 @@ export const YourSelections = ({
 
       setMintingTxn(result.hash);
       await result.wait();
+      await fetchPizzas();
+      setShowSuccessModal(true);
     } catch (e) {
       console.log(e);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -152,7 +158,15 @@ export const YourSelections = ({
       );
 
       setMintingTxn(result.hash);
-      await result.wait();
+      const receipt = await result.wait();
+
+      const [mintedId] = receipt.events
+        ?.map(({ topics }) => (topics?.[3] ? parseInt(topics?.[3], 16) : null))
+        .filter(id => !!id);
+
+      setMintedTokenId(mintedId);
+      await fetchPizzas();
+      setShowSuccessModal(true);
     } catch (e) {
       console.log(e);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -191,13 +205,13 @@ export const YourSelections = ({
       setMintingTxn(result.hash);
       const receipt = await result.wait();
 
-      console.log(receipt);
+      const [mintedId] = receipt.events
+        ?.map(({ topics }) => (topics?.[3] ? parseInt(topics?.[3], 16) : null))
+        .filter(id => !!id);
 
-      // const mintedIds = receipt.events
-      //   ?.map(({ args }) => (args?.[2] ? parseInt(args?.[2]) : null))
-      //   .filter(id => !!id);
-
-      // setTokenIds(mintedIds);
+      setMintedTokenId(mintedId);
+      await fetchPizzas();
+      setShowSuccessModal(true);
     } catch (e) {
       console.log(e);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -233,13 +247,9 @@ export const YourSelections = ({
       );
 
       setMintingTxn(result.hash);
-      const receipt = await result.wait();
-
-      const mintedIds = receipt.events
-        ?.map(({ args }) => (args?.[2] ? parseInt(args?.[2]) : null))
-        .filter(id => !!id);
-
-      setTokenIds(mintedIds);
+      await result.wait();
+      await fetchPizzas();
+      setShowSuccessModal(true);
     } catch (e) {
       console.log(e);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -349,6 +359,7 @@ export const YourSelections = ({
                 width: '80%',
                 height: '80%',
                 backgroundImage: `url(/assets/ingredients/baked/${item.name
+                  .replace(/'/g, '')
                   .split(' ')
                   .join('-')}.png)`,
                 backgroundSize: 'contain',
@@ -422,6 +433,11 @@ export const YourSelections = ({
         {/* Buttons */}
         {renderButtons()}
       </Stack>
+      <SuccessModal
+        isOpen={showSuccessModal}
+        setIsOpen={setShowSuccessModal}
+        pizzaTokenId={mintedTokenId}
+      />
     </Box>
   );
 };
