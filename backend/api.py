@@ -67,7 +67,7 @@ async def get_random_pizza(request):
 
 @app.route('/payout', methods=["GET"])
 @cross_origin(app)
-async def get_random_pizza(request):
+async def get_payout(request):
     if 'address' not in request.args or len(request.args['address']) != 1:
         return text('address is required', status=400)
 
@@ -81,8 +81,7 @@ async def get_random_pizza(request):
     if payout_amount == None:
         return text('no payout for this block', status=404)
 
-    converted_payout_amount = payout_amount * 1000000000000000000
-    
+    converted_payout_amount = int(payout_amount * 1000000000000000000.0)
     hashed_message = w3.soliditySha3(
         ['uint256', 'address', 'uint256'],
         [block, w3.toChecksumAddress(addr), converted_payout_amount]

@@ -24,6 +24,8 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
     using Counters for Counters.Counter;
     using Strings for uint256;
 
+    bool public mintingOn = true;
+    bool public bakeRandomPizzaOn = true;
     uint256 public bakePizzaPrice = 0.01 ether;
     uint256 public unbakePizzaPrice = 0.05 ether;
     uint256 public rebakePizzaPrice = 0.01 ether;
@@ -33,6 +35,14 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
     address private systemAddress;
     mapping(address => uint256) artistWithdrawalAmount;
     mapping(uint256 => mapping(address => bool)) isPaidByBlockAndAddress;
+
+    function setMintingOn(bool on) public onlyOwner {
+        mintingOn = on;
+    }
+
+    function setBakeRandomPizzaOn(bool on) public onlyOwner {
+        bakeRandomPizzaOn = on;
+    }
 
     function setPizzaContractAddress(address addr) public onlyOwner {
         pizzaContractAddress = addr;
@@ -47,6 +57,8 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
     }
 
     function buyIngredients(uint256[] memory tokenIds, uint256[] memory amounts) public payable nonReentrant {
+        require(mintingOn, 'minting must be on');
+        
         uint256 expectedPrice;
         for (uint256 i = 0; i < tokenIds.length; i++) {
             uint256 tokenId = tokenIds[i];
@@ -69,11 +81,14 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
     }
 
     function bakePizza(uint256[] memory tokenIds) public payable nonReentrant returns (uint256) {
+        require(mintingOn, 'minting must be on');
         require(msg.value == bakePizzaPrice, 'Invalid price.');
         return _bakePizza(tokenIds, true);
     }
 
     function buyAndBakePizza(uint256[] memory tokenIds) public payable nonReentrant returns (uint256) {
+        require(mintingOn, 'minting must be on');
+
         // Validate that:
         //  1. None of these ingredients are sold out.
         //  2. The given eth is correct (cost of ingredients + bake price).
@@ -307,6 +322,7 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
     }
 
     function unbakePizza(uint256 pizzaTokenId) public payable nonReentrant {
+        require(mintingOn, 'minting must be on');
         require(msg.value == unbakePizzaPrice, 'Invalid price.');
 
         Pizza memory pizza = ILazlosPizzas(pizzaContractAddress).pizza(pizzaTokenId);
@@ -407,6 +423,7 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
     }
 
     function rebakePizza(uint256 pizzaTokenId, uint256[] memory ingredientTokenIdsToAdd, uint256[] memory ingredientTokenIdsToRemove) public payable nonReentrant {
+        require(mintingOn, 'minting must be on');
         require(msg.value == rebakePizzaPrice, 'Invalid price.');
 
         Pizza memory pizza = ILazlosPizzas(pizzaContractAddress).pizza(pizzaTokenId);
@@ -523,6 +540,8 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
     }
 
     function bakeRandomPizza(uint256[] memory tokenIds, uint256 timestamp, bytes32 r, bytes32 s, uint8 v) public payable nonReentrant returns (uint256) {
+        require(mintingOn, 'minting must be on');
+        require(bakeRandomPizzaOn, 'bakeRandomPizza must be on');
         require(randomBakePrice == msg.value, 'Invalid price.');
         require(block.timestamp - timestamp < 300, 'timestamp expired');
 
@@ -532,7 +551,7 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
             tokenIds
         ));
 
-        address signerAddress = verifyString(messageHash, r, s, v);
+        address signerAddress = verifySignature(messageHash, r, s, v);
         bool validSignature = signerAddress == systemAddress;
         require(validSignature, 'Invalid signature.');
 
@@ -555,24 +574,7 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
         return _bakePizza(tokenIds, false);
     }
 
-    function toAsciiString(address x) internal pure returns (string memory) {
-        bytes memory s = new bytes(40);
-        for (uint i = 0; i < 20; i++) {
-            bytes1 b = bytes1(uint8(uint(uint160(x)) / (2**(8*(19 - i)))));
-            bytes1 hi = bytes1(uint8(b) / 16);
-            bytes1 lo = bytes1(uint8(b) - 16 * uint8(hi));
-            s[2*i] = char(hi);
-            s[2*i+1] = char(lo);            
-        }
-        return string(s);
-    }
-
-    function char(bytes1 b) internal pure returns (bytes1 c) {
-        if (uint8(b) < 10) return bytes1(uint8(b) + 0x30);
-        else return bytes1(uint8(b) + 0x57);
-    }
-
-    function verifyString(bytes32 messageHash, bytes32 r, bytes32 s, uint8 v) public pure returns (address) {
+    function verifySignature(bytes32 messageHash, bytes32 r, bytes32 s, uint8 v) public pure returns (address) {
         bytes memory prefix = "\x19Ethereum Signed Message:\n32";
         bytes memory prefixedMessage = abi.encodePacked(prefix, messageHash);
         bytes32 hashedMessage = keccak256(prefixedMessage);
@@ -607,33 +609,43 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
                 continue;
             }
 
-            unchecked {
-                uint256 numSold = ingredient.initialSupply - ingredient.supply;
-                uint256 ingredientRevenue = numSold * ingredient.price;
-                uint256 artistsIngredientCommission = ingredientRevenue / 10;
-                artistCommission += artistsIngredientCommission;
-            }
+            uint256 numSold = ingredient.initialSupply - ingredient.supply;
+            uint256 ingredientRevenue = numSold * ingredient.price;
+            uint256 artistsIngredientCommission = ingredientRevenue / 10;
+            artistCommission += artistsIngredientCommission;
         }
 
         return artistCommission;
     }
 
-    function redeemPayout(uint256 payoutBlock, uint256 amount, bytes32 r, bytes32 s, uint8 v) public nonReentrant {
-        bytes32 messageHash = keccak256(abi.encodePacked(
-            payoutBlock,
-            msg.sender,
-            amount
-        ));
-        address signerAddress = verifyString(messageHash, r, s, v);
-        bool validSignature = signerAddress == systemAddress;
-        require(validSignature, 'Invalid signature.');
+    struct Payout {
+        uint256 payoutBlock;
+        uint256 amount;
+        bytes32 r;
+        bytes32 s;
+        uint8 v;
+    }
 
-        require(!isPaidByBlockAndAddress[payoutBlock][msg.sender], 'Address already been paid for this block.');
+    function redeemPayout(Payout[] memory payouts) public nonReentrant {
+        for (uint256 i; i < payouts.length; i++) {
+            Payout memory payout = payouts[i];
 
-        isPaidByBlockAndAddress[payoutBlock][msg.sender] = true;
+            bytes32 messageHash = keccak256(abi.encodePacked(
+                payout.payoutBlock,
+                msg.sender,
+                payout.amount
+            ));
+            address signerAddress = verifySignature(messageHash, payout.r, payout.s, payout.v);
+            bool validSignature = signerAddress == systemAddress;
+            require(validSignature, 'Invalid signature.');
 
-        (bool success,) = msg.sender.call{value : amount}('');
-        require(success, "Withdrawal failed.");
+            require(!isPaidByBlockAndAddress[payout.payoutBlock][msg.sender], 'Address already been paid for this block.');
+
+            isPaidByBlockAndAddress[payout.payoutBlock][msg.sender] = true;
+
+            (bool success,) = msg.sender.call{value : payout.amount}('');
+            require(success, "Withdrawal failed.");
+        }
     }
 
     function isPaidOutForBlock(address addr, uint256 payoutBlock) public view returns (bool) {
