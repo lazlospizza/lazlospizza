@@ -60,16 +60,26 @@ contract LazlosIngredients is ERC1155U, Ownable {
         return numIngredients.current();
     }
 
-    function increaseIngredientSupply(uint256 tokenId, uint256 amount) public onlyPizzaShopOrOwner {
+    function increaseIngredientSupply(uint256 tokenId, uint256 amount) public onlyPizzaShop {
         unchecked {
             ingredients[tokenId].supply += uint256(amount);
         }
     }
 
-    function decreaseIngredientSupply(uint256 tokenId, uint256 amount) public onlyPizzaShopOrOwner {
+    function decreaseIngredientSupply(uint256 tokenId, uint256 amount) public onlyPizzaShop {
         unchecked {
             ingredients[tokenId].supply -= uint256(amount);
         }
+    }
+
+    function increaseIngredientTotalSupply(uint256 tokenId, uint256 amount) public onlyOwner {
+        ingredients[tokenId].supply += uint256(amount);
+        ingredients[tokenId].initialSupply += uint256(amount);
+    }
+
+    function decreaseIngredientTotalSupply(uint256 tokenId, uint256 amount) public onlyOwner {
+        ingredients[tokenId].supply -= uint256(amount);
+        ingredients[tokenId].initialSupply -= uint256(amount);
     }
 
     function mintIngredients(address addr, uint256[] memory tokenIds, uint256[] memory amounts) public onlyPizzaShop {
