@@ -55,6 +55,7 @@ export const Bake = () => {
         return (
           <SelectYourIngredients
             ingredientGroups={ingredientGroups}
+            ownedIngredients={myIngredients}
             addIngredient={handleAddIngredient}
             removeIngredient={handleRemoveIngredient}
             pizza={pizza}
@@ -123,14 +124,14 @@ export const Bake = () => {
       ) : (
         // desktop view
         <Flex borderTop="2px" borderColor={'gray.light'}>
-          <div style={{ width: '50%', height: '1000px', overflowY: 'scroll' }}>
+          <div style={{ width: '50%' }}>
             <SelectYourIngredients
               ingredientGroups={ingredientGroups}
               ownedIngredients={myIngredients}
               addIngredient={handleAddIngredient}
               removeIngredient={handleRemoveIngredient}
               pizza={pizza}
-              tab={PizzaCave.buyAndBake}
+              tab={PizzaCave.bake}
             />
           </div>
           <Stack

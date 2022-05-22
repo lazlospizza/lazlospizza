@@ -29,13 +29,6 @@ export const SelectYourPizza = ({
           </Text>
         </Flex>
         {pizzas.map(pizza => {
-          const raritySum = pizza.allIngredients.reduce(
-            (prev, current) => prev + current.rarity,
-            0,
-          );
-          const rarityScore = (raritySum / pizza.allIngredients.length).toFixed(
-            3,
-          );
           return (
             <Box
               key={pizza.tokenId}
@@ -93,7 +86,7 @@ export const SelectYourPizza = ({
                     py="2"
                   >
                     <Text color="red" fontWeight="bold">
-                      {rarityScore}
+                      {pizza.rarity.toFixed(3)}
                     </Text>
                     {!!selectPizza && (
                       <Button

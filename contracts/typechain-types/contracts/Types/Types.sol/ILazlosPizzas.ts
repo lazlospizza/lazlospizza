@@ -47,18 +47,20 @@ export type PizzaStructOutput = [
 export interface ILazlosPizzasInterface extends utils.Interface {
   functions: {
     "bake(address,(uint16,uint16,uint16[3],uint16[4],uint16[4]))": FunctionFragment;
+    "burn(uint256)": FunctionFragment;
     "pizza(uint256)": FunctionFragment;
     "rebake(address,uint256,(uint16,uint16,uint16[3],uint16[4],uint16[4]))": FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic: "bake" | "pizza" | "rebake"
+    nameOrSignatureOrTopic: "bake" | "burn" | "pizza" | "rebake"
   ): FunctionFragment;
 
   encodeFunctionData(
     functionFragment: "bake",
     values: [string, PizzaStruct]
   ): string;
+  encodeFunctionData(functionFragment: "burn", values: [BigNumberish]): string;
   encodeFunctionData(functionFragment: "pizza", values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: "rebake",
@@ -66,6 +68,7 @@ export interface ILazlosPizzasInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "bake", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pizza", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "rebake", data: BytesLike): Result;
 
@@ -105,6 +108,11 @@ export interface ILazlosPizzas extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    burn(
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     pizza(
       tokenId: BigNumberish,
       overrides?: CallOverrides
@@ -121,6 +129,11 @@ export interface ILazlosPizzas extends BaseContract {
   bake(
     baker: string,
     pizza: PizzaStruct,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  burn(
+    tokenId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -142,6 +155,8 @@ export interface ILazlosPizzas extends BaseContract {
       pizza: PizzaStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    burn(tokenId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     pizza(
       tokenId: BigNumberish,
@@ -165,6 +180,11 @@ export interface ILazlosPizzas extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    burn(
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     pizza(tokenId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     rebake(
@@ -179,6 +199,11 @@ export interface ILazlosPizzas extends BaseContract {
     bake(
       baker: string,
       pizza: PizzaStruct,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    burn(
+      tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

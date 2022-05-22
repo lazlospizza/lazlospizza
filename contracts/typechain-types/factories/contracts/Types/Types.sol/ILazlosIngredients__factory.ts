@@ -112,10 +112,28 @@ const _abi = [
             name: "supply",
             type: "uint256",
           },
+          {
+            internalType: "uint256",
+            name: "initialSupply",
+            type: "uint256",
+          },
         ],
         internalType: "struct Ingredient",
         name: "",
         type: "tuple",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getNumIngredients",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",

@@ -46,6 +46,7 @@ export const Header = () => {
           direction="column"
           pathname={router.pathname}
           isWalletConnected={isConnected}
+          showConnectWallet={true}
         />
       </Box>
     );

@@ -7,3 +7,4 @@ export * as types from "./Types";
 export { LazlosIngredients__factory } from "./LazlosIngredients__factory";
 export { LazlosPizzaShop__factory } from "./LazlosPizzaShop__factory";
 export { LazlosPizzas__factory } from "./LazlosPizzas__factory";
+export { LazlosRendering__factory } from "./LazlosRendering__factory";

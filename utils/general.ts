@@ -16,6 +16,20 @@ export const useIsMobile = () => {
   return isMobile;
 };
 
+export const useGetWindowSize = () => {
+  const [size, setSize] = useState(0);
+  useEffect(() => {
+    const handleResize = () => {
+      setSize(window.innerWidth);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return size;
+};
+
 export const DefaultPizza = {
   meats: [],
   toppings: [],

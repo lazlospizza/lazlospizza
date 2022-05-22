@@ -53,6 +53,7 @@ export interface LazlosPizzasInterface extends utils.Interface {
     "approve(address,uint256)": FunctionFragment;
     "bake(address,(uint16,uint16,uint16[3],uint16[4],uint16[4]))": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "burn(uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "name()": FunctionFragment;
@@ -62,11 +63,13 @@ export interface LazlosPizzasInterface extends utils.Interface {
     "pizza(uint256)": FunctionFragment;
     "pizzaShopContractAddress()": FunctionFragment;
     "rebake(address,uint256,(uint16,uint16,uint16[3],uint16[4],uint16[4]))": FunctionFragment;
+    "renderingContractAddress()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setPizzaShopContractAddress(address)": FunctionFragment;
+    "setRenderingContractAddress(address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
@@ -79,6 +82,7 @@ export interface LazlosPizzasInterface extends utils.Interface {
       | "approve"
       | "bake"
       | "balanceOf"
+      | "burn"
       | "getApproved"
       | "isApprovedForAll"
       | "name"
@@ -88,11 +92,13 @@ export interface LazlosPizzasInterface extends utils.Interface {
       | "pizza"
       | "pizzaShopContractAddress"
       | "rebake"
+      | "renderingContractAddress"
       | "renounceOwnership"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
       | "setPizzaShopContractAddress"
+      | "setRenderingContractAddress"
       | "supportsInterface"
       | "symbol"
       | "tokenURI"
@@ -109,6 +115,7 @@ export interface LazlosPizzasInterface extends utils.Interface {
     values: [string, PizzaStruct]
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(functionFragment: "burn", values: [BigNumberish]): string;
   encodeFunctionData(
     functionFragment: "getApproved",
     values: [BigNumberish]
@@ -134,6 +141,10 @@ export interface LazlosPizzasInterface extends utils.Interface {
     values: [string, BigNumberish, PizzaStruct]
   ): string;
   encodeFunctionData(
+    functionFragment: "renderingContractAddress",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
   ): string;
@@ -151,6 +162,10 @@ export interface LazlosPizzasInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setPizzaShopContractAddress",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setRenderingContractAddress",
     values: [string]
   ): string;
   encodeFunctionData(
@@ -174,6 +189,7 @@ export interface LazlosPizzasInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "bake", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
@@ -193,6 +209,10 @@ export interface LazlosPizzasInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "rebake", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "renderingContractAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
   ): Result;
@@ -210,6 +230,10 @@ export interface LazlosPizzasInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setPizzaShopContractAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setRenderingContractAddress",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -329,6 +353,11 @@ export interface LazlosPizzas extends BaseContract {
 
     balanceOf(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    burn(
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     getApproved(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -364,6 +393,8 @@ export interface LazlosPizzas extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    renderingContractAddress(overrides?: CallOverrides): Promise<[string]>;
+
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -390,6 +421,11 @@ export interface LazlosPizzas extends BaseContract {
     ): Promise<ContractTransaction>;
 
     setPizzaShopContractAddress(
+      addr: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setRenderingContractAddress(
       addr: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -430,6 +466,11 @@ export interface LazlosPizzas extends BaseContract {
 
   balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  burn(
+    tokenId: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   getApproved(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   isApprovedForAll(
@@ -460,6 +501,8 @@ export interface LazlosPizzas extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  renderingContractAddress(overrides?: CallOverrides): Promise<string>;
+
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -486,6 +529,11 @@ export interface LazlosPizzas extends BaseContract {
   ): Promise<ContractTransaction>;
 
   setPizzaShopContractAddress(
+    addr: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setRenderingContractAddress(
     addr: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -526,6 +574,8 @@ export interface LazlosPizzas extends BaseContract {
 
     balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    burn(tokenId: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
     getApproved(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     isApprovedForAll(
@@ -556,6 +606,8 @@ export interface LazlosPizzas extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    renderingContractAddress(overrides?: CallOverrides): Promise<string>;
+
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     "safeTransferFrom(address,address,uint256)"(
@@ -580,6 +632,11 @@ export interface LazlosPizzas extends BaseContract {
     ): Promise<void>;
 
     setPizzaShopContractAddress(
+      addr: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setRenderingContractAddress(
       addr: string,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -665,6 +722,11 @@ export interface LazlosPizzas extends BaseContract {
 
     balanceOf(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    burn(
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     getApproved(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -695,6 +757,8 @@ export interface LazlosPizzas extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    renderingContractAddress(overrides?: CallOverrides): Promise<BigNumber>;
+
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -721,6 +785,11 @@ export interface LazlosPizzas extends BaseContract {
     ): Promise<BigNumber>;
 
     setPizzaShopContractAddress(
+      addr: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setRenderingContractAddress(
       addr: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -765,6 +834,11 @@ export interface LazlosPizzas extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    burn(
+      tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     getApproved(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -803,6 +877,10 @@ export interface LazlosPizzas extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    renderingContractAddress(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -829,6 +907,11 @@ export interface LazlosPizzas extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     setPizzaShopContractAddress(
+      addr: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setRenderingContractAddress(
       addr: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

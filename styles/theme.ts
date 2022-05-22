@@ -89,6 +89,33 @@ export const styles = {
     '.menu a:hover::after, .menu a.current::after': {
       width: '100%',
     },
+    '.footer a': {
+      color: 'white',
+      padding: '0 0 7px',
+      position: 'relative',
+      fontSize: '18px',
+      fontWeight: '900',
+      width: 'max-content',
+      whiteSpaceWrap: 'nowrap',
+    },
+    '.footer a:hover, .footer a.current': {
+      color: 'cheese.200',
+      textDecoration: 'none',
+    },
+    '.footer a::after': {
+      width: 0,
+      height: '4px',
+      content: '""',
+      position: 'absolute',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      bottom: 0,
+      background: '#ffda54',
+      transition: 'all .3s ease-in-out',
+    },
+    '.footer a:hover::after, .footer a.current::after': {
+      width: '100%',
+    },
     a: {
       color: 'cheese.200',
       _hover: {

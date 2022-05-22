@@ -61,4 +61,5 @@ export interface Pizza {
   allIngredients: Ingredient[];
   additionalIngredients?: Ingredient[];
   burnIngredients?: Ingredient[];
+  rarity?: number;
 }

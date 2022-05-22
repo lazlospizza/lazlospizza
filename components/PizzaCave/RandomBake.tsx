@@ -1,9 +1,44 @@
 import { Box, Button, Center, Stack, Text } from '@chakra-ui/react';
-import { RADOM_BAKE_FEE, REBAKE_FEE } from '../../constants';
+import axios from 'axios';
+import { parseEther } from 'ethers/lib/utils';
+import { RANDOM_BAKE_FEE, REBAKE_FEE } from '../../constants';
+import { useMainContract } from '../../hooks/useContract';
+import { useWallet } from '../../hooks/useWallet';
 
 export const RandomBake = () => {
-  const handleRandomBake = () => {
-    // do something
+  const { wallet } = useWallet();
+  const { mainContract } = useMainContract();
+
+  const handleRandomBake = async () => {
+    if (!wallet?.address || !wallet.web3Provider) return null;
+    console.log('test', wallet?.address);
+    const res = await axios.get(
+      `https://api.lazlospizza.com/random_pizza?address=${wallet?.address}`,
+    );
+    console.log(res.data);
+    const data: {
+      address: string;
+      r: string;
+      s: string;
+      v: number;
+      timestamp: number;
+      token_ids: number[];
+    } = res.data;
+    const signer = wallet.web3Provider.getSigner();
+    const contractWithSigner = mainContract.connect(signer);
+    const result = await contractWithSigner.bakeRandomPizza(
+      data.token_ids,
+      data.timestamp,
+      data.r,
+      data.s,
+      data.v,
+      {
+        from: signer._address,
+        value: parseEther(RANDOM_BAKE_FEE.toFixed(2)),
+        gasLimit: 500000,
+      },
+    );
+    await result.wait();
   };
 
   return (
@@ -13,7 +48,7 @@ export const RandomBake = () => {
           Random Bake
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
-          {`Can’t decide what you want? Is oke, we have you covered! Get a completed pizza NFT with a random selection of ingredients. (${REBAKE_FEE} ETH + gas)`}
+          {`Can't decide what you want? Is oke, we have you covered! Get a completed pizza NFT with a random selection of ingredients. (${REBAKE_FEE} ETH + gas)`}
         </Text>
       </Stack>
 
@@ -44,7 +79,8 @@ export const RandomBake = () => {
               maxW={'600'}
               mt="16"
               onClick={handleRandomBake}
-            >{`Random Bake at ${RADOM_BAKE_FEE}`}</Button>
+              disabled={!wallet?.address}
+            >{`Random Bake at ${RANDOM_BAKE_FEE}`}</Button>
           </Center>
         </Stack>
       </Box>

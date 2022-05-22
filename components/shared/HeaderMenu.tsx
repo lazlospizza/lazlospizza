@@ -1,15 +1,18 @@
 import { Stack } from '@chakra-ui/react';
 import Link from 'next/link';
 import { PageRoutes, Pages } from '../../types';
+import { ConnectWalletButton } from '../ConnectWalletButton';
 
 export const HeaderMenu = ({
   direction,
   pathname,
   isWalletConnected,
+  showConnectWallet = false,
 }: {
   direction: 'row' | 'column';
   pathname: string;
   isWalletConnected: boolean;
+  showConnectWallet?: boolean;
 }) => {
   return (
     <Stack direction={direction} className="menu">
@@ -61,6 +64,7 @@ export const HeaderMenu = ({
           </a>
         </Link>
       )}
+      {showConnectWallet && <ConnectWalletButton />}
     </Stack>
   );
 };
