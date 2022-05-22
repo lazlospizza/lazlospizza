@@ -28,7 +28,9 @@ export const NavButton = ({
 
   return (
     <Text
-      mr="4"
+      textAlign="center"
+      w="100%"
+      mx="2"
       pb="3"
       borderBottom="4px"
       color={'tomato.500'}

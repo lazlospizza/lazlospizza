@@ -1,19 +1,11 @@
-import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  Heading,
-  Stack,
-  Text,
-} from '@chakra-ui/react';
+import { Box, Button, Center, Flex, Heading } from '@chakra-ui/react';
 import { useState } from 'react';
 import { Bake } from '../components/PizzaCave/Bake';
 import { BuyAndBake } from '../components/PizzaCave/BuyAndBake';
 import { RandomBake } from '../components/PizzaCave/RandomBake';
 import { Rebake } from '../components/PizzaCave/Rebake';
 import { Unbake } from '../components/PizzaCave/Unbake';
-import { Ingredient } from '../types';
+import { useIsMobile } from '../utils/general';
 
 enum Tabs {
   buyAndBake = 'Buy & Bake',
@@ -24,6 +16,7 @@ enum Tabs {
 }
 
 export default function PizzaCave() {
+  const isMobile = useIsMobile();
   const [tab, setTab] = useState(Tabs.buyAndBake);
 
   const renderSubpage = (tab: Tabs) => {
@@ -63,7 +56,10 @@ export default function PizzaCave() {
       </Flex>
 
       {/* Page nav */}
-      <Flex m="20px">
+      <Flex
+        m="20px"
+        style={isMobile ? { flexWrap: 'wrap', justifyContent: 'center' } : {}}
+      >
         <Button
           onClick={() => setTab(Tabs.buyAndBake)}
           backgroundColor={tab === Tabs.buyAndBake ? '#3D3431' : ''}

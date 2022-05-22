@@ -125,7 +125,7 @@ export const BuyAndBake = () => {
           {/* mobile nav */}
           <Center
             pt="4"
-            px="8"
+            px={isMobile ? '2' : '8'}
             alignContent={'center'}
             justifyContent={'center'}
             borderTop="1px"
