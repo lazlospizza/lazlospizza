@@ -8,8 +8,18 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-export const ErrorModal = ({ isOpen }: { isOpen: boolean }) => {
+export const ErrorModal = ({
+  isOpen,
+  setIsOpen,
+}: {
+  isOpen: boolean;
+  setIsOpen;
+}) => {
   const { onClose } = useDisclosure();
+
+  const handleOnClose = () => {
+    setIsOpen(false);
+  };
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -23,7 +33,7 @@ export const ErrorModal = ({ isOpen }: { isOpen: boolean }) => {
               backgroundColor={'white'}
               color="gray.dark"
               mr={3}
-              onClick={onClose}
+              onClick={handleOnClose}
             >
               Close
             </Button>
