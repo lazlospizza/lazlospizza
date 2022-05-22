@@ -71,6 +71,7 @@ export const IngredientItem = ({
               width: '100%',
               height: '100%',
               backgroundImage: `url(/assets/ingredients/raw/${ingredient.name
+                .toLowerCase()
                 .replace(/'/g, '')
                 .split(' ')
                 .join('-')}.png)`,
