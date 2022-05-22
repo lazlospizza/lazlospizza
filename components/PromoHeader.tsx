@@ -5,7 +5,7 @@ export const PromoHeader = () => {
   return (
     <Box
       w="full"
-      h="330px"
+      h="310px"
       display={'flex'}
       alignItems="center"
       justifyContent={'center'}
