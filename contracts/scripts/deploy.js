@@ -74,7 +74,7 @@ async function main() {
   await rendering.setIngredientsIPFSHash('QmRpABeFSqXkpCSxUugwKrKhTrVrJQ2i3yYu7an1fgWYaa');
   await rendering.setIngredientsContractAddress(ingredients.address);
   await rendering.setPizzasContractAddress(pizzas.address);
-  await rendering.setBaseURI('http://lazlospizzaapi-dev.eba-t2m7znq3.us-east-1.elasticbeanstalk.com');
+  await rendering.setBaseURI('https://api.lazlospizza.com');
   await rendering.setIngredientsDescription("The finest pixelated produce on the blockchain. Combine your faves to bake a pizza in Lazlo's Pizza Cave at lazlospizza.com.");
   await rendering.setPizzaDescription("Pixelated pizzas win prizes in Lazlo's Pizza Cave. Visit lazlospizza.com to bake your own.");
 

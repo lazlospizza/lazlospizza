@@ -618,22 +618,34 @@ contract LazlosPizzaShop is Ownable, ReentrancyGuard {
         return artistCommission;
     }
 
-    function redeemPayout(uint256 payoutBlock, uint256 amount, bytes32 r, bytes32 s, uint8 v) public nonReentrant {
-        bytes32 messageHash = keccak256(abi.encodePacked(
-            payoutBlock,
-            msg.sender,
-            amount
-        ));
-        address signerAddress = verifySignature(messageHash, r, s, v);
-        bool validSignature = signerAddress == systemAddress;
-        require(validSignature, 'Invalid signature.');
+    struct Payout {
+        uint256 payoutBlock;
+        uint256 amount;
+        bytes32 r;
+        bytes32 s;
+        uint8 v;
+    }
 
-        require(!isPaidByBlockAndAddress[payoutBlock][msg.sender], 'Address already been paid for this block.');
+    function redeemPayout(Payout[] memory payouts) public nonReentrant {
+        for (uint256 i; i < payouts.length; i++) {
+            Payout memory payout = payouts[i];
 
-        isPaidByBlockAndAddress[payoutBlock][msg.sender] = true;
+            bytes32 messageHash = keccak256(abi.encodePacked(
+                payout.payoutBlock,
+                msg.sender,
+                payout.amount
+            ));
+            address signerAddress = verifySignature(messageHash, payout.r, payout.s, payout.v);
+            bool validSignature = signerAddress == systemAddress;
+            require(validSignature, 'Invalid signature.');
 
-        (bool success,) = msg.sender.call{value : amount}('');
-        require(success, "Withdrawal failed.");
+            require(!isPaidByBlockAndAddress[payout.payoutBlock][msg.sender], 'Address already been paid for this block.');
+
+            isPaidByBlockAndAddress[payout.payoutBlock][msg.sender] = true;
+
+            (bool success,) = msg.sender.call{value : payout.amount}('');
+            require(success, "Withdrawal failed.");
+        }
     }
 
     function isPaidOutForBlock(address addr, uint256 payoutBlock) public view returns (bool) {
