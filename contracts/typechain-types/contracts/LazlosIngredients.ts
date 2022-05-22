@@ -59,9 +59,11 @@ export interface LazlosIngredientsInterface extends utils.Interface {
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
     "burnIngredients(address,uint256[],uint256[])": FunctionFragment;
     "decreaseIngredientSupply(uint256,uint256)": FunctionFragment;
+    "decreaseIngredientTotalSupply(uint256,uint256)": FunctionFragment;
     "getIngredient(uint256)": FunctionFragment;
     "getNumIngredients()": FunctionFragment;
     "increaseIngredientSupply(uint256,uint256)": FunctionFragment;
+    "increaseIngredientTotalSupply(uint256,uint256)": FunctionFragment;
     "ingredients(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "mintIngredients(address,uint256[],uint256[])": FunctionFragment;
@@ -88,9 +90,11 @@ export interface LazlosIngredientsInterface extends utils.Interface {
       | "balanceOfBatch"
       | "burnIngredients"
       | "decreaseIngredientSupply"
+      | "decreaseIngredientTotalSupply"
       | "getIngredient"
       | "getNumIngredients"
       | "increaseIngredientSupply"
+      | "increaseIngredientTotalSupply"
       | "ingredients"
       | "isApprovedForAll"
       | "mintIngredients"
@@ -134,6 +138,10 @@ export interface LazlosIngredientsInterface extends utils.Interface {
     values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "decreaseIngredientTotalSupply",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getIngredient",
     values: [BigNumberish]
   ): string;
@@ -143,6 +151,10 @@ export interface LazlosIngredientsInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "increaseIngredientSupply",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "increaseIngredientTotalSupply",
     values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
@@ -226,6 +238,10 @@ export interface LazlosIngredientsInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "decreaseIngredientTotalSupply",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getIngredient",
     data: BytesLike
   ): Result;
@@ -235,6 +251,10 @@ export interface LazlosIngredientsInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "increaseIngredientSupply",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "increaseIngredientTotalSupply",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -434,6 +454,12 @@ export interface LazlosIngredients extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    decreaseIngredientTotalSupply(
+      tokenId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     getIngredient(
       tokenId: BigNumberish,
       overrides?: CallOverrides
@@ -442,6 +468,12 @@ export interface LazlosIngredients extends BaseContract {
     getNumIngredients(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     increaseIngredientSupply(
+      tokenId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    increaseIngredientTotalSupply(
       tokenId: BigNumberish,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -571,6 +603,12 @@ export interface LazlosIngredients extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  decreaseIngredientTotalSupply(
+    tokenId: BigNumberish,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   getIngredient(
     tokenId: BigNumberish,
     overrides?: CallOverrides
@@ -579,6 +617,12 @@ export interface LazlosIngredients extends BaseContract {
   getNumIngredients(overrides?: CallOverrides): Promise<BigNumber>;
 
   increaseIngredientSupply(
+    tokenId: BigNumberish,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  increaseIngredientTotalSupply(
     tokenId: BigNumberish,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -706,6 +750,12 @@ export interface LazlosIngredients extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    decreaseIngredientTotalSupply(
+      tokenId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     getIngredient(
       tokenId: BigNumberish,
       overrides?: CallOverrides
@@ -714,6 +764,12 @@ export interface LazlosIngredients extends BaseContract {
     getNumIngredients(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseIngredientSupply(
+      tokenId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    increaseIngredientTotalSupply(
       tokenId: BigNumberish,
       amount: BigNumberish,
       overrides?: CallOverrides
@@ -898,6 +954,12 @@ export interface LazlosIngredients extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    decreaseIngredientTotalSupply(
+      tokenId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     getIngredient(
       tokenId: BigNumberish,
       overrides?: CallOverrides
@@ -906,6 +968,12 @@ export interface LazlosIngredients extends BaseContract {
     getNumIngredients(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseIngredientSupply(
+      tokenId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    increaseIngredientTotalSupply(
       tokenId: BigNumberish,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1025,6 +1093,12 @@ export interface LazlosIngredients extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    decreaseIngredientTotalSupply(
+      tokenId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     getIngredient(
       tokenId: BigNumberish,
       overrides?: CallOverrides
@@ -1033,6 +1107,12 @@ export interface LazlosIngredients extends BaseContract {
     getNumIngredients(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     increaseIngredientSupply(
+      tokenId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    increaseIngredientTotalSupply(
       tokenId: BigNumberish,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }

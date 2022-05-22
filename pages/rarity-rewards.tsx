@@ -1,5 +1,7 @@
 import { Box, Button, Flex, Heading, Stack, Text } from '@chakra-ui/react';
 import axios from 'axios';
+import { BigNumber } from 'ethers';
+import { parseEther } from 'ethers/lib/utils';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { SelectYourPizza } from '../components/PizzaCave/SelectYourPizza';
 import { NavButton } from '../components/shared/NavButton';
@@ -65,6 +67,13 @@ export default function RarityRewards() {
   const claimRewards = async () => {
     if (!wallet?.address || !wallet?.web3Provider) return null;
     setIsClaimingRewards(true);
+    const payouts: {
+      payoutBlock: number;
+      amount: BigNumber;
+      r: string;
+      s: string;
+      v: number;
+    }[] = [];
     for (let i = 0; i < unpaidRewards.length; i += 1) {
       try {
         const res = await axios.get(
@@ -74,29 +83,27 @@ export default function RarityRewards() {
 
         const blockReward = res.data;
 
-        const signer = wallet.web3Provider.getSigner();
-        const contractWithSigner = mainContract.connect(signer);
-        const result = await contractWithSigner.redeemPayout(
-          blockReward.block,
-          blockReward.payout_amount,
-          blockReward.r,
-          blockReward.s,
-          blockReward.v,
-          {
-            from: signer._address,
-          },
-        );
-
-        const receipt = await result.wait();
-        console.log(receipt);
-        setUnpaidRewards(_unpaidRewards =>
-          _unpaidRewards.filter(
-            unpaidReward => unpaidReward.block !== blockReward.block,
-          ),
-        );
+        payouts.push({
+          payoutBlock: blockReward.block,
+          amount: parseEther(`${blockReward.payout_amount}`),
+          r: blockReward.r,
+          s: blockReward.s,
+          v: blockReward.v,
+        });
       } catch (e) {
         console.log(e);
       }
+    }
+    try {
+      const signer = wallet.web3Provider.getSigner();
+      const contractWithSigner = mainContract.connect(signer);
+      const result = await contractWithSigner.redeemPayout(payouts, {
+        from: signer._address,
+      });
+      await result.wait();
+      setUnpaidRewards([]);
+    } catch (e) {
+      console.log(e);
     }
     setIsClaimingRewards(false);
   };
