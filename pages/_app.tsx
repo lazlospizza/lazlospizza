@@ -33,7 +33,7 @@ function MyApp({ Component, pageProps }) {
         />
         <meta
           name="description"
-          content="Our mission is to make creating on-chain NFTs as easy and affordable as possible."
+          content="Pixelated pizzas win ETH prizes in Lazlo's Pizza Cave. Visit lazlospizza.com to bake your own."
         />
         <link rel="icon" href="/assets/logo.png" />
       </Head>
