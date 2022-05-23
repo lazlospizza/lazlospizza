@@ -4,6 +4,7 @@ import { useGetWindowSize, useIsMobile } from '../utils/general';
 
 export default function MeetArtists() {
   const isMobile = useIsMobile();
+  const size = useGetWindowSize();
   const artists: ArtistProps[] = [
     {
       name: 'when_lambo',
@@ -24,6 +25,7 @@ export default function MeetArtists() {
       name: 'Hirsch',
       role: 'Front End Dev',
       link: 'https://twitter.com/MikeAHirsch ',
+      imgSrc: 'hirsch.jpg',
     },
     {
       name: 'BRAINDRAIND',
@@ -126,13 +128,38 @@ export default function MeetArtists() {
         </Text>
       </Stack>
 
-      {isMobile ? (
+      {size > 1700 ? (
         <Stack m="20px" spacing={'20px'}>
-          {artists.map((artist, index) => (
-            <Artist key={index} artist={artist} />
-          ))}
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[0]} />
+            <Artist artist={artists[1]} />
+            <Artist artist={artists[2]} />
+          </Stack>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[3]} />
+            <Artist artist={artists[4]} />
+            <Artist artist={artists[5]} />
+          </Stack>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[6]} />
+            <Artist artist={artists[7]} />
+            <Artist artist={artists[8]} />
+          </Stack>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[9]} />
+            <Artist artist={artists[10]} />
+            <Artist artist={artists[11]} />
+          </Stack>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[12]} />
+            <Artist artist={artists[13]} />
+            <Artist artist={artists[14]} />
+          </Stack>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[15]} />
+          </Stack>
         </Stack>
-      ) : (
+      ) : size > 1150 ? (
         <Stack m="20px" spacing={'20px'}>
           <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
             <Artist artist={artists[0]} />
@@ -166,6 +193,12 @@ export default function MeetArtists() {
             <Artist artist={artists[14]} />
             <Artist artist={artists[15]} />
           </Stack>
+        </Stack>
+      ) : (
+        <Stack m="20px" spacing={'20px'}>
+          {artists.map((artist, index) => (
+            <Artist key={index} artist={artist} />
+          ))}
         </Stack>
       )}
     </Box>
