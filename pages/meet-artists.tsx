@@ -8,14 +8,15 @@ export default function MeetArtists() {
       bio: `Founder of Lazlo's Pizza, Co-founder of Flipmap and MAHASSIVE pizza lover! Combining his two of his favourite things with this project: PIZZA and NFTs!`,
       role: 'Founder',
       link: 'https://twitter.com/WhenLambo6135 ',
-      imgSrc: '/assets/when_lambo.png',
+      imgSrc: `when_lambo.png`,
+      // imgSrc: `${public.env.NEXT_PUBLIC_DOMAIN_URL}when_lambo.png`,
     },
     {
       name: 'Totally',
       bio: `Co-Founder of @supdotxyz. Game Dev. @Blitmap artist. Creator of @Suprize_Machine`,
       role: 'Lazlo Designer',
       link: 'https://twitter.com/_BigPapap_',
-      imgSrc: '/assets/Totally.jpg',
+      imgSrc: 'Totally.jpg',
     },
     {
       name: 'Hirsch',
@@ -27,34 +28,34 @@ export default function MeetArtists() {
       bio: `Human Creative and Game Dev in NYC. NFT artist contributing to Blitmap, Polysart and OKPC whilst hacking the planet with Chainrunners!`,
       role: 'Artists',
       link: 'https://twitter.com/BrainDraind ',
-      imgSrc: '/assets/BrainDraind.jpg',
+      imgSrc: 'BrainDraind.jpg',
     },
     {
       name: 'cielxnoel',
       bio: `Ciel Noel makes hybrid handmade and generative NFT art with a focus on interactive game elements.`,
       role: 'Artists',
       link: 'http://www.twitter.com/@cielxnoel',
-      imgSrc: '/assets/CielxNoel.jpg',
+      imgSrc: 'CielxNoel.jpg',
     },
     {
       name: 'Davina Pixel',
       bio: `Pizza loving pixel queen watching from afar.`,
       role: 'Artists',
-      imgSrc: '/assets/DavinaPixel.png',
+      imgSrc: 'DavinaPixel.png',
     },
     {
       name: 'Focus Points',
       bio: `At time of writing, proudly holds the record of ‘least amount of Twitter followers in Crypto’. Co-creator of Blitoadz.`,
       role: 'Artists',
       link: 'https://twitter.com/FocusPoints_NFT',
-      imgSrc: '/assets/FocusPoints.jpg',
+      imgSrc: 'FocusPoints.jpg',
     },
     {
       name: 'HypnoBrando',
       bio: `A California native who loves building new things in Web3. Founder of https://www.chainpass.xyz.`,
       role: 'Artists',
       link: 'https://twitter.com/hypnobrando',
-      imgSrc: '/assets/HypnoBrando.png',
+      imgSrc: 'HypnoBrando.png',
     },
     {
       name: 'NUMO',
@@ -67,28 +68,28 @@ export default function MeetArtists() {
       bio: `Long time enthusiast/investor/collector in crypto and NFTs with a passion for the arts. `,
       role: 'Artists',
       link: 'https://twitter.com/TheAIArtist ',
-      imgSrc: '/assets/Sato.jpg',
+      imgSrc: 'Sato.jpg',
     },
     {
       name: 'SMOTS',
       bio: `Smots is the Creator of the exciting NFT project, Smots. Discover and collect the mystical creatures that occupy the 5 wonderful realms in the Smotsverse!`,
       role: 'Artists',
       link: 'https://twitter.com/Smotsnft ',
-      imgSrc: '/assets/Smots.jpg',
+      imgSrc: 'Smots.jpg',
     },
     {
       name: 'Varley',
       bio: `Varley is a Blitmap original artist and half of the creative duo Highley Varlet. Come stop by Highley Varlet Studios on Cryptovoxel's Scarcity Island to see their latest NFT adventures!`,
       role: 'Artists',
       link: 'https://twitter.com/highleyvarlet',
-      imgSrc: '/assets/Varley.jpg',
+      imgSrc: 'Varley.jpg',
     },
     {
       name: 'Veenus',
       bio: `NFT artist and collector. Original Blitmap artist.`,
       role: 'Artists',
       link: 'https://twitter.com/Veenus_rising ',
-      imgSrc: '/assets/Veenus.png',
+      imgSrc: 'Veenus.png',
     },
 
     {
@@ -96,19 +97,19 @@ export default function MeetArtists() {
       bio: `zod is a newly-minted pixel artist based in New York City. A game industry veteran, he's helped make games in roles that run the gamut of QA, engineering, and production.`,
       role: 'Artists',
       link: 'https://twitter.com/privatezod ',
-      imgSrc: '/assets/Zod.jpg',
+      imgSrc: 'Zod.jpg',
     },
     {
       name: 'Rockpole',
       bio: `Rockpole is a web2 UI expert making steps into the world of web3. He designed the streamlined UI of Lazlo's Pizza, making it simple and intuitive to bake your favorite pie!`,
       role: 'UI Design',
-      imgSrc: '/assets/RockPole.png',
+      imgSrc: 'RockPole.png',
     },
     {
       name: 'HOT SAUCE',
       role: 'Helpoor',
       link: 'https://twitter.com/capag777 ',
-      imgSrc: '/assets/HotSauce.jpg',
+      imgSrc: 'HotSauce.jpg',
     },
   ];
 
@@ -131,6 +132,7 @@ export default function MeetArtists() {
             bio={artist.bio}
             role={artist.role}
             link={artist.link}
+            imgSrc={artist.imgSrc}
           />
         ))}
       </Stack>
