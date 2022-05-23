@@ -16,7 +16,7 @@ export const Footer = () => {
           <Link href={''}>
             <a>FAQ</a>
           </Link>
-          <Link href={''}>
+          <Link href={'https://opensea.io/collection/lazlos-pizza'}>
             <a>OpenSea</a>
           </Link>
         </Stack>
