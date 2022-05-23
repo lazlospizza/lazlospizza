@@ -4,11 +4,11 @@ import { IngredientItem } from './IngredientItem';
 
 interface Props {
   ingredientGroup: IngredientGroup;
-  ownedIngredients?: { tokenId: number; amount: number }[];
-  addIngredient: (ingredient: Ingredient) => void;
-  removeIngredient: (ingredient: Ingredient) => void;
-  pizza: Pizza;
-  tab: PizzaCave;
+  ownedIngredients?: Ingredient[];
+  addIngredient?: (ingredient: Ingredient) => void;
+  removeIngredient?: (ingredient: Ingredient) => void;
+  pizza?: Pizza;
+  tab?: PizzaCave;
 }
 export const IngredientList = ({
   ingredientGroup,
@@ -19,30 +19,43 @@ export const IngredientList = ({
   tab,
 }: Props) => {
   return (
-    <Box>
+    <Box mt={4}>
       <Stack>
         <Text color="tomato.500" fontWeight={900} fontSize={'xl'}>
-          {ingredientGroup.namePlural}
+          {ingredientGroup.name}
         </Text>
-        <Flex>
-          <Text color="gray.dark">{`A Pizza must have`}</Text>
-          <Text color="tomato.500">
-            &nbsp;{`only 1 ${ingredientGroup.name}`}
-          </Text>
-        </Flex>
+        {!!ingredientGroup.max && (
+          <Flex>
+            <Text color="gray.dark">{`A Pizza must have`}</Text>
+            {ingredientGroup.min === ingredientGroup.max ? (
+              <Text color="tomato.500">
+                &nbsp;{`only ${ingredientGroup.max} ${ingredientGroup.name}`}
+              </Text>
+            ) : (
+              <Text color="tomato.500">
+                &nbsp;
+                {ingredientGroup.min
+                  ? `${ingredientGroup.min} to ${ingredientGroup.max} ${ingredientGroup.name}`
+                  : `up to ${ingredientGroup.max} ${ingredientGroup.name}`}
+              </Text>
+            )}
+          </Flex>
+        )}
         {(!!ownedIngredients
           ? ingredientGroup.ingredients.filter(ingredient =>
               ownedIngredients.find(
                 ownedIngredient =>
                   ownedIngredient.tokenId === ingredient.tokenId &&
-                  ownedIngredient.amount > 0,
+                  !!ownedIngredient.balance,
               ),
             )
           : ingredientGroup.ingredients
         ).map(item => (
           <IngredientItem
             key={item.name}
-            ingredient={item}
+            ingredient={
+              ownedIngredients?.find(i => i.tokenId === item.tokenId) || item
+            }
             addIngredient={addIngredient}
             removeIngredient={removeIngredient}
             pizza={pizza}

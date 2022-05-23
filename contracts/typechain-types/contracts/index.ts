@@ -10,3 +10,4 @@ export type { types };
 export type { LazlosIngredients } from "./LazlosIngredients";
 export type { LazlosPizzaShop } from "./LazlosPizzaShop";
 export type { LazlosPizzas } from "./LazlosPizzas";
+export type { LazlosRendering } from "./LazlosRendering";

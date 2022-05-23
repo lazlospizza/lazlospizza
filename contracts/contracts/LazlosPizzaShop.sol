@@ -2,21 +2,47 @@
 pragma solidity 0.8.9;
 
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import '@openzeppelin/contracts/access/Ownable.sol';
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 import './Types/Types.sol';
 
-contract LazlosPizzaShop is Ownable {
+/*
+   __           _      _        ___ _                __ _                 
+  / /  __ _ ___| | ___( )__    / _ (_)__________ _  / _\ |__   ___  _ __  
+ / /  / _` |_  / |/ _ \/ __|  / /_)/ |_  /_  / _` | \ \| '_ \ / _ \| '_ \ 
+/ /__| (_| |/ /| | (_) \__ \ / ___/| |/ / / / (_| | _\ \ | | | (_) | |_) |
+\____/\__,_/___|_|\___/|___/ \/    |_/___/___\__,_| \__/_| |_|\___/| .__/ 
+                                                                   |_|    
+
+LazlosPizzaShop is the main contract for buying ingredients and baking pizza's out of Lazlo's kitchen.
+*/
+contract LazlosPizzaShop is Ownable, ReentrancyGuard {
     using ECDSA for bytes32;
     using Counters for Counters.Counter;
+    using Strings for uint256;
 
+    bool public mintingOn = true;
+    bool public bakeRandomPizzaOn = true;
     uint256 public bakePizzaPrice = 0.01 ether;
     uint256 public unbakePizzaPrice = 0.05 ether;
     uint256 public rebakePizzaPrice = 0.01 ether;
+    uint256 public randomBakePrice = 0.05 ether;
     address public pizzaContractAddress;
     address public ingredientsContractAddress;
     address private systemAddress;
+    mapping(address => uint256) artistWithdrawalAmount;
+    mapping(uint256 => mapping(address => bool)) isPaidByBlockAndAddress;
+
+    function setMintingOn(bool on) public onlyOwner {
+        mintingOn = on;
+    }
+
+    function setBakeRandomPizzaOn(bool on) public onlyOwner {
+        bakeRandomPizzaOn = on;
+    }
 
     function setPizzaContractAddress(address addr) public onlyOwner {
         pizzaContractAddress = addr;
@@ -30,7 +56,9 @@ contract LazlosPizzaShop is Ownable {
         systemAddress = addr;
     }
 
-    function buyIngredients(uint256[] memory tokenIds, uint256[] memory amounts) public payable {
+    function buyIngredients(uint256[] memory tokenIds, uint256[] memory amounts) public payable nonReentrant {
+        require(mintingOn, 'minting must be on');
+        
         uint256 expectedPrice;
         for (uint256 i = 0; i < tokenIds.length; i++) {
             uint256 tokenId = tokenIds[i];
@@ -52,12 +80,15 @@ contract LazlosPizzaShop is Ownable {
         ILazlosIngredients(ingredientsContractAddress).mintIngredients(msg.sender, tokenIds, amounts);
     }
 
-    function bakePizza(uint256[] memory tokenIds) public payable returns (uint256) {
+    function bakePizza(uint256[] memory tokenIds) public payable nonReentrant returns (uint256) {
+        require(mintingOn, 'minting must be on');
         require(msg.value == bakePizzaPrice, 'Invalid price.');
         return _bakePizza(tokenIds, true);
     }
 
-    function buyAndBakePizza(uint256[] memory tokenIds) public payable returns (uint256) {
+    function buyAndBakePizza(uint256[] memory tokenIds) public payable nonReentrant returns (uint256) {
+        require(mintingOn, 'minting must be on');
+
         // Validate that:
         //  1. None of these ingredients are sold out.
         //  2. The given eth is correct (cost of ingredients + bake price).
@@ -290,7 +321,8 @@ contract LazlosPizzaShop is Ownable {
         }
     }
 
-    function unbakePizza(uint256 pizzaTokenId) public payable {
+    function unbakePizza(uint256 pizzaTokenId) public payable nonReentrant {
+        require(mintingOn, 'minting must be on');
         require(msg.value == unbakePizzaPrice, 'Invalid price.');
 
         Pizza memory pizza = ILazlosPizzas(pizzaContractAddress).pizza(pizzaTokenId);
@@ -390,7 +422,8 @@ contract LazlosPizzaShop is Ownable {
         ILazlosPizzas(pizzaContractAddress).burn(pizzaTokenId);
     }
 
-    function rebakePizza(uint256 pizzaTokenId, uint256[] memory ingredientTokenIdsToAdd, uint256[] memory ingredientTokenIdsToRemove) public payable {
+    function rebakePizza(uint256 pizzaTokenId, uint256[] memory ingredientTokenIdsToAdd, uint256[] memory ingredientTokenIdsToRemove) public payable nonReentrant {
+        require(mintingOn, 'minting must be on');
         require(msg.value == rebakePizzaPrice, 'Invalid price.');
 
         Pizza memory pizza = ILazlosPizzas(pizzaContractAddress).pizza(pizzaTokenId);
@@ -506,26 +539,120 @@ contract LazlosPizzaShop is Ownable {
         _addIngredientsToPizza(pizzaTokenId, pizza, ingredientTokenIdsToAdd, true);
     }
 
-    function bakeRandomPizza(uint256[] memory tokenIds, uint256 timestamp, bytes memory signature) public payable returns (uint256) {
+    function bakeRandomPizza(uint256[] memory tokenIds, uint256 timestamp, bytes32 r, bytes32 s, uint8 v) public payable nonReentrant returns (uint256) {
+        require(mintingOn, 'minting must be on');
+        require(bakeRandomPizzaOn, 'bakeRandomPizza must be on');
+        require(randomBakePrice == msg.value, 'Invalid price.');
         require(block.timestamp - timestamp < 300, 'timestamp expired');
 
-        bytes memory message;
-        for (uint256 i; i<tokenIds.length;) {
-            message = abi.encodePacked(message, ',' , tokenIds[i]);
+        bytes32 messageHash = keccak256(abi.encodePacked(
+            msg.sender,
+            timestamp,
+            tokenIds
+        ));
+
+        address signerAddress = verifySignature(messageHash, r, s, v);
+        bool validSignature = signerAddress == systemAddress;
+        require(validSignature, 'Invalid signature.');
+
+        // Validate that:
+        //  1. None of these ingredients are sold out.
+        uint256 expectedPrice = bakePizzaPrice;
+        for (uint256 i = 0; i < tokenIds.length; i++) {
+            uint256 tokenId = tokenIds[i];
+
+            Ingredient memory ingredient = ILazlosIngredients(ingredientsContractAddress).getIngredient(tokenId);
+            require(ingredient.supply >= 1, 'Ingredient sold out.');
+
+            ILazlosIngredients(ingredientsContractAddress).decreaseIngredientSupply(tokenId, 1);
 
             unchecked {
-                i++;
+                expectedPrice += ingredient.price;
             }
         }
 
-        message = abi.encodePacked(message, ':', msg.sender, ':', timestamp);
+        return _bakePizza(tokenIds, false);
+    }
 
-        bytes32 hash = keccak256(message);
-        bytes32 signedHash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", hash));
-        bool validSignature = signedHash.recover(signature) == systemAddress;
+    function verifySignature(bytes32 messageHash, bytes32 r, bytes32 s, uint8 v) public pure returns (address) {
+        bytes memory prefix = "\x19Ethereum Signed Message:\n32";
+        bytes memory prefixedMessage = abi.encodePacked(prefix, messageHash);
+        bytes32 hashedMessage = keccak256(prefixedMessage);
+        return ecrecover(hashedMessage, v, r, s);
+    }
 
-        require(validSignature, 'Invalid signature.');
+    function artistWithdraw() public nonReentrant {
+        uint256 amountToBePayed = artistAllowedWithdrawalAmount(msg.sender);
+        artistWithdrawalAmount[msg.sender] += amountToBePayed;
 
-        return buyAndBakePizza(tokenIds);
+        (bool success,) = msg.sender.call{value : amountToBePayed}('');
+        require(success, "Withdrawal failed.");
+    }
+
+    function artistAllowedWithdrawalAmount(address artist) public view returns( uint256) {
+        uint256 earnedCommission = artistTotalCommission(artist);
+        uint256 amountWithdrawn = artistWithdrawalAmount[artist];
+
+        require(earnedCommission > amountWithdrawn, "Hasn't earned any more commission.");
+        uint256 withdrawalAmount = earnedCommission - amountWithdrawn;
+        return withdrawalAmount;
+    }
+
+    function artistTotalCommission(address artist) public view returns (uint256) {
+        uint256 numIngredients = ILazlosIngredients(ingredientsContractAddress).getNumIngredients();
+
+        uint256 artistCommission;
+        for (uint256 tokenId = 1; tokenId <= numIngredients; tokenId++) {
+            Ingredient memory ingredient = ILazlosIngredients(ingredientsContractAddress).getIngredient(tokenId);
+
+            if (ingredient.artist != artist) {
+                continue;
+            }
+
+            uint256 numSold = ingredient.initialSupply - ingredient.supply;
+            uint256 ingredientRevenue = numSold * ingredient.price;
+            uint256 artistsIngredientCommission = ingredientRevenue / 10;
+            artistCommission += artistsIngredientCommission;
+        }
+
+        return artistCommission;
+    }
+
+    struct Payout {
+        uint256 payoutBlock;
+        uint256 amount;
+        bytes32 r;
+        bytes32 s;
+        uint8 v;
+    }
+
+    function redeemPayout(Payout[] memory payouts) public nonReentrant {
+        uint256 totalPayout;
+        for (uint256 i; i < payouts.length; i++) {
+            Payout memory payout = payouts[i];
+
+            bytes32 messageHash = keccak256(abi.encodePacked(
+                payout.payoutBlock,
+                msg.sender,
+                payout.amount
+            ));
+            address signerAddress = verifySignature(messageHash, payout.r, payout.s, payout.v);
+            bool validSignature = signerAddress == systemAddress;
+            require(validSignature, 'Invalid signature.');
+
+            require(!isPaidByBlockAndAddress[payout.payoutBlock][msg.sender], 'Address already been paid for this block.');
+
+            isPaidByBlockAndAddress[payout.payoutBlock][msg.sender] = true;
+            totalPayout += payout.amount;
+        }
+
+        if (totalPayout > 0) {
+            (bool success,) = msg.sender.call{value : totalPayout}('');
+            require(success, "Withdrawal failed.");
+        }
+    }
+
+    function isPaidOutForBlock(address addr, uint256 payoutBlock) public view returns (bool) {
+        return isPaidByBlockAndAddress[payoutBlock][addr];
     }
 }

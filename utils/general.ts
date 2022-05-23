@@ -1,17 +1,14 @@
-import { useState, useEffect } from 'react';
-import { MEAT_LIMIT, TOPPING_LIMIT } from '../constants';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
+import { CHEESE_LIMIT, MEAT_LIMIT, TOPPING_LIMIT } from '../constants';
 import { Ingredient, IngredientType, Pizza } from '../types';
 
-export const getIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
+export const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(true);
   useEffect(() => {
     const handleResize = () => {
-      //   console.log('window resized:', window.innerWidth);
-      //temp
       setIsMobile(window.innerWidth < 1200);
     };
-
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -19,13 +16,39 @@ export const getIsMobile = () => {
   return isMobile;
 };
 
-export const DefaultPizza = () => {
-  return {
-    meats: [],
-    toppings: [],
-    allIngredients: [],
-    totalCost: 0,
-  };
+export const useGetWindowSize = () => {
+  const [size, setSize] = useState(0);
+  useEffect(() => {
+    const handleResize = () => {
+      setSize(window.innerWidth);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return size;
+};
+
+export const DefaultPizza = {
+  meats: [],
+  toppings: [],
+  allIngredients: [],
+  totalCost: 0,
+};
+
+const ingredientsWithoutDupe = (
+  ingredients: Ingredient[],
+  item: Ingredient,
+) => {
+  return [
+    ...(ingredients || []).filter(_item => _item.tokenId !== item.tokenId),
+    item,
+  ];
+};
+
+export const getTotalCost = (ingredients: Ingredient[]) => {
+  return ingredients.reduce((partialSum, item) => partialSum + item.price, 0);
 };
 
 export const addIngredient = ({
@@ -35,58 +58,67 @@ export const addIngredient = ({
 }: {
   item: Ingredient;
   pizza: Pizza;
-  setPizza: any;
+  setPizza: Dispatch<SetStateAction<Pizza>>;
 }) => {
-  switch (item.type) {
+  switch (item.ingredientType) {
     case IngredientType.base:
       if (pizza.base) return;
-      setPizza({
+      setPizza(pizza => ({
         ...pizza,
         base: item,
-      });
+        allIngredients: ingredientsWithoutDupe(pizza?.allIngredients, item),
+        totalCost: getTotalCost(
+          ingredientsWithoutDupe(pizza?.allIngredients, item),
+        ),
+      }));
       break;
     case IngredientType.sauce:
       if (pizza.sauce) return;
       setPizza(pizza => ({
         ...pizza,
         sauce: item,
+        allIngredients: ingredientsWithoutDupe(pizza?.allIngredients, item),
+        totalCost: getTotalCost(
+          ingredientsWithoutDupe(pizza?.allIngredients, item),
+        ),
       }));
       break;
     case IngredientType.cheese:
-      if (pizza.cheese) return;
+      if (pizza.cheeses?.length >= CHEESE_LIMIT) return;
       setPizza(pizza => ({
         ...pizza,
-        cheese: item,
+        cheeses: ingredientsWithoutDupe(pizza.cheeses, item),
+        allIngredients: ingredientsWithoutDupe(pizza?.allIngredients, item),
+        totalCost: getTotalCost(
+          ingredientsWithoutDupe(pizza?.allIngredients, item),
+        ),
       }));
       break;
     case IngredientType.meat:
       if (pizza.meats?.length >= MEAT_LIMIT) return;
       setPizza(pizza => ({
         ...pizza,
-        meats: [
-          ...pizza.meats.filter(_item => _item.tokenId !== item.tokenId),
-          item,
-        ],
+        meats: ingredientsWithoutDupe(pizza.meats, item),
+        allIngredients: ingredientsWithoutDupe(pizza?.allIngredients, item),
+        totalCost: getTotalCost(
+          ingredientsWithoutDupe(pizza?.allIngredients, item),
+        ),
       }));
       break;
     case IngredientType.topping:
       if (pizza.toppings?.length >= TOPPING_LIMIT) return;
       setPizza(pizza => ({
         ...pizza,
-        toppings: [
-          ...pizza.toppings.filter(_item => _item.tokenId !== item.tokenId),
-          item,
-        ],
+        toppings: ingredientsWithoutDupe(pizza.toppings, item),
+        allIngredients: ingredientsWithoutDupe(pizza?.allIngredients, item),
+        totalCost: getTotalCost(
+          ingredientsWithoutDupe(pizza?.allIngredients, item),
+        ),
       }));
       break;
     default:
       break;
   }
-  setPizza(pizza => ({
-    ...pizza,
-    allIngredients: [...pizza.allIngredients, item],
-    totalCost: (pizza.totalCost || 0) + item.cost,
-  }));
 };
 
 export const removeIngredient = ({
@@ -99,7 +131,7 @@ export const removeIngredient = ({
   setPizza: any;
 }) => {
   const newPizza = { ...pizza };
-  switch (item.type) {
+  switch (item.ingredientType) {
     case IngredientType.base:
       if (pizza.base?.tokenId !== item.tokenId) break;
       delete newPizza.base;
@@ -109,8 +141,10 @@ export const removeIngredient = ({
       delete newPizza.sauce;
       break;
     case IngredientType.cheese:
-      if (pizza.cheese?.tokenId !== item.tokenId) break;
-      delete newPizza.cheese;
+      if (!pizza.cheeses?.find(_item => _item.tokenId === item.tokenId)) break;
+      newPizza.cheeses = pizza.cheeses.filter(
+        _item => _item.tokenId !== item.tokenId,
+      );
       break;
     case IngredientType.meat:
       if (!pizza.meats?.find(_item => _item.tokenId === item.tokenId)) break;
@@ -125,12 +159,13 @@ export const removeIngredient = ({
       );
       break;
   }
+  const allIngredients = pizza?.allIngredients.filter(
+    _item => _item.tokenId !== item.tokenId,
+  );
   setPizza({
     ...newPizza,
-    allIngredients: pizza.allIngredients.filter(
-      _item => _item.tokenId !== item.tokenId,
-    ),
-    totalCost: (pizza.totalCost || 0) - item.cost,
+    allIngredients,
+    totalCost: (getTotalCost(allIngredients) || 0) - item.price,
   });
 };
 
@@ -196,4 +231,8 @@ export const removeAdditionalIngredient = ({
       _item => _item.tokenId !== item.tokenId,
     ),
   }));
+};
+
+export const getRandomInt = (max: number) => {
+  return Math.floor(Math.random() * max);
 };

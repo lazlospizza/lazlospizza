@@ -1,14 +1,22 @@
-import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Heading,
+  Stack,
+  Text,
+} from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { colors } from '../../styles/theme';
 import { Ingredient, Pizza, PizzaCave } from '../../types';
 
 interface Props {
   ingredient: Ingredient;
-  addIngredient: (ingredient: Ingredient) => void;
-  removeIngredient: (ingredient: Ingredient) => void;
-  pizza: Pizza;
-  tab: PizzaCave;
+  addIngredient?: (ingredient: Ingredient) => void;
+  removeIngredient?: (ingredient: Ingredient) => void;
+  pizza?: Pizza;
+  tab?: PizzaCave;
 }
 
 export const IngredientItem = ({
@@ -18,13 +26,7 @@ export const IngredientItem = ({
   pizza,
   tab,
 }: Props) => {
-  const {
-    name,
-    cost,
-    numOwned,
-    numAvailable,
-    imgUrl = '/assets/pizza.svg', // Fixme
-  } = ingredient;
+  const { name, price, supply, balance } = ingredient;
 
   const handleAdd = () => {
     addIngredient(ingredient);
@@ -53,11 +55,32 @@ export const IngredientItem = ({
       p="2"
     >
       <Flex>
-        <img
-          style={{ height: 100 }}
-          src={`/assets/ingredients/raw/${imgUrl}`}
-          alt="ingredient"
-        />
+        <Center
+          style={{
+            position: 'relative',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 100,
+            height: 100,
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              backgroundImage: `url(/assets/ingredients/raw/${ingredient.name
+                .toLowerCase()
+                .replace(/'/g, '')
+                .split(' ')
+                .join('-')}.png)`,
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center center',
+            }}
+          />
+        </Center>
         {/* Right of Image */}
         <Flex width={'100%'} justifyContent={'space-between'}>
           {/* Name and Cost */}
@@ -69,13 +92,28 @@ export const IngredientItem = ({
             px="8"
             py="2"
           >
-            <Heading size={'sm'} color="gray.dark">
-              {name}
-            </Heading>
+            <Stack direction="row" alignItems="center">
+              <Heading size={'sm'} color="gray.dark">
+                {name}
+              </Heading>
+              {!!balance && (
+                <Text
+                  fontSize="md"
+                  color="white"
+                  bg="tomato.500"
+                  py={1}
+                  px={3}
+                  borderRadius="full"
+                  fontWeight="bold"
+                >
+                  {balance}
+                </Text>
+              )}
+            </Stack>
             {tab === PizzaCave.buyAndBake && (
               <Flex>
                 <Heading size={'sm'} color="gray.500" mr="2">
-                  {cost}
+                  {price}
                 </Heading>
                 <img src="/assets/eth.svg" alt="eth icon" />
               </Flex>
@@ -84,15 +122,17 @@ export const IngredientItem = ({
           {/* Count and Add Button */}
           <Flex direction={'column'} justifyContent={'space-between'} py="2">
             <Text size={'sm'} color="gray.dark" align={'right'}>
-              {`${numOwned}/${numAvailable}`}
+              {supply}/10,000 sold
             </Text>
-            <Button
-              className="tomato-btn"
-              onClick={selected ? handleRemove : handleAdd}
-              disabled={tab === PizzaCave.rebake && pizzaHasItem}
-            >
-              {selected ? `Remove` : `Add`}
-            </Button>
+            {!!addIngredient && !!removeIngredient && (
+              <Button
+                className="tomato-btn"
+                onClick={selected ? handleRemove : handleAdd}
+                disabled={tab === PizzaCave.rebake && pizzaHasItem}
+              >
+                {selected ? `Remove` : `Add`}
+              </Button>
+            )}
           </Flex>
         </Flex>
       </Flex>

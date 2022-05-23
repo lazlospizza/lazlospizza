@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   Button,
@@ -11,10 +12,18 @@ import {
 import { parseEther } from 'ethers/lib/utils';
 import { isEmpty } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
-import { BAKING_FEE, REBAKE_FEE, UNBAKE_FEE } from '../../constants';
+import {
+  BAKING_FEE,
+  MEAT_LIMIT,
+  REBAKE_FEE,
+  TOPPING_LIMIT,
+  UNBAKE_FEE,
+} from '../../constants';
 import { useMainContract } from '../../hooks/useContract';
 import { useWallet } from '../../hooks/useWallet';
 import { Ingredient, Pizza, PizzaCave } from '../../types';
+import { getTotalCost } from '../../utils/general';
+import { SuccessModal } from './SuccessModal';
 
 interface Props {
   pizza?: Pizza | null;
@@ -28,12 +37,13 @@ export const YourSelections = ({
   removeBurnIngredient,
   addBurnIngredient,
 }: Props) => {
-  const { wallet, isConnected } = useWallet();
+  const { wallet, isConnected, fetchPizzas } = useWallet();
   const { mainContract } = useMainContract();
   const [disableBake, setDisableBake] = useState(true);
   const [isMinting, setIsMinting] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [mintingTxn, setMintingTxn] = useState<string | null>(null);
-  const [tokenIds, setTokenIds] = useState([]);
+  const [mintedTokenId, setMintedTokenId] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const toast = useToast();
   const provider = wallet?.web3Provider;
@@ -42,9 +52,9 @@ export const YourSelections = ({
     if (isEmpty(pizza?.allIngredients)) return setDisableBake(true);
     if (!pizza?.base) return setDisableBake(true);
     if (!pizza?.sauce) return setDisableBake(true);
-    if (!pizza?.cheese) return setDisableBake(true);
-    // add checks for other ingredients
-    console.log('Bake and Bake Allowed!');
+    if (!pizza?.cheeses) return setDisableBake(true);
+    if (pizza?.meats?.length > MEAT_LIMIT) return setDisableBake(true);
+    if (pizza?.toppings?.length > TOPPING_LIMIT) return setDisableBake(true);
     setDisableBake(false);
   };
 
@@ -83,11 +93,13 @@ export const YourSelections = ({
       setMintingTxn(result.hash);
       const receipt = await result.wait();
 
-      const mintedIds = receipt.events
-        ?.map(({ args }) => (args?.[2] ? parseInt(args?.[2]) : null))
+      const [mintedId] = receipt.events
+        ?.map(({ topics }) => (topics?.[3] ? parseInt(topics?.[3], 16) : null))
         .filter(id => !!id);
 
-      setTokenIds(mintedIds);
+      setMintedTokenId(mintedId);
+      await fetchPizzas();
+      setShowSuccessModal(true);
     } catch (e) {
       console.log(e);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -114,6 +126,8 @@ export const YourSelections = ({
 
       setMintingTxn(result.hash);
       await result.wait();
+      await fetchPizzas();
+      setShowSuccessModal(true);
     } catch (e) {
       console.log(e);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -144,7 +158,15 @@ export const YourSelections = ({
       );
 
       setMintingTxn(result.hash);
-      await result.wait();
+      const receipt = await result.wait();
+
+      const [mintedId] = receipt.events
+        ?.map(({ topics }) => (topics?.[3] ? parseInt(topics?.[3], 16) : null))
+        .filter(id => !!id);
+
+      setMintedTokenId(mintedId);
+      await fetchPizzas();
+      setShowSuccessModal(true);
     } catch (e) {
       console.log(e);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -165,6 +187,9 @@ export const YourSelections = ({
       );
       setIsMinting(true);
       setErrorMessage(null);
+      const totalCost = pizza?.allIngredients?.length
+        ? getTotalCost(pizza.allIngredients)
+        : 0;
       const signer = provider.getSigner();
       const contractWithSigner = mainContract.connect(signer);
       const result = await contractWithSigner.buyAndBakePizza(
@@ -172,7 +197,7 @@ export const YourSelections = ({
         {
           from: signer._address,
           value: parseEther(
-            (Math.round((pizza.totalCost + BAKING_FEE) * 100) / 100).toFixed(2),
+            (Math.round((totalCost + BAKING_FEE) * 100) / 100).toFixed(2),
           ),
         },
       );
@@ -180,13 +205,13 @@ export const YourSelections = ({
       setMintingTxn(result.hash);
       const receipt = await result.wait();
 
-      console.log(receipt);
+      const [mintedId] = receipt.events
+        ?.map(({ topics }) => (topics?.[3] ? parseInt(topics?.[3], 16) : null))
+        .filter(id => !!id);
 
-      // const mintedIds = receipt.events
-      //   ?.map(({ args }) => (args?.[2] ? parseInt(args?.[2]) : null))
-      //   .filter(id => !!id);
-
-      // setTokenIds(mintedIds);
+      setMintedTokenId(mintedId);
+      await fetchPizzas();
+      setShowSuccessModal(true);
     } catch (e) {
       console.log(e);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -207,6 +232,9 @@ export const YourSelections = ({
       );
       setIsMinting(true);
       setErrorMessage(null);
+      const totalCost = pizza?.allIngredients?.length
+        ? getTotalCost(pizza.allIngredients)
+        : 0;
       const signer = provider.getSigner();
       const contractWithSigner = mainContract.connect(signer);
       const result = await contractWithSigner.buyIngredients(
@@ -214,20 +242,14 @@ export const YourSelections = ({
         ingredientTokenIds.map(() => 1),
         {
           from: signer._address,
-          value: parseEther(
-            (Math.round(pizza?.totalCost * 100) / 100).toFixed(2),
-          ),
+          value: parseEther((Math.round(totalCost * 100) / 100).toFixed(2)),
         },
       );
 
       setMintingTxn(result.hash);
-      const receipt = await result.wait();
-
-      const mintedIds = receipt.events
-        ?.map(({ args }) => (args?.[2] ? parseInt(args?.[2]) : null))
-        .filter(id => !!id);
-
-      setTokenIds(mintedIds);
+      await result.wait();
+      await fetchPizzas();
+      setShowSuccessModal(true);
     } catch (e) {
       console.log(e);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -241,17 +263,20 @@ export const YourSelections = ({
   }, [mainContract, provider, pizza]);
 
   const renderButtons = () => {
+    const totalCost = pizza?.allIngredients?.length
+      ? getTotalCost(pizza.allIngredients)
+      : 0;
     switch (tab) {
       case PizzaCave.buyAndBake:
         return (
           <Stack pt={8}>
             <Button
-              disabled={pizza?.totalCost === 0 || !isConnected}
+              disabled={totalCost === 0 || !isConnected}
               className="tomato-btn"
               onClick={handleBuyIngredients}
               isLoading={isMinting}
             >{`Buy Ingredients only at ${
-              Math.round((pizza?.totalCost || 0) * 100) / 100
+              Math.round((totalCost || 0) * 100) / 100
             }`}</Button>
             <Button
               disabled={disableBake || !isConnected}
@@ -259,7 +284,7 @@ export const YourSelections = ({
               onClick={handleBuyAndBake}
               isLoading={isMinting}
             >{`Buy & Bake at ${
-              Math.round(((pizza?.totalCost || 0) + BAKING_FEE) * 100) / 100
+              Math.round(((totalCost || 0) + BAKING_FEE) * 100) / 100
             }`}</Button>
           </Stack>
         );
@@ -333,7 +358,11 @@ export const YourSelections = ({
                 position: 'absolute',
                 width: '80%',
                 height: '80%',
-                backgroundImage: `url(/assets/ingredients/baked/${item.imgUrl})`,
+                backgroundImage: `url(/assets/ingredients/baked/${item.name
+                  .toLowerCase()
+                  .replace(/'/g, '')
+                  .split(' ')
+                  .join('-')}.png)`,
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center center',
@@ -369,9 +398,9 @@ export const YourSelections = ({
                   {item.name}
                 </Heading>
               )}
-              {(tab === PizzaCave.buyAndBake || tab === PizzaCave.bake) && (
+              {tab === PizzaCave.buyAndBake && (
                 <Heading size={'sm'} color={'tomato.500'}>
-                  {item.cost}
+                  {item.price}
                 </Heading>
               )}
               {tab === PizzaCave.rebake &&
@@ -405,6 +434,11 @@ export const YourSelections = ({
         {/* Buttons */}
         {renderButtons()}
       </Stack>
+      <SuccessModal
+        isOpen={showSuccessModal}
+        setIsOpen={setShowSuccessModal}
+        pizzaTokenId={mintedTokenId}
+      />
     </Box>
   );
 };

@@ -15,6 +15,7 @@ struct Ingredient {
     address artist;
     uint256 price;
     uint256 supply;
+    uint256 initialSupply;
 }
 
 struct Pizza {
@@ -26,6 +27,7 @@ struct Pizza {
 }
 
 interface ILazlosIngredients {
+    function getNumIngredients() external view returns (uint256);
     function getIngredient(uint256 tokenId) external view returns (Ingredient memory);
     function increaseIngredientSupply(uint256 tokenId, uint256 amount) external;
     function decreaseIngredientSupply(uint256 tokenId, uint256 amount) external;

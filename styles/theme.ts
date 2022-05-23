@@ -1,3 +1,8 @@
+export const headerHeight = {
+  mobile: '120px',
+  desktop: '159px',
+};
+
 export const colors = {
   cheese: {
     100: '#ffff86',
@@ -14,6 +19,11 @@ export const colors = {
     medium: '#999999',
     dark: '#3D3431',
   },
+  background: {
+    light: '#F5F5F5',
+    dark: '#EEEDED',
+    brown: '#3D3431',
+  },
 };
 
 export const styles = {
@@ -29,12 +39,6 @@ export const styles = {
       display: 'flex',
       flexDirection: 'column',
     },
-    '#__next::before': {
-      content: '""',
-      minHeight: '159px',
-      maxHeight: '159px',
-      width: '100%',
-    },
     '.header': {
       position: 'fixed',
       top: 0,
@@ -44,7 +48,7 @@ export const styles = {
       flexDirection: 'row',
       backgroundColor: 'tomato.500',
       borderBottomWidth: '2px',
-      borderColor: '#3D3431',
+      borderColor: 'gray.dark',
       zIndex: 1000,
     },
     '.header .header-content': {
@@ -52,27 +56,26 @@ export const styles = {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      flexWrap: 'wrap',
       padding: 4,
     },
     '.header .logo': {
-      height: '159px',
+      maxHeight: headerHeight.desktop,
       width: 'auto',
     },
-    '.header .menu a': {
+    '.menu a': {
       color: 'white',
       padding: '0 0 7px',
       position: 'relative',
       fontSize: '18px',
       fontWeight: '900',
-      marginRight: 6,
-      marginLeft: 1,
+      width: 'max-content',
+      whiteSpaceWrap: 'nowrap',
     },
-    '.header .menu a:hover, .header .menu a.current': {
+    '.menu a:hover, .menu a.current': {
       color: 'cheese.200',
       textDecoration: 'none',
     },
-    '.header .menu a::after': {
+    '.menu a::after': {
       width: 0,
       height: '4px',
       content: '""',
@@ -83,7 +86,34 @@ export const styles = {
       background: '#ffda54',
       transition: 'all .3s ease-in-out',
     },
-    '.header .menu a:hover::after, .header .menu a.current::after': {
+    '.menu a:hover::after, .menu a.current::after': {
+      width: '100%',
+    },
+    '.footer a': {
+      color: 'white',
+      padding: '0 0 7px',
+      position: 'relative',
+      fontSize: '18px',
+      fontWeight: '900',
+      width: 'max-content',
+      whiteSpaceWrap: 'nowrap',
+    },
+    '.footer a:hover, .footer a.current': {
+      color: 'cheese.200',
+      textDecoration: 'none',
+    },
+    '.footer a::after': {
+      width: 0,
+      height: '4px',
+      content: '""',
+      position: 'absolute',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      bottom: 0,
+      background: '#ffda54',
+      transition: 'all .3s ease-in-out',
+    },
+    '.footer a:hover::after, .footer a.current::after': {
       width: '100%',
     },
     a: {
@@ -92,6 +122,11 @@ export const styles = {
         color: 'cheese.300',
         textDecoration: 'underline',
       },
+    },
+    '.mobile-nav-item': {
+      color: 'white',
+      fontWeight: 400,
+      fontSize: '24px',
     },
     '.footer': {
       display: 'flex',
@@ -130,13 +165,13 @@ export const styles = {
     '.cave-nav-btn': {
       color: 'gray.dark',
       border: '1px',
-      marginRight: 5,
+      margin: 2,
     },
     '.cave-nav-btn-selected': {
       color: '#FFD232',
       background: '#3D3431',
       border: '1px',
-      marginRight: 5,
+      margin: 2,
     },
     '.artist-card': {
       color: 'tomato.500',

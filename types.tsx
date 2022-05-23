@@ -1,9 +1,26 @@
+export const enum Pages {
+  home = 'Home',
+  pizzaCave = 'Pizza Cave',
+  meetArtists = 'Meet Artists',
+  rarityRewards = 'Rarity Rewards',
+  myWallet = 'My Wallet',
+}
+
+export const enum PageRoutes {
+  home = '/',
+  pizzaCave = '/pizza-cave',
+  meetArtists = '/meet-artists',
+  rarityRewards = '/rarity-rewards',
+  myWallet = '/my-wallet',
+}
+
 export const enum PizzaCave {
   buyAndBake = 'Buy & Bake',
   bake = 'Bake',
   unbake = 'Unbake',
   rebake = 'Rebake',
 }
+
 export const enum IngredientType {
   base = 'Base',
   sauce = 'Sauce',
@@ -15,20 +32,20 @@ export const enum IngredientType {
 export interface Ingredient {
   tokenId: number;
   name: string;
-  namePlural?: string;
-  cost: number;
-  numOwned: number;
-  numAvailable: number;
-  type: IngredientType;
-  imgUrl?: string;
+  price: number;
+  balance: number;
+  supply: number;
+  ingredientType: IngredientType;
+  image?: string;
   rarity?: number;
-  numPizzas?: number;
+  numberOfPizzas?: number;
 }
 
 export interface IngredientGroup {
   name: string;
-  namePlural: string;
   type?: IngredientType;
+  min?: number | null;
+  max?: number | null;
   ingredients: Ingredient[];
 }
 
@@ -36,11 +53,13 @@ export interface Pizza {
   tokenId?: number;
   base?: Ingredient | null;
   sauce?: Ingredient | null;
-  cheese?: Ingredient | null;
+  cheeses?: Ingredient[];
   meats?: Ingredient[];
   toppings?: Ingredient[];
+  image?: string;
+  owner?: string;
   allIngredients: Ingredient[];
   additionalIngredients?: Ingredient[];
   burnIngredients?: Ingredient[];
-  totalCost: number;
+  rarity?: number;
 }
