@@ -55,7 +55,7 @@ export default function MeetArtists() {
       imgSrc: 'FocusPoints.jpg',
     },
     {
-      name: 'HypnoBrando',
+      name: 'hypnobrando',
       bio: `A California native who loves building new things in Web3. Founder of https://www.chainpass.xyz.`,
       role: 'Artists',
       link: 'https://twitter.com/hypnobrando',
