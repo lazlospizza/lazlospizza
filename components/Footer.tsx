@@ -13,7 +13,7 @@ export const Footer = () => {
           <Link href={PageRoutes.meetArtists}>
             <a>Meet Artists</a>
           </Link>
-          <Link href={''}>
+          <Link href={'/faq'}>
             <a>FAQ</a>
           </Link>
           <Link href={'https://opensea.io/collection/lazlos-pizza'}>
