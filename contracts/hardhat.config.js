@@ -37,8 +37,12 @@ module.exports = {
       blockGasLimit: 70_000_000
     },
     rinkeby: {
-      allowUnlimitedContractSize: true,
       url: "https://rinkeby.infura.io/v3/67198f4f15244598b1a3980106ce8fe3",
+      accounts: [privatekey],
+      gasPrice: 35000000000
+    },
+    mainnet: {
+      url: "https://mainnet.infura.io/v3/c4dc9d48550647c79f71bc67360bcf68",
       accounts: [privatekey],
       gasPrice: 35000000000
     },
