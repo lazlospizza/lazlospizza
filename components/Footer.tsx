@@ -19,9 +19,6 @@ export const Footer = () => {
           <Link href={''}>
             <a>OpenSea</a>
           </Link>
-          <Link href={''}>
-            <a>Meet Artists</a>
-          </Link>
         </Stack>
         <Center w="100%">
           <Heading size={'xs'}>Copyright 2022</Heading>
