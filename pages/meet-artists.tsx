@@ -12,7 +12,6 @@ export default function MeetArtists() {
       role: 'Founder',
       link: 'https://twitter.com/WhenLambo6135 ',
       imgSrc: `when_lambo.png`,
-      // imgSrc: `${public.env.NEXT_PUBLIC_DOMAIN_URL}when_lambo.png`,
     },
     {
       name: 'Totally',
@@ -24,6 +23,7 @@ export default function MeetArtists() {
     {
       name: 'Hirsch',
       role: 'Front End Dev',
+      bio: 'Founder of Kickstart Crew, Indelible Labs, and OnChainKevin. NFT addict.',
       link: 'https://twitter.com/MikeAHirsch ',
       imgSrc: 'hirsch.jpg',
     },
@@ -95,7 +95,6 @@ export default function MeetArtists() {
       link: 'https://twitter.com/Veenus_rising ',
       imgSrc: 'Veenus.png',
     },
-
     {
       name: 'zod',
       bio: `zod is a newly-minted pixel artist based in New York City. A game industry veteran, he's helped make games in roles that run the gamut of QA, engineering, and production.`,
