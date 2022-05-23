@@ -75,7 +75,7 @@ export default function MeetArtists() {
       bio: `Smots is the Creator of the exciting NFT project, Smots. Discover and collect the mystical creatures that occupy the 5 wonderful realms in the Smotsverse!`,
       role: 'Artists',
       link: 'https://twitter.com/Smotsnft ',
-      imgSrc: 'Smots.jpg',
+      imgSrc: 'Smots.png',
     },
     {
       name: 'Varley',
