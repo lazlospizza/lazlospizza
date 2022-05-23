@@ -5,8 +5,8 @@
     "pizzaContractAddress": "0xF3a089Ad57Eb3b7667CBFFFb417Ac35B051e6431"
   },
   "mainnet": {
-    "mainContractAddress": "0x4c52Ce7553B140cd12834235634E6352FEbfbfB7",
-    "ingredientsContractAddress": "0x8F6AE469e19f7adCC225D86B57Ad8d41869591d0",
-    "pizzaContractAddress": "0xF3a089Ad57Eb3b7667CBFFFb417Ac35B051e6431"
+    "mainContractAddress": "0x93d6e1b962606470c5c28fdb56dcf53b1bb1cd8c",
+    "ingredientsContractAddress": "0xd2e5992ce910b2ab7921f653de827b2e5d5ae828",
+    "pizzaContractAddress": "0x652aa63f0349c296e5082dc1fd62aeb91b2c419a"
   }
 }
