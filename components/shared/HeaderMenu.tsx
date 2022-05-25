@@ -8,11 +8,13 @@ export const HeaderMenu = ({
   pathname,
   isWalletConnected,
   showConnectWallet = false,
+  children,
 }: {
   direction: 'row' | 'column';
   pathname: string;
   isWalletConnected: boolean;
   showConnectWallet?: boolean;
+  children?: any;
 }) => {
   return (
     <Stack direction={direction} className="menu">
@@ -64,7 +66,7 @@ export const HeaderMenu = ({
           </a>
         </Link>
       )}
-      {showConnectWallet && <ConnectWalletButton />}
+      {!!children && children}
     </Stack>
   );
 };

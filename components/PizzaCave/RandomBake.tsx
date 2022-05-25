@@ -34,7 +34,7 @@ export const RandomBake = () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `https://api.lazlospizza.com/random_pizza?address=${wallet?.address}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/random_pizza?address=${wallet?.address}`,
       );
       const data: {
         address: string;
