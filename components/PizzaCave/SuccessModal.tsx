@@ -43,7 +43,7 @@ export const SuccessModal = ({
               textAlign={'center'}
               color={'cheese.200'}
               fontSize={'2xl'}
-            >{`Transaction done Successfully`}</Text>
+            >{`Transaction Complete`}</Text>
           </Center>
           <Center mt={8}>
             {!!mintedPizza && (

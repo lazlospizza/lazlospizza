@@ -1,7 +1,10 @@
-import { Box, Stack, Text } from '@chakra-ui/react';
+import { Box, Flex, Stack, Text } from '@chakra-ui/react';
 import { Artist, ArtistProps } from '../components/Artist';
+import { useGetWindowSize, useIsMobile } from '../utils/general';
 
 export default function MeetArtists() {
+  const isMobile = useIsMobile();
+  const size = useGetWindowSize();
   const artists: ArtistProps[] = [
     {
       name: 'when_lambo',
@@ -9,7 +12,6 @@ export default function MeetArtists() {
       role: 'Founder',
       link: 'https://twitter.com/WhenLambo6135 ',
       imgSrc: `when_lambo.png`,
-      // imgSrc: `${public.env.NEXT_PUBLIC_DOMAIN_URL}when_lambo.png`,
     },
     {
       name: 'Totally',
@@ -21,7 +23,9 @@ export default function MeetArtists() {
     {
       name: 'Hirsch',
       role: 'Front End Dev',
+      bio: 'Founder of Kickstart Crew, Indelible Labs, and OnChainKevin. NFT addict.',
       link: 'https://twitter.com/MikeAHirsch ',
+      imgSrc: 'hirsch.jpg',
     },
     {
       name: 'BRAINDRAIND',
@@ -51,7 +55,7 @@ export default function MeetArtists() {
       imgSrc: 'FocusPoints.jpg',
     },
     {
-      name: 'HypnoBrando',
+      name: 'hypnobrando',
       bio: `A California native who loves building new things in Web3. Founder of https://www.chainpass.xyz.`,
       role: 'Artists',
       link: 'https://twitter.com/hypnobrando',
@@ -75,7 +79,7 @@ export default function MeetArtists() {
       bio: `Smots is the Creator of the exciting NFT project, Smots. Discover and collect the mystical creatures that occupy the 5 wonderful realms in the Smotsverse!`,
       role: 'Artists',
       link: 'https://twitter.com/Smotsnft ',
-      imgSrc: 'Smots.jpg',
+      imgSrc: 'Smots.png',
     },
     {
       name: 'Varley',
@@ -91,7 +95,6 @@ export default function MeetArtists() {
       link: 'https://twitter.com/Veenus_rising ',
       imgSrc: 'Veenus.png',
     },
-
     {
       name: 'zod',
       bio: `zod is a newly-minted pixel artist based in New York City. A game industry veteran, he's helped make games in roles that run the gamut of QA, engineering, and production.`,
@@ -124,18 +127,79 @@ export default function MeetArtists() {
         </Text>
       </Stack>
 
-      <Stack m="20px" spacing={'20px'}>
-        {artists.map((artist, index) => (
-          <Artist
-            key={index}
-            name={artist.name}
-            bio={artist.bio}
-            role={artist.role}
-            link={artist.link}
-            imgSrc={artist.imgSrc}
-          />
-        ))}
-      </Stack>
+      {size > 1700 ? (
+        <Stack m="20px" spacing={'20px'}>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[0]} />
+            <Artist artist={artists[1]} />
+            <Artist artist={artists[2]} />
+          </Stack>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[3]} />
+            <Artist artist={artists[4]} />
+            <Artist artist={artists[5]} />
+          </Stack>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[6]} />
+            <Artist artist={artists[7]} />
+            <Artist artist={artists[8]} />
+          </Stack>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[9]} />
+            <Artist artist={artists[10]} />
+            <Artist artist={artists[11]} />
+          </Stack>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[12]} />
+            <Artist artist={artists[13]} />
+            <Artist artist={artists[14]} />
+          </Stack>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[15]} />
+          </Stack>
+        </Stack>
+      ) : size > 1150 ? (
+        <Stack m="20px" spacing={'20px'}>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[0]} />
+            <Artist artist={artists[1]} />
+          </Stack>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[2]} />
+            <Artist artist={artists[3]} />
+          </Stack>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[4]} />
+            <Artist artist={artists[5]} />
+          </Stack>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[6]} />
+            <Artist artist={artists[7]} />
+          </Stack>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[8]} />
+            <Artist artist={artists[9]} />
+          </Stack>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[10]} />
+            <Artist artist={artists[11]} />
+          </Stack>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[12]} />
+            <Artist artist={artists[13]} />
+          </Stack>
+          <Stack direction={'row'} w="100%" justifyContent={'space-between'}>
+            <Artist artist={artists[14]} />
+            <Artist artist={artists[15]} />
+          </Stack>
+        </Stack>
+      ) : (
+        <Stack m="20px" spacing={'20px'}>
+          {artists.map((artist, index) => (
+            <Artist key={index} artist={artist} />
+          ))}
+        </Stack>
+      )}
     </Box>
   );
 }

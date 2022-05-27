@@ -92,7 +92,6 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     const res = await axios.get(
       `${process.env.NEXT_PUBLIC_DOMAIN_URL}/api/pizzas`,
     );
-    console.log(res);
     setPizzas(res.data.pizzas);
     setIngredients(res.data.ingredients);
     setIsLoadingPizzas(false);
@@ -256,8 +255,6 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         ...ingredients[index],
         balance: parseInt(bigNumber._hex, 16),
       }));
-
-      console.log(parsedIngredients);
 
       setMyIngredients(parsedIngredients.filter(({ balance }) => !!balance));
     } catch (e) {

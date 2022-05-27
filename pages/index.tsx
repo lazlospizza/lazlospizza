@@ -168,7 +168,7 @@ export default function Home() {
             <Flex flexDirection="row">
               {/* Button */}
               <Link
-                href="/pizza-cave"
+                href="/rarity-rewards"
                 color="auto"
                 _hover={{
                   textDecoration: 'none',

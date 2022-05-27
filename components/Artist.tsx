@@ -10,10 +10,15 @@ export interface ArtistProps {
   imgSrc?: string;
 }
 
-export const Artist = ({ bio, name, role, imgSrc, link }: ArtistProps) => {
+interface Artist {
+  artist: ArtistProps;
+}
+
+export const Artist = ({ artist }: Artist) => {
+  const { bio, name, role, imgSrc, link } = artist;
   const size = useGetWindowSize();
   return (
-    <Box className="artist-card">
+    <Box className="artist-card" mr="8px" w="100%">
       {size > 600 ? (
         <Flex>
           <img
