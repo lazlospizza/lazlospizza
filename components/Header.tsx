@@ -3,7 +3,6 @@ import { Box, Heading, Stack, Button } from '@chakra-ui/react';
 import axios from 'axios';
 import { BigNumber } from 'ethers';
 import { parseEther } from 'ethers/lib/utils';
-import { flatten } from 'lodash';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -13,8 +12,6 @@ import { headerHeight } from '../styles/theme';
 import { useIsMobile } from '../utils/general';
 import { ConnectWalletButton } from './ConnectWalletButton';
 import { HeaderMenu } from './shared/HeaderMenu';
-
-const firstPizzaBlock = 14826581;
 
 interface Reward {
   block: number;
@@ -204,27 +201,26 @@ export const Header = () => {
           ) : (
             <Stack>
               <ConnectWalletButton />
-              {!!unpaidRewards.length ||
-                (!!wallet?.address && (
-                  <Button
-                    backgroundColor="cheese.200"
-                    borderWidth={2}
-                    borderColor="cheese.200"
-                    fontWeight="900"
-                    color="gray.800"
-                    _hover={{
-                      textDecoration: 'none',
-                      backgroundColor: 'tomato.500',
-                      borderColor: 'cheese.200',
-                      color: 'cheese.200',
-                    }}
-                    size="lg"
-                    onClick={claimRewards}
-                    isLoading={isClaimingRewards}
-                  >
-                    Claim Rewards
-                  </Button>
-                ))}
+              {!!unpaidRewards.length && (
+                <Button
+                  backgroundColor="cheese.200"
+                  borderWidth={2}
+                  borderColor="cheese.200"
+                  fontWeight="900"
+                  color="gray.800"
+                  _hover={{
+                    textDecoration: 'none',
+                    backgroundColor: 'tomato.500',
+                    borderColor: 'cheese.200',
+                    color: 'cheese.200',
+                  }}
+                  size="lg"
+                  onClick={claimRewards}
+                  isLoading={isClaimingRewards}
+                >
+                  Claim Rewards
+                </Button>
+              )}
             </Stack>
           )}
         </Box>
