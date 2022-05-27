@@ -31,20 +31,14 @@ export const Header = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const { mainContract } = useMainContract();
   const [unpaidRewards, setUnpaidRewards] = useState<Reward[]>([]);
-  const [nextBlock, setNextBlock] = useState<number | null>(null);
   const [isClaimingRewards, setIsClaimingRewards] = useState(false);
 
   const checkRarityRewards = useCallback(async () => {
     if (!wallet?.address) return null;
-    const winnersRes = await axios.get(
-      'https://lazlos-pizza.s3.amazonaws.com/payouts/rinkeby.json',
+    const payoutsRes = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/payouts`,
     );
-    const winners: { [key: string]: Reward[] } = winnersRes.data;
-
-    setNextBlock(
-      (flatten(Object.values(winners)).sort((a, b) => b.block - a.block)[0]
-        ?.block || firstPizzaBlock) + 10000,
-    );
+    const winners: { [key: string]: Reward[] } = payoutsRes.data;
 
     const rewards = winners[wallet?.address];
 
@@ -97,6 +91,7 @@ export const Header = () => {
         console.log(e);
       }
     }
+    console.log(payouts);
     try {
       const signer = wallet.web3Provider.getSigner();
       const contractWithSigner = mainContract.connect(signer);
@@ -132,27 +127,26 @@ export const Header = () => {
         >
           <Stack>
             <ConnectWalletButton />
-            {!!unpaidRewards.length ||
-              (!!wallet?.address && (
-                <Button
-                  backgroundColor="cheese.200"
-                  borderWidth={2}
-                  borderColor="cheese.200"
-                  fontWeight="900"
-                  color="gray.800"
-                  _hover={{
-                    textDecoration: 'none',
-                    backgroundColor: 'tomato.500',
-                    borderColor: 'cheese.200',
-                    color: 'cheese.200',
-                  }}
-                  size="lg"
-                  onClick={claimRewards}
-                  isLoading={isClaimingRewards}
-                >
-                  Claim Rewards
-                </Button>
-              ))}
+            {!!unpaidRewards.length && (
+              <Button
+                backgroundColor="cheese.200"
+                borderWidth={2}
+                borderColor="cheese.200"
+                fontWeight="900"
+                color="gray.800"
+                _hover={{
+                  textDecoration: 'none',
+                  backgroundColor: 'tomato.500',
+                  borderColor: 'cheese.200',
+                  color: 'cheese.200',
+                }}
+                size="lg"
+                onClick={claimRewards}
+                isLoading={isClaimingRewards}
+              >
+                Claim Rewards
+              </Button>
+            )}
           </Stack>
         </HeaderMenu>
       </Box>

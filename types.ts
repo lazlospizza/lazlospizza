@@ -62,4 +62,5 @@ export interface Pizza {
   additionalIngredients?: Ingredient[];
   burnIngredients?: Ingredient[];
   rarity?: number;
+  rewardedOn?: number;
 }

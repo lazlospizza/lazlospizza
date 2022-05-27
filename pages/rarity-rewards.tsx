@@ -1,24 +1,50 @@
 import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/react';
-import { useMemo, useState } from 'react';
+import axios from 'axios';
+import { useEffect } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { SelectYourPizza } from '../components/PizzaCave/SelectYourPizza';
 import { NavButton } from '../components/shared/NavButton';
 import { useWallet } from '../hooks/useWallet';
 import { colors } from '../styles/theme';
+import { Pizza } from '../types';
 
 enum Tabs {
-  'winners',
+  'winningPizzas',
+  'previousWinners',
   'topPizzas',
 }
 
 export default function RarityRewards() {
   const { pizzas } = useWallet();
-  const [selectedTab, setSelectedTab] = useState(Tabs.topPizzas);
+  const [selectedTab, setSelectedTab] = useState(Tabs.winningPizzas);
+  const [winningPizzas, setWinningPizzas] = useState<Pizza[]>([]);
+  const [previousWinners, setPreviousWinners] = useState<Pizza[]>([]);
 
   const rarestPizzas = useMemo(
     () =>
       pizzas.sort((a, b) => (a.rarity || 100) - (b.rarity || 100)).slice(0, 10),
     [pizzas],
   );
+
+  const getWinningPizzas = useCallback(async () => {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/winning_pizzas`,
+    );
+    setWinningPizzas(res.data);
+  }, []);
+
+  const getPreviousWinners = useCallback(async () => {
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/winners`);
+    setPreviousWinners(res.data);
+  }, []);
+
+  useEffect(() => {
+    getWinningPizzas();
+  }, [getWinningPizzas]);
+
+  useEffect(() => {
+    getPreviousWinners();
+  }, [getPreviousWinners]);
 
   return (
     <Box p="20px" w="full">
@@ -45,10 +71,18 @@ export default function RarityRewards() {
 
       <Flex pt="4" px="8" alignContent={'center'} justifyContent={'center'}>
         <NavButton
-          title="Previous Winners"
-          isSelected={selectedTab === Tabs.winners}
+          title="Winning Pizzas"
+          isSelected={selectedTab === Tabs.winningPizzas}
           onClick={() => {
-            setSelectedTab(Tabs.winners);
+            setSelectedTab(Tabs.winningPizzas);
+          }}
+          bgColor={colors.gray.background}
+        />
+        <NavButton
+          title="Previous Winners"
+          isSelected={selectedTab === Tabs.previousWinners}
+          onClick={() => {
+            setSelectedTab(Tabs.previousWinners);
           }}
           bgColor={colors.gray.background}
         />
@@ -61,6 +95,12 @@ export default function RarityRewards() {
           bgColor={colors.gray.background}
         />
       </Flex>
+      {selectedTab === Tabs.winningPizzas && (
+        <SelectYourPizza pizzas={winningPizzas} hideTitle />
+      )}
+      {selectedTab === Tabs.previousWinners && (
+        <SelectYourPizza pizzas={previousWinners} hideTitle />
+      )}
       {selectedTab === Tabs.topPizzas && (
         <SelectYourPizza pizzas={rarestPizzas} hideTitle />
       )}
