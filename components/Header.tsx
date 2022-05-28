@@ -5,7 +5,7 @@ import { BigNumber } from 'ethers';
 import { parseEther } from 'ethers/lib/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMainContract } from '../hooks/useContract';
 import { useWallet } from '../hooks/useWallet';
 import { headerHeight } from '../styles/theme';
@@ -58,6 +58,12 @@ export const Header = () => {
   useEffect(() => {
     checkRarityRewards();
   }, [checkRarityRewards]);
+
+  const unclaimedTotal = useMemo(
+    () =>
+      unpaidRewards.reduce((prev, current) => prev + current.payout_amount, 0),
+    [unpaidRewards],
+  );
 
   const claimRewards = async () => {
     if (!wallet?.address || !wallet?.web3Provider) return null;
@@ -141,7 +147,7 @@ export const Header = () => {
                 onClick={claimRewards}
                 isLoading={isClaimingRewards}
               >
-                Claim Rewards
+                Claim Rewards ({unclaimedTotal} ETH)
               </Button>
             )}
           </Stack>
