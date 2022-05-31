@@ -89,9 +89,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
   const [isLoadingPizzas, setIsLoadingPizzas] = useState(true);
 
   const fetchPizzas = useCallback(async () => {
-    const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_DOMAIN_URL}/api/pizzas`,
-    );
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/pizzas`);
     setPizzas(res.data.pizzas);
     setIngredients(res.data.ingredients);
     setIsLoadingPizzas(false);

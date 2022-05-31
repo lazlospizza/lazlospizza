@@ -11,6 +11,7 @@ export const RandomBake = () => {
   const { wallet, pizzas, fetchPizzas } = useWallet();
   const { mainContract } = useMainContract();
   const [loading, setLoading] = useState(false);
+  const [txn, setTxn] = useState(null);
   const [tokenId, setTokenId] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -31,6 +32,7 @@ export const RandomBake = () => {
 
   const handleRandomBake = async () => {
     if (!wallet?.address || !wallet.web3Provider) return null;
+    setTxn(null);
     setLoading(true);
     try {
       const res = await axios.get(
@@ -46,7 +48,7 @@ export const RandomBake = () => {
       } = res.data;
       const signer = wallet.web3Provider.getSigner();
       const contractWithSigner = mainContract.connect(signer);
-      const result = await contractWithSigner.bakeRandomPizza(
+      const _txn = await contractWithSigner.bakeRandomPizza(
         data.token_ids,
         data.timestamp,
         data.r,
@@ -58,7 +60,8 @@ export const RandomBake = () => {
           gasLimit: 500000,
         },
       );
-      const receipt = await result.wait();
+      setTxn(_txn);
+      const receipt = await _txn.wait();
 
       const [mintedId] = receipt.events
         ?.map(({ topics }) => (topics?.[3] ? parseInt(topics?.[3], 16) : null))
@@ -106,10 +109,29 @@ export const RandomBake = () => {
               alignItems: 'center',
             }}
           >
-            <img
-              src={pizza ? pizza.image : '/assets/tablecloth.svg'}
-              alt="tablecloth"
-            />
+            {loading && !!txn ? (
+              <img
+                src={'/assets/pizza.gif'}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  maxWidth: 400,
+                  maxHeight: 400,
+                }}
+                alt="pizza-loading"
+              />
+            ) : (
+              <img
+                src={pizza ? pizza.image : '/assets/tablecloth.svg'}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  maxWidth: 400,
+                  maxHeight: 400,
+                }}
+                alt="tablecloth"
+              />
+            )}
           </Center>
           {/* Button */}
           <Center>
