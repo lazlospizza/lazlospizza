@@ -80,7 +80,7 @@ export interface WalletContextValue {
 export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
   const { replace } = useRouter();
   const [wallet, setWallet] = useState<WalletStatus | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [myIngredients, setMyIngredients] = useState<Ingredient[]>([]);
@@ -89,9 +89,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
   const [isLoadingPizzas, setIsLoadingPizzas] = useState(true);
 
   const fetchPizzas = useCallback(async () => {
-    const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_DOMAIN_URL}/api/pizzas`,
-    );
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/pizzas`);
     setPizzas(res.data.pizzas);
     setIngredients(res.data.ingredients);
     setIsLoadingPizzas(false);
@@ -181,6 +179,14 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
       }
     };
   }, [provider, disconnect]);
+
+  useEffect(() => {
+    if (web3Modal && web3Modal.cachedProvider) {
+      connect();
+    } else {
+      setLoading(false);
+    }
+  }, [connect]);
 
   const ingredientGroups = useMemo(
     () =>

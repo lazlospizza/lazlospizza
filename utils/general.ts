@@ -40,15 +40,23 @@ export const DefaultPizza = {
 const ingredientsWithoutDupe = (
   ingredients: Ingredient[],
   item: Ingredient,
+  removeItem?: Ingredient,
 ) => {
   return [
-    ...(ingredients || []).filter(_item => _item.tokenId !== item.tokenId),
+    ...(ingredients || []).filter(_item =>
+      removeItem
+        ? _item.tokenId !== item.tokenId && _item.tokenId !== removeItem.tokenId
+        : _item.tokenId !== item.tokenId,
+    ),
     item,
   ];
 };
 
 export const getTotalCost = (ingredients: Ingredient[]) => {
-  return ingredients.reduce((partialSum, item) => partialSum + item.price, 0);
+  return (
+    ingredients.reduce((partialSum, item) => partialSum + item.price * 100, 0) /
+    100
+  );
 };
 
 export const addIngredient = ({
@@ -60,65 +68,55 @@ export const addIngredient = ({
   pizza: Pizza;
   setPizza: Dispatch<SetStateAction<Pizza>>;
 }) => {
+  const newPizza = { ...pizza };
   switch (item.ingredientType) {
     case IngredientType.base:
-      if (pizza.base) return;
-      setPizza(pizza => ({
-        ...pizza,
-        base: item,
-        allIngredients: ingredientsWithoutDupe(pizza?.allIngredients, item),
-        totalCost: getTotalCost(
-          ingredientsWithoutDupe(pizza?.allIngredients, item),
-        ),
-      }));
+      newPizza.base = item;
+      newPizza.allIngredients = ingredientsWithoutDupe(
+        pizza.allIngredients,
+        item,
+        pizza.base,
+      );
       break;
     case IngredientType.sauce:
-      if (pizza.sauce) return;
-      setPizza(pizza => ({
-        ...pizza,
-        sauce: item,
-        allIngredients: ingredientsWithoutDupe(pizza?.allIngredients, item),
-        totalCost: getTotalCost(
-          ingredientsWithoutDupe(pizza?.allIngredients, item),
-        ),
-      }));
+      newPizza.sauce = item;
+      newPizza.allIngredients = ingredientsWithoutDupe(
+        pizza.allIngredients,
+        item,
+        pizza.sauce,
+      );
       break;
     case IngredientType.cheese:
       if (pizza.cheeses?.length >= CHEESE_LIMIT) return;
-      setPizza(pizza => ({
-        ...pizza,
-        cheeses: ingredientsWithoutDupe(pizza.cheeses, item),
-        allIngredients: ingredientsWithoutDupe(pizza?.allIngredients, item),
-        totalCost: getTotalCost(
-          ingredientsWithoutDupe(pizza?.allIngredients, item),
-        ),
-      }));
+      newPizza.cheeses = ingredientsWithoutDupe(pizza.cheeses || [], item);
+      newPizza.allIngredients = ingredientsWithoutDupe(
+        pizza.allIngredients,
+        item,
+      );
       break;
     case IngredientType.meat:
       if (pizza.meats?.length >= MEAT_LIMIT) return;
-      setPizza(pizza => ({
-        ...pizza,
-        meats: ingredientsWithoutDupe(pizza.meats, item),
-        allIngredients: ingredientsWithoutDupe(pizza?.allIngredients, item),
-        totalCost: getTotalCost(
-          ingredientsWithoutDupe(pizza?.allIngredients, item),
-        ),
-      }));
+      newPizza.meats = ingredientsWithoutDupe(pizza.meats || [], item);
+      newPizza.allIngredients = ingredientsWithoutDupe(
+        pizza.allIngredients,
+        item,
+      );
       break;
     case IngredientType.topping:
       if (pizza.toppings?.length >= TOPPING_LIMIT) return;
-      setPizza(pizza => ({
-        ...pizza,
-        toppings: ingredientsWithoutDupe(pizza.toppings, item),
-        allIngredients: ingredientsWithoutDupe(pizza?.allIngredients, item),
-        totalCost: getTotalCost(
-          ingredientsWithoutDupe(pizza?.allIngredients, item),
-        ),
-      }));
+      newPizza.toppings = ingredientsWithoutDupe(pizza.toppings || [], item);
+      newPizza.allIngredients = ingredientsWithoutDupe(
+        pizza.allIngredients,
+        item,
+      );
       break;
     default:
       break;
   }
+  setPizza({
+    ...newPizza,
+    totalCost: getTotalCost(newPizza.allIngredients),
+  });
 };
 
 export const removeIngredient = ({
@@ -141,20 +139,17 @@ export const removeIngredient = ({
       delete newPizza.sauce;
       break;
     case IngredientType.cheese:
-      if (!pizza.cheeses?.find(_item => _item.tokenId === item.tokenId)) break;
-      newPizza.cheeses = pizza.cheeses.filter(
+      newPizza.cheeses = (pizza.cheeses || []).filter(
         _item => _item.tokenId !== item.tokenId,
       );
       break;
     case IngredientType.meat:
-      if (!pizza.meats?.find(_item => _item.tokenId === item.tokenId)) break;
-      newPizza.meats = pizza.meats.filter(
+      newPizza.meats = (pizza.meats || []).filter(
         _item => _item.tokenId !== item.tokenId,
       );
       break;
     case IngredientType.topping:
-      if (pizza.toppings?.length >= 4) break;
-      newPizza.toppings = pizza.toppings.filter(
+      newPizza.toppings = (pizza.toppings || []).filter(
         _item => _item.tokenId !== item.tokenId,
       );
       break;
@@ -165,7 +160,7 @@ export const removeIngredient = ({
   setPizza({
     ...newPizza,
     allIngredients,
-    totalCost: (getTotalCost(allIngredients) || 0) - item.price,
+    totalCost: getTotalCost(allIngredients),
   });
 };
 

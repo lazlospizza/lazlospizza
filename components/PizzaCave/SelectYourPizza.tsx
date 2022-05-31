@@ -15,12 +15,14 @@ interface Props {
   pizzas: Pizza[];
   selectedPizza?: Pizza;
   hideTitle?: boolean;
+  useIngredientsForImage?: boolean;
 }
 export const SelectYourPizza = ({
   selectPizza,
   pizzas,
   selectedPizza,
   hideTitle,
+  useIngredientsForImage = false,
 }: Props) => {
   return (
     <Box style={{ marginTop: 20, padding: 10 }}>
@@ -30,10 +32,10 @@ export const SelectYourPizza = ({
             {!hideTitle && 'Your Pizzas'}
           </Text>
         </Flex>
-        {pizzas.map(pizza => {
+        {pizzas.map((pizza, i) => {
           return (
             <Box
-              key={pizza.tokenId}
+              key={`${pizza.tokenId}-${i}`}
               className="artist-card"
               backgroundColor={
                 pizza.tokenId === selectedPizza?.tokenId
@@ -55,17 +57,52 @@ export const SelectYourPizza = ({
                     height: 150,
                   }}
                 >
-                  <div
-                    style={{
-                      position: 'absolute',
-                      width: '100%',
-                      height: '100%',
-                      backgroundImage: `url(${pizza.image})`,
-                      backgroundSize: 'contain',
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'center center',
-                    }}
-                  />
+                  {!useIngredientsForImage ? (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%',
+                        backgroundImage: `url(${pizza.image})`,
+                        backgroundSize: 'contain',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'center center',
+                      }}
+                    />
+                  ) : (
+                    <>
+                      <img
+                        src="https://lazlos-pizza.s3.amazonaws.com/pizza_layers/table_cloth.png"
+                        alt="tablecloth"
+                      />
+                      {(
+                        [
+                          ...(pizza?.allIngredients || []),
+                          ...(pizza?.additionalIngredients || []),
+                        ]
+                          .filter(
+                            item =>
+                              !(pizza.burnIngredients || []).find(
+                                burnItem => burnItem.tokenId == item.tokenId,
+                              ),
+                          )
+                          .sort((a, b) => a.tokenId - b.tokenId) ?? []
+                      ).map(item => (
+                        <div
+                          key={item.tokenId}
+                          style={{
+                            position: 'absolute',
+                            width: '83.5%',
+                            height: '83.5%',
+                            backgroundImage: `url(https://lazlos-pizza.s3.amazonaws.com/pizza_layers/${item.tokenId}.png)`,
+                            backgroundSize: 'contain',
+                            backgroundRepeat: 'no-repeat',
+                            backgroundPosition: 'center center',
+                          }}
+                        />
+                      ))}
+                    </>
+                  )}
                 </Center>
                 {/* Right of Image */}
                 <Flex width={'100%'} justifyContent={'space-between'}>
@@ -78,7 +115,7 @@ export const SelectYourPizza = ({
                           size={'sm'}
                           color="gray.dark"
                         >
-                          {ingredient.name}
+                          {ingredient.name} - {ingredient.rarity.toFixed(2)}
                         </Heading>
                       ))}
                     </Stack>

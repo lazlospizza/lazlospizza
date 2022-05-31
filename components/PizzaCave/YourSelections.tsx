@@ -358,11 +358,7 @@ export const YourSelections = ({
                 position: 'absolute',
                 width: '80%',
                 height: '80%',
-                backgroundImage: `url(/assets/ingredients/baked/${item.name
-                  .toLowerCase()
-                  .replace(/'/g, '')
-                  .split(' ')
-                  .join('-')}.png)`,
+                backgroundImage: `url(https://lazlos-pizza.s3.amazonaws.com/pizza_layers/${item.tokenId}.png)`,
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center center',

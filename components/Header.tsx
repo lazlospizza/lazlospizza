@@ -1,11 +1,9 @@
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { Box, Heading, Stack, Button } from '@chakra-ui/react';
 import axios from 'axios';
-import { BigNumber } from 'ethers';
-import { parseEther } from 'ethers/lib/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMainContract } from '../hooks/useContract';
 import { useWallet } from '../hooks/useWallet';
 import { headerHeight } from '../styles/theme';
@@ -33,13 +31,11 @@ export const Header = () => {
   const checkRarityRewards = useCallback(async () => {
     if (!wallet?.address) return null;
     const payoutsRes = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/payouts`,
+      `${process.env.NEXT_PUBLIC_API_URL}/payouts?address=${wallet.address}`,
     );
-    const winners: { [key: string]: Reward[] } = payoutsRes.data;
+    const rewards: Reward[] = payoutsRes.data;
 
-    const rewards = winners[wallet?.address];
-
-    if (!rewards) return null;
+    if (!rewards?.length) return null;
 
     const _unpaidRewards: Reward[] = [];
 
@@ -59,12 +55,18 @@ export const Header = () => {
     checkRarityRewards();
   }, [checkRarityRewards]);
 
+  const unclaimedTotal = useMemo(
+    () =>
+      unpaidRewards.reduce((prev, current) => prev + current.payout_amount, 0),
+    [unpaidRewards],
+  );
+
   const claimRewards = async () => {
     if (!wallet?.address || !wallet?.web3Provider) return null;
     setIsClaimingRewards(true);
     const payouts: {
       payoutBlock: number;
-      amount: BigNumber;
+      amount: string;
       r: string;
       s: string;
       v: number;
@@ -79,7 +81,7 @@ export const Header = () => {
 
         payouts.push({
           payoutBlock: blockReward.block,
-          amount: parseEther(`${blockReward.payout_amount}`),
+          amount: `${blockReward.payout_amount * 1000000000000000000.0}`,
           r: blockReward.r,
           s: blockReward.s,
           v: blockReward.v,
@@ -88,7 +90,6 @@ export const Header = () => {
         console.log(e);
       }
     }
-    console.log(payouts);
     try {
       const signer = wallet.web3Provider.getSigner();
       const contractWithSigner = mainContract.connect(signer);
@@ -124,7 +125,7 @@ export const Header = () => {
         >
           <Stack>
             <ConnectWalletButton />
-            {!!unpaidRewards.length && (
+            {!!unclaimedTotal && (
               <Button
                 backgroundColor="cheese.200"
                 borderWidth={2}
@@ -141,7 +142,7 @@ export const Header = () => {
                 onClick={claimRewards}
                 isLoading={isClaimingRewards}
               >
-                Claim Rewards
+                Claim Rewards ({unclaimedTotal.toFixed(3)} ETH)
               </Button>
             )}
           </Stack>
@@ -201,7 +202,7 @@ export const Header = () => {
           ) : (
             <Stack>
               <ConnectWalletButton />
-              {!!unpaidRewards.length && (
+              {!!unclaimedTotal && (
                 <Button
                   backgroundColor="cheese.200"
                   borderWidth={2}
@@ -218,7 +219,7 @@ export const Header = () => {
                   onClick={claimRewards}
                   isLoading={isClaimingRewards}
                 >
-                  Claim Rewards
+                  Claim Rewards ({unclaimedTotal.toFixed(3)} ETH)
                 </Button>
               )}
             </Stack>

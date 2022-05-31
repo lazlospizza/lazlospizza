@@ -96,10 +96,18 @@ export default function RarityRewards() {
         />
       </Flex>
       {selectedTab === Tabs.winningPizzas && (
-        <SelectYourPizza pizzas={winningPizzas} hideTitle />
+        <SelectYourPizza
+          pizzas={winningPizzas}
+          hideTitle
+          useIngredientsForImage
+        />
       )}
       {selectedTab === Tabs.previousWinners && (
-        <SelectYourPizza pizzas={previousWinners} hideTitle />
+        <SelectYourPizza
+          pizzas={previousWinners}
+          hideTitle
+          useIngredientsForImage
+        />
       )}
       {selectedTab === Tabs.topPizzas && (
         <SelectYourPizza pizzas={rarestPizzas} hideTitle />
