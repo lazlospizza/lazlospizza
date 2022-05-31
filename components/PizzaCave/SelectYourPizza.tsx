@@ -32,10 +32,10 @@ export const SelectYourPizza = ({
             {!hideTitle && 'Your Pizzas'}
           </Text>
         </Flex>
-        {pizzas.map(pizza => {
+        {pizzas.map((pizza, i) => {
           return (
             <Box
-              key={pizza.tokenId}
+              key={`${pizza.tokenId}-${i}`}
               className="artist-card"
               backgroundColor={
                 pizza.tokenId === selectedPizza?.tokenId
@@ -115,7 +115,7 @@ export const SelectYourPizza = ({
                           size={'sm'}
                           color="gray.dark"
                         >
-                          {ingredient.name} - {ingredient.rarity}
+                          {ingredient.name} - {ingredient.rarity.toFixed(2)}
                         </Heading>
                       ))}
                     </Stack>
