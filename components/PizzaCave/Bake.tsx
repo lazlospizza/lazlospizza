@@ -75,11 +75,10 @@ export const Bake = () => {
     <Box>
       <Stack m="10px">
         <Text color="tomato.500" fontWeight={700} fontSize={'xl'}>
-          Bake a Pizza
+          {`Bake a Pizza (${BAKING_FEE} ETH)`}
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
-          {`Bake a pizzza with ingredients you already have in your wallet. ${BAKING_FEE}ETH
-        Baking fee.`}
+          {`Bake a pizza with ingredients you already have in your wallet.`}
         </Text>
       </Stack>
       {/* deterime which view */}

@@ -88,7 +88,7 @@ export const RandomBake = () => {
           Random Bake ({RANDOM_BAKE_FEE} ETH)
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
-          {`Can't decide what you want? Is oke, we have you covered! Get a completed pizza NFT with a random selection of ingredients. (${RANDOM_BAKE_FEE} ETH + gas)`}
+          {`Can't decide what you want, or just want to degen and enjoy a dopamine rush with instant reveal? Randomly baked pizzas have a minimum of 3 ingredients (1 base, 1 sauce, 1 cheese) and up to a maximum of 13 ingredients (1 base, 1 sauce, 3 cheeses, 4 meats, 4 toppings).`}
         </Text>
       </Stack>
 
@@ -109,7 +109,7 @@ export const RandomBake = () => {
               alignItems: 'center',
             }}
           >
-            {loading && !!txn ? (
+            {loading ? (
               <img
                 src={'/assets/pizza.gif'}
                 style={{

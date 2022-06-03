@@ -49,7 +49,7 @@ export const Unbake = () => {
           Unbake a Pizza ({UNBAKE_FEE} ETH)
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
-          {`Reverse the BAKE process to burn a pizza you own and receive  its constituent ingredient NFTs in your wallet. Ingredients may then be traded on secondary markets or used to bake another pizza. (${UNBAKE_FEE} ETH)`}
+          {`Reverse the BAKE process to burn a pizza you own and receive  its constituent ingredient NFTs in your wallet. Ingredients may then be traded on secondary markets or used to bake another pizza.`}
         </Text>
       </Stack>
       {/* deterime which view */}
