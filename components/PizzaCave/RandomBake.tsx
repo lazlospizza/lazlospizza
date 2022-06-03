@@ -109,7 +109,7 @@ export const RandomBake = () => {
               alignItems: 'center',
             }}
           >
-            {loading ? (
+            {!pizza?.image ? (
               <img
                 src={'/assets/pizza.gif'}
                 style={{
