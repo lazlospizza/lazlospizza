@@ -1,4 +1,4 @@
-import { Box, Flex, Stack, Text } from '@chakra-ui/react';
+import { Box, Flex, Grid, Stack, Text } from '@chakra-ui/react';
 import { Ingredient, IngredientGroup, Pizza, PizzaCave } from '../../types';
 import { IngredientItem } from './IngredientItem';
 
@@ -41,27 +41,29 @@ export const IngredientList = ({
             )}
           </Flex>
         )}
-        {(!!ownedIngredients
-          ? ingredientGroup.ingredients.filter(ingredient =>
-              ownedIngredients.find(
-                ownedIngredient =>
-                  ownedIngredient.tokenId === ingredient.tokenId &&
-                  !!ownedIngredient.balance,
-              ),
-            )
-          : ingredientGroup.ingredients
-        ).map(item => (
-          <IngredientItem
-            key={item.name}
-            ingredient={
-              ownedIngredients?.find(i => i.tokenId === item.tokenId) || item
-            }
-            addIngredient={addIngredient}
-            removeIngredient={removeIngredient}
-            pizza={pizza}
-            tab={tab}
-          />
-        ))}
+        <Grid templateColumns={{ md: `repeat(2, 1fr)` }} gap={{ md: 6 }}>
+          {(!!ownedIngredients
+            ? ingredientGroup.ingredients.filter(ingredient =>
+                ownedIngredients.find(
+                  ownedIngredient =>
+                    ownedIngredient.tokenId === ingredient.tokenId &&
+                    !!ownedIngredient.balance,
+                ),
+              )
+            : ingredientGroup.ingredients
+          ).map(item => (
+            <IngredientItem
+              key={item.name}
+              ingredient={
+                ownedIngredients?.find(i => i.tokenId === item.tokenId) || item
+              }
+              addIngredient={addIngredient}
+              removeIngredient={removeIngredient}
+              pizza={pizza}
+              tab={tab}
+            />
+          ))}
+        </Grid>
       </Stack>
     </Box>
   );

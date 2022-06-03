@@ -107,10 +107,11 @@ export default function RarityRewards() {
           pizzas={previousWinners}
           hideTitle
           useIngredientsForImage
+          columns={2}
         />
       )}
       {selectedTab === Tabs.topPizzas && (
-        <SelectYourPizza pizzas={rarestPizzas} hideTitle />
+        <SelectYourPizza pizzas={rarestPizzas} columns={2} hideTitle />
       )}
     </Box>
   );
