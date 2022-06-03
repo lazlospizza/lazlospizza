@@ -9,6 +9,7 @@ interface Props {
   removeIngredient?: (ingredient: Ingredient) => void;
   pizza?: Pizza;
   tab?: PizzaCave;
+  columns?: number;
 }
 export const IngredientList = ({
   ingredientGroup,
@@ -17,6 +18,7 @@ export const IngredientList = ({
   removeIngredient,
   pizza,
   tab,
+  columns = 1,
 }: Props) => {
   return (
     <Box mt={4}>
@@ -41,7 +43,10 @@ export const IngredientList = ({
             )}
           </Flex>
         )}
-        <Grid templateColumns={{ md: `repeat(2, 1fr)` }} gap={{ md: 6 }}>
+        <Grid
+          templateColumns={{ md: `repeat(${columns}, 1fr)` }}
+          gap={{ md: 6 }}
+        >
           {(!!ownedIngredients
             ? ingredientGroup.ingredients.filter(ingredient =>
                 ownedIngredients.find(
