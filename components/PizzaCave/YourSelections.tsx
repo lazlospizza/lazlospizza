@@ -338,7 +338,7 @@ export const YourSelections = ({
             alignItems: 'center',
           }}
         >
-          <img src="/assets/tablecloth.svg" alt="tablecloth" />
+          <img src="/assets/tablecloth.png" alt="tablecloth" />
           {(
             [
               ...(pizza?.allIngredients || []),
@@ -366,6 +366,7 @@ export const YourSelections = ({
             />
           ))}
         </Center>
+        {renderButtons()}
         {/* Number of Ingredients Selected */}
         <Flex pt={8} justifyContent="space-between">
           <Text fontWeight={700} color="gray.dark">
@@ -428,7 +429,6 @@ export const YourSelections = ({
             </Flex>
           ))}
         {/* Buttons */}
-        {renderButtons()}
       </Stack>
       <SuccessModal
         isOpen={showSuccessModal}

@@ -122,7 +122,7 @@ export const RandomBake = () => {
               />
             ) : (
               <img
-                src={pizza ? pizza.image : '/assets/tablecloth.svg'}
+                src={pizza ? pizza.image : '/assets/tablecloth.png'}
                 style={{
                   width: '100%',
                   height: '100%',

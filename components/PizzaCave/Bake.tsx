@@ -123,8 +123,18 @@ export const Bake = () => {
         </Stack>
       ) : (
         // desktop view
-        <Flex borderTop="2px" borderColor={'gray.light'}>
-          <div style={{ width: '50%' }}>
+        <Flex
+          borderTop="2px"
+          borderColor={'gray.light'}
+          maxHeight={'900px'}
+          top="20px"
+        >
+          <Box
+            className="scrollable"
+            width={'50%'}
+            maxHeight="900px"
+            overflowY={'auto'}
+          >
             <SelectYourIngredients
               ingredientGroups={ingredientGroups}
               ownedIngredients={myIngredients}
@@ -133,9 +143,11 @@ export const Bake = () => {
               pizza={pizza}
               tab={PizzaCave.bake}
             />
-          </div>
+          </Box>
           <Stack
             style={{ width: '50%', backgroundColor: colors.gray.background }}
+            maxHeight="900px"
+            overflowY={'auto'}
           >
             <Flex
               pt="4"

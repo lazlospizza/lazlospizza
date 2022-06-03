@@ -93,16 +93,29 @@ export const Unbake = () => {
         </Stack>
       ) : (
         // desktop view
-        <Flex borderTop="2px" borderColor={'gray.light'}>
-          <div style={{ width: '50%' }}>
+        <Flex
+          borderTop="2px"
+          borderColor={'gray.light'}
+          maxHeight={'900px'}
+          top="20px"
+        >
+          <Box
+            className="scrollable"
+            width={'50%'}
+            maxHeight="900px"
+            overflowY={'auto'}
+          >
             <SelectYourPizza
               selectPizza={p => setPizza(p)}
               pizzas={pizzas}
               selectedPizza={pizza}
             />
-          </div>
+          </Box>
           <Stack
             style={{ width: '50%', backgroundColor: colors.gray.background }}
+            maxHeight="900px"
+            overflowY={'auto'}
+            className="scrollable"
           >
             <Flex
               pt="4"

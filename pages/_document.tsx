@@ -7,7 +7,7 @@ export default class Document extends NextDocument {
     return (
       <Html lang="en">
         <Head />
-        <body>
+        <body className='scrollable'>
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />
           <Main />
           <NextScript />
