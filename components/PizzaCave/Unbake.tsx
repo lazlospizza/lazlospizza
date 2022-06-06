@@ -1,6 +1,6 @@
 import { Box, Center, Flex, Stack, Text } from '@chakra-ui/react';
 import { useState } from 'react';
-import { UNBAKE_FEE } from '../../constants';
+import { CHECK_RARITY_INFO, UNBAKE_FEE } from '../../constants';
 import { useWallet } from '../../hooks/useWallet';
 import { colors } from '../../styles/theme';
 import { Pizza, PizzaCave } from '../../types';
@@ -49,7 +49,7 @@ export const Unbake = () => {
           Unbake a Pizza ({UNBAKE_FEE} ETH)
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
-          {`Disassemble a pizza held in your wallet and return the constituent fresh ingredient NFTs to your wallet for trading or baking new pizzas.`}
+          {`Reverse the BAKE process to burn a pizza you own and receive  its constituent ingredient NFTs in your wallet. Ingredients may then be traded on secondary markets or used to bake another pizza.`}
         </Text>
       </Stack>
       {/* deterime which view */}
@@ -82,6 +82,7 @@ export const Unbake = () => {
               <NavButton
                 title={UnbakeTabs.checkRarity}
                 isSelected={selectedTab === UnbakeTabs.checkRarity}
+                infoTooltip={CHECK_RARITY_INFO}
                 onClick={() => {
                   setSelectedTab(UnbakeTabs.checkRarity);
                   setSelectedHalfTab(UnbakeTabs.checkRarity);
@@ -93,16 +94,29 @@ export const Unbake = () => {
         </Stack>
       ) : (
         // desktop view
-        <Flex borderTop="2px" borderColor={'gray.light'}>
-          <div style={{ width: '50%' }}>
+        <Flex
+          borderTop="2px"
+          borderColor={'gray.light'}
+          maxHeight={'900px'}
+          top="20px"
+        >
+          <Box
+            className="scrollable"
+            width={'50%'}
+            maxHeight="900px"
+            overflowY={'auto'}
+          >
             <SelectYourPizza
               selectPizza={p => setPizza(p)}
               pizzas={pizzas}
               selectedPizza={pizza}
             />
-          </div>
+          </Box>
           <Stack
             style={{ width: '50%', backgroundColor: colors.gray.background }}
+            maxHeight="900px"
+            overflowY={'auto'}
+            className="scrollable"
           >
             <Flex
               pt="4"
@@ -122,6 +136,7 @@ export const Unbake = () => {
               <NavButton
                 title={UnbakeTabs.checkRarity}
                 isSelected={selectedHalfTab === UnbakeTabs.checkRarity}
+                infoTooltip={CHECK_RARITY_INFO}
                 onClick={() => {
                   setSelectedTab(UnbakeTabs.checkRarity);
                   setSelectedHalfTab(UnbakeTabs.checkRarity);

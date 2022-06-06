@@ -1,6 +1,6 @@
 import { Box, Center, Flex, Stack, Text, useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { REBAKE_FEE } from '../../constants';
+import { CHECK_RARITY_INFO, REBAKE_FEE } from '../../constants';
 import { useWallet } from '../../hooks/useWallet';
 import { colors } from '../../styles/theme';
 import { Pizza, Ingredient, PizzaCave } from '../../types';
@@ -103,7 +103,7 @@ export const Rebake = () => {
           Rebake ({REBAKE_FEE} ETH)
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
-          {`Customize a pizza you already hold. Add ingredients from your wallet or remove* ingredients to improve your Rarity Reward Score.`}
+          {`Customize a pizza you already own. Add ingredients from your wallet or remove* ingredients to improve your Rarity Score. (*Removed ingredients are burned, not returned to your wallet. This is an irreversible process.)`}
         </Text>
       </Stack>
       {/* deterime which view */}
@@ -136,6 +136,7 @@ export const Rebake = () => {
               <NavButton
                 title={RebakeTabs.checkRarity}
                 isSelected={selectedTab === RebakeTabs.checkRarity}
+                infoTooltip={CHECK_RARITY_INFO}
                 onClick={() => {
                   setSelectedTab(RebakeTabs.checkRarity);
                   setSelectedHalfTab(RebakeTabs.checkRarity);
@@ -147,8 +148,18 @@ export const Rebake = () => {
         </Stack>
       ) : (
         // desktop view
-        <Flex borderTop="2px" borderColor={'gray.light'}>
-          <div style={{ width: '50%' }}>
+        <Flex
+          borderTop="2px"
+          borderColor={'gray.light'}
+          maxHeight={'900px'}
+          top="20px"
+        >
+          <Box
+            className="scrollable"
+            width={'50%'}
+            maxHeight="900px"
+            overflowY={'auto'}
+          >
             {pizza ? (
               <SelectYourIngredients
                 ingredientGroups={ingredientGroups}
@@ -166,9 +177,12 @@ export const Rebake = () => {
                 selectedPizza={pizza}
               />
             )}
-          </div>
+          </Box>
           <Stack
             style={{ width: '50%', backgroundColor: colors.gray.background }}
+            maxHeight="900px"
+            overflowY={'auto'}
+            className="scrollable"
           >
             <Flex
               pt="4"
@@ -188,6 +202,7 @@ export const Rebake = () => {
               <NavButton
                 title={RebakeTabs.checkRarity}
                 isSelected={selectedHalfTab === RebakeTabs.checkRarity}
+                infoTooltip={CHECK_RARITY_INFO}
                 onClick={() => {
                   setSelectedTab(RebakeTabs.checkRarity);
                   setSelectedHalfTab(RebakeTabs.checkRarity);
