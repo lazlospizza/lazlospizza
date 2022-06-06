@@ -93,7 +93,6 @@ export const YourSelections = ({
 
       setMintingTxn(result.hash);
       const receipt = await result.wait();
-
       const [mintedId] = receipt.events
         ?.map(({ topics }) => (topics?.[3] ? parseInt(topics?.[3], 16) : null))
         .filter(id => !!id);
@@ -159,13 +158,9 @@ export const YourSelections = ({
       );
 
       setMintingTxn(result.hash);
-      const receipt = await result.wait();
+      await result.wait();
 
-      const [mintedId] = receipt.events
-        ?.map(({ topics }) => (topics?.[3] ? parseInt(topics?.[3], 16) : null))
-        .filter(id => !!id);
-
-      setMintedTokenId(mintedId);
+      setMintedTokenId(pizza.tokenId);
       await fetchPizzas();
       setShowSuccessModal(true);
     } catch (e) {
@@ -210,7 +205,6 @@ export const YourSelections = ({
 
       setMintingTxn(result.hash);
       const receipt = await result.wait();
-
       const [mintedId] = receipt.events
         ?.map(({ topics }) => (topics?.[3] ? parseInt(topics?.[3], 16) : null))
         .filter(id => !!id);
