@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Center, Flex, Stack, Text, useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { BAKING_FEE } from '../../constants';
+import { BAKING_FEE, CHECK_RARITY_INFO } from '../../constants';
 import { useWallet } from '../../hooks/useWallet';
 import { colors } from '../../styles/theme';
 import { Pizza, Ingredient, PizzaCave } from '../../types';
@@ -111,6 +111,7 @@ export const Bake = () => {
               <NavButton
                 title={BuyAndBakeTabs.checkRarity}
                 isSelected={selectedTab === BuyAndBakeTabs.checkRarity}
+                infoTooltip={CHECK_RARITY_INFO}
                 onClick={() => {
                   setSelectedTab(BuyAndBakeTabs.checkRarity);
                   setSelectedHalfTab(BuyAndBakeTabs.checkRarity);
@@ -166,6 +167,7 @@ export const Bake = () => {
               <NavButton
                 title={BuyAndBakeTabs.checkRarity}
                 isSelected={selectedHalfTab === BuyAndBakeTabs.checkRarity}
+                infoTooltip={CHECK_RARITY_INFO}
                 onClick={() => {
                   setSelectedTab(BuyAndBakeTabs.checkRarity);
                   setSelectedHalfTab(BuyAndBakeTabs.checkRarity);

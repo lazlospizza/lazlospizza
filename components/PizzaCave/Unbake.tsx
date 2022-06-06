@@ -1,6 +1,6 @@
 import { Box, Center, Flex, Stack, Text } from '@chakra-ui/react';
 import { useState } from 'react';
-import { UNBAKE_FEE } from '../../constants';
+import { CHECK_RARITY_INFO, UNBAKE_FEE } from '../../constants';
 import { useWallet } from '../../hooks/useWallet';
 import { colors } from '../../styles/theme';
 import { Pizza, PizzaCave } from '../../types';
@@ -82,6 +82,7 @@ export const Unbake = () => {
               <NavButton
                 title={UnbakeTabs.checkRarity}
                 isSelected={selectedTab === UnbakeTabs.checkRarity}
+                infoTooltip={CHECK_RARITY_INFO}
                 onClick={() => {
                   setSelectedTab(UnbakeTabs.checkRarity);
                   setSelectedHalfTab(UnbakeTabs.checkRarity);
@@ -135,6 +136,7 @@ export const Unbake = () => {
               <NavButton
                 title={UnbakeTabs.checkRarity}
                 isSelected={selectedHalfTab === UnbakeTabs.checkRarity}
+                infoTooltip={CHECK_RARITY_INFO}
                 onClick={() => {
                   setSelectedTab(UnbakeTabs.checkRarity);
                   setSelectedHalfTab(UnbakeTabs.checkRarity);

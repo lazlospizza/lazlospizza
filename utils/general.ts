@@ -59,6 +59,24 @@ export const getTotalCost = (ingredients: Ingredient[]) => {
   );
 };
 
+export const canAddIngredient = (item: Ingredient, pizza: Pizza) => {
+  switch (item.ingredientType) {
+    case IngredientType.cheese:
+      if (pizza.cheeses?.length >= CHEESE_LIMIT) {
+        return `A pizza may include up to ${CHEESE_LIMIT} cheeses.`;
+      }
+    case IngredientType.meat:
+      if (pizza.meats?.length >= MEAT_LIMIT) {
+        return `A pizza may include up to ${MEAT_LIMIT} meats.`;
+      }
+    case IngredientType.topping:
+      if (pizza.toppings?.length >= TOPPING_LIMIT) {
+        return `A pizza may include up to ${TOPPING_LIMIT} toppings.`;
+      }
+  }
+  return true;
+};
+
 export const addIngredient = ({
   item,
   pizza,

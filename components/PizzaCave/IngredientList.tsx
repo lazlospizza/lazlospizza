@@ -28,17 +28,28 @@ export const IngredientList = ({
         </Text>
         {!!ingredientGroup.max && (
           <Flex>
-            <Text color="gray.dark">{`A Pizza must have`}</Text>
+            <Text color="gray.dark">{`A pizza ${
+              ingredientGroup.min ? 'must' : 'may'
+            } have`}</Text>
             {ingredientGroup.min === ingredientGroup.max ? (
-              <Text color="tomato.500">
-                &nbsp;{`only ${ingredientGroup.max} ${ingredientGroup.name}`}
-              </Text>
+              <>
+                <Text color="tomato.500">
+                  &nbsp;
+                  {`only ${
+                    ingredientGroup.max
+                  } ${ingredientGroup.name.toLowerCase()}`}
+                </Text>
+              </>
             ) : (
               <Text color="tomato.500">
                 &nbsp;
                 {ingredientGroup.min
-                  ? `${ingredientGroup.min} to ${ingredientGroup.max} ${ingredientGroup.name}`
-                  : `up to ${ingredientGroup.max} ${ingredientGroup.name}`}
+                  ? `${ingredientGroup.min} to ${
+                      ingredientGroup.max
+                    } ${ingredientGroup.name.toLowerCase()}`
+                  : `up to ${
+                      ingredientGroup.max
+                    } ${ingredientGroup.name.toLowerCase()}`}
               </Text>
             )}
           </Flex>

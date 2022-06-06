@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Box, Center, Flex, Stack, Text } from '@chakra-ui/react';
+import { Box, Center, Flex, Stack, Text, Tooltip } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import {
   BAKING_FEE,
+  CHECK_RARITY_INFO,
   INGREDIENT_COST,
   MEAT_LIMIT,
   TOPPING_LIMIT,
@@ -112,7 +113,12 @@ export const BuyAndBake = () => {
   return (
     <Box>
       <Stack m="10px">
-        <Text color="tomato.500" fontWeight={700} fontSize={'xl'}>
+        <Text
+          color="tomato.500"
+          fontWeight={700}
+          fontSize={'xl'}
+          cursor="pointer"
+        >
           {`Buy Ingredients and Bake a Pizza (${INGREDIENT_COST} ETH per ingredient + ${BAKING_FEE} ETH Baking fee)`}
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
@@ -148,6 +154,7 @@ export const BuyAndBake = () => {
               />
               <NavButton
                 title={BuyAndBakeTabs.checkRarity}
+                infoTooltip={CHECK_RARITY_INFO}
                 isSelected={selectedTab === BuyAndBakeTabs.checkRarity}
                 onClick={() => {
                   setSelectedTab(BuyAndBakeTabs.checkRarity);
@@ -209,6 +216,7 @@ export const BuyAndBake = () => {
                   setSelectedTab(BuyAndBakeTabs.checkRarity);
                   setSelectedHalfTab(BuyAndBakeTabs.checkRarity);
                 }}
+                infoTooltip={CHECK_RARITY_INFO}
                 bgColor={colors.gray.background}
               />
             </Flex>

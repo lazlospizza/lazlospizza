@@ -1,6 +1,6 @@
 import { Box, Center, Flex, Stack, Text, useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { REBAKE_FEE } from '../../constants';
+import { CHECK_RARITY_INFO, REBAKE_FEE } from '../../constants';
 import { useWallet } from '../../hooks/useWallet';
 import { colors } from '../../styles/theme';
 import { Pizza, Ingredient, PizzaCave } from '../../types';
@@ -136,6 +136,7 @@ export const Rebake = () => {
               <NavButton
                 title={RebakeTabs.checkRarity}
                 isSelected={selectedTab === RebakeTabs.checkRarity}
+                infoTooltip={CHECK_RARITY_INFO}
                 onClick={() => {
                   setSelectedTab(RebakeTabs.checkRarity);
                   setSelectedHalfTab(RebakeTabs.checkRarity);
@@ -201,6 +202,7 @@ export const Rebake = () => {
               <NavButton
                 title={RebakeTabs.checkRarity}
                 isSelected={selectedHalfTab === RebakeTabs.checkRarity}
+                infoTooltip={CHECK_RARITY_INFO}
                 onClick={() => {
                   setSelectedTab(RebakeTabs.checkRarity);
                   setSelectedHalfTab(RebakeTabs.checkRarity);
