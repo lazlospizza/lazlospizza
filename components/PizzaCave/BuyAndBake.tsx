@@ -39,7 +39,7 @@ export const BuyAndBake = () => {
     BuyAndBakeTabs.selections,
   );
 
-  const handleAddIngredient = (item: Ingredient) => {
+  const handleAddIngredient = (item: Ingredient | Ingredient[]) => {
     addIngredient({ item, pizza, setPizza });
   };
 
@@ -65,24 +65,26 @@ export const BuyAndBake = () => {
     const cheeses = ingredientGroups[2].ingredients;
     const meats = ingredientGroups[3].ingredients;
     const toppings = ingredientGroups[4].ingredients;
+    const ingredients: Ingredient[] = [];
     // add base
-    handleAddIngredient(bases[getRandomInt(bases.length)]);
+    ingredients.push(bases[getRandomInt(bases.length)]);
     // add sauce
-    handleAddIngredient(sauces[getRandomInt(sauces.length)]);
+    ingredients.push(sauces[getRandomInt(sauces.length)]);
     // add cheese
-    handleAddIngredient(cheeses[getRandomInt(cheeses.length)]);
+    ingredients.push(cheeses[getRandomInt(cheeses.length)]);
     // add meat (first pick rand number of meats to add)
     const numMeatsToPick = getRandomInt(MEAT_LIMIT);
     for (let i = 0; i < numMeatsToPick; i++) {
       const randMeat = meats[getRandomInt(meats.length)];
-      handleAddIngredient(randMeat);
+      ingredients.push(randMeat);
     }
     // add toppings (first pick rand number of toppings to add)
     const numToppingsToPick = getRandomInt(TOPPING_LIMIT);
     for (let i = 0; i < numToppingsToPick; i++) {
       const randTopping = toppings[getRandomInt(toppings.length)];
-      handleAddIngredient(randTopping);
+      ingredients.push(randTopping);
     }
+    handleAddIngredient(ingredients);
   };
 
   const renderTab = (tab: BuyAndBakeTabs) => {

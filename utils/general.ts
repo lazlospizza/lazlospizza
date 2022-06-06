@@ -82,55 +82,59 @@ export const addIngredient = ({
   pizza,
   setPizza,
 }: {
-  item: Ingredient;
+  item: Ingredient | Ingredient[];
   pizza: Pizza;
   setPizza: Dispatch<SetStateAction<Pizza>>;
 }) => {
+  const ingredients: Ingredient[] = Array.isArray(item) ? item : [item];
   const newPizza = { ...pizza };
-  switch (item.ingredientType) {
-    case IngredientType.base:
-      newPizza.base = item;
-      newPizza.allIngredients = ingredientsWithoutDupe(
-        pizza.allIngredients,
-        item,
-        pizza.base,
-      );
-      break;
-    case IngredientType.sauce:
-      newPizza.sauce = item;
-      newPizza.allIngredients = ingredientsWithoutDupe(
-        pizza.allIngredients,
-        item,
-        pizza.sauce,
-      );
-      break;
-    case IngredientType.cheese:
-      if (pizza.cheeses?.length >= CHEESE_LIMIT) return;
-      newPizza.cheeses = ingredientsWithoutDupe(pizza.cheeses || [], item);
-      newPizza.allIngredients = ingredientsWithoutDupe(
-        pizza.allIngredients,
-        item,
-      );
-      break;
-    case IngredientType.meat:
-      if (pizza.meats?.length >= MEAT_LIMIT) return;
-      newPizza.meats = ingredientsWithoutDupe(pizza.meats || [], item);
-      newPizza.allIngredients = ingredientsWithoutDupe(
-        pizza.allIngredients,
-        item,
-      );
-      break;
-    case IngredientType.topping:
-      if (pizza.toppings?.length >= TOPPING_LIMIT) return;
-      newPizza.toppings = ingredientsWithoutDupe(pizza.toppings || [], item);
-      newPizza.allIngredients = ingredientsWithoutDupe(
-        pizza.allIngredients,
-        item,
-      );
-      break;
-    default:
-      break;
-  }
+  ingredients.forEach(item => {
+    switch (item.ingredientType) {
+      case IngredientType.base:
+        newPizza.base = item;
+        newPizza.allIngredients = ingredientsWithoutDupe(
+          pizza.allIngredients,
+          item,
+          pizza.base,
+        );
+        break;
+      case IngredientType.sauce:
+        newPizza.sauce = item;
+        newPizza.allIngredients = ingredientsWithoutDupe(
+          pizza.allIngredients,
+          item,
+          pizza.sauce,
+        );
+        break;
+      case IngredientType.cheese:
+        if (pizza.cheeses?.length >= CHEESE_LIMIT) return;
+        newPizza.cheeses = ingredientsWithoutDupe(pizza.cheeses || [], item);
+        newPizza.allIngredients = ingredientsWithoutDupe(
+          pizza.allIngredients,
+          item,
+        );
+        break;
+      case IngredientType.meat:
+        if (pizza.meats?.length >= MEAT_LIMIT) return;
+        newPizza.meats = ingredientsWithoutDupe(pizza.meats || [], item);
+        newPizza.allIngredients = ingredientsWithoutDupe(
+          pizza.allIngredients,
+          item,
+        );
+        break;
+      case IngredientType.topping:
+        if (pizza.toppings?.length >= TOPPING_LIMIT) return;
+        newPizza.toppings = ingredientsWithoutDupe(pizza.toppings || [], item);
+        newPizza.allIngredients = ingredientsWithoutDupe(
+          pizza.allIngredients,
+          item,
+        );
+        break;
+      default:
+        break;
+    }
+    pizza = { ...newPizza };
+  });
   setPizza({
     ...newPizza,
     totalCost: getTotalCost(newPizza.allIngredients),
