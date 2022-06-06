@@ -1,6 +1,8 @@
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { Box, Heading, Stack, Button } from '@chakra-ui/react';
 import axios from 'axios';
+import { BigNumberish } from 'ethers';
+import { parseEther } from 'ethers/lib/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -34,7 +36,6 @@ export const Header = () => {
       `${process.env.NEXT_PUBLIC_API_URL}/payouts?address=${wallet.address}`,
     );
     const rewards: Reward[] = payoutsRes.data;
-
     if (!rewards?.length) return null;
 
     const _unpaidRewards: Reward[] = [];
@@ -66,11 +67,13 @@ export const Header = () => {
     setIsClaimingRewards(true);
     const payouts: {
       payoutBlock: number;
-      amount: string;
+      amount: BigNumberish;
       r: string;
       s: string;
       v: number;
     }[] = [];
+    const signer = wallet.web3Provider.getSigner();
+    const contractWithSigner = mainContract.connect(signer);
     for (let i = 0; i < unpaidRewards.length; i += 1) {
       try {
         const res = await axios.get(
@@ -79,24 +82,33 @@ export const Header = () => {
 
         const blockReward = res.data;
 
-        payouts.push({
+        const _payout = {
           payoutBlock: blockReward.block,
-          amount: `${blockReward.payout_amount * 1000000000000000000.0}`,
+          amount: parseEther(`${blockReward.payout_amount}`),
           r: blockReward.r,
           s: blockReward.s,
           v: blockReward.v,
-        });
+        };
+
+        const _res = await contractWithSigner.estimateGas.redeemPayout(
+          [_payout],
+          {
+            from: signer._address,
+          },
+        );
+
+        payouts.push(_payout);
       } catch (e) {
         console.log(e);
       }
     }
     try {
-      const signer = wallet.web3Provider.getSigner();
-      const contractWithSigner = mainContract.connect(signer);
-      const result = await contractWithSigner.redeemPayout(payouts, {
-        from: signer._address,
-      });
-      await result.wait();
+      if (payouts.length) {
+        const result = await contractWithSigner.redeemPayout(payouts, {
+          from: signer._address,
+        });
+        await result.wait();
+      }
       setUnpaidRewards([]);
     } catch (e) {
       console.log(e);
