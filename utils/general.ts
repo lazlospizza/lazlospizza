@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { CHEESE_LIMIT, MEAT_LIMIT, TOPPING_LIMIT } from '../constants';
 import { Ingredient, IngredientType, Pizza } from '../types';
@@ -265,4 +266,92 @@ export const removeAdditionalIngredient = ({
 
 export const getRandomInt = (max: number) => {
   return Math.floor(Math.random() * max);
+};
+
+export const isPizzaValid = (pizza?: Pizza) => {
+  if (isEmpty(pizza?.allIngredients)) {
+    return false;
+  }
+  let addedBases = pizza?.base ? [pizza.base] : [];
+  let addedSauce = pizza?.sauce ? [pizza.sauce] : [];
+  let addedCheeses = pizza?.cheeses ? [...pizza.cheeses] : [];
+  let addedMeats = pizza?.meats ? [...pizza.meats] : [];
+  let addedToppings = pizza?.toppings ? [...pizza.toppings] : [];
+  if (pizza.burnIngredients) {
+    addedBases = addedBases.filter(
+      item =>
+        !pizza.burnIngredients.find(
+          ingredient => ingredient.tokenId === item.tokenId,
+        ),
+    );
+    addedSauce = addedSauce.filter(
+      item =>
+        !pizza.burnIngredients.find(
+          ingredient => ingredient.tokenId === item.tokenId,
+        ),
+    );
+    addedCheeses = addedCheeses.filter(
+      item =>
+        !pizza.burnIngredients.find(
+          ingredient => ingredient.tokenId === item.tokenId,
+        ),
+    );
+    addedMeats = addedMeats.filter(
+      item =>
+        !pizza.burnIngredients.find(
+          ingredient => ingredient.tokenId === item.tokenId,
+        ),
+    );
+    addedToppings = addedToppings.filter(
+      item =>
+        !pizza.burnIngredients.find(
+          ingredient => ingredient.tokenId === item.tokenId,
+        ),
+    );
+  }
+  if (pizza.additionalIngredients) {
+    addedBases = [
+      ...addedBases,
+      ...pizza.additionalIngredients.filter(
+        item => item.ingredientType === IngredientType.base,
+      ),
+    ];
+    addedSauce = [
+      ...addedSauce,
+      ...pizza.additionalIngredients.filter(
+        item => item.ingredientType === IngredientType.sauce,
+      ),
+    ];
+    addedCheeses = [
+      ...addedCheeses,
+      ...pizza.additionalIngredients.filter(
+        item => item.ingredientType === IngredientType.cheese,
+      ),
+    ];
+    addedMeats = [
+      ...addedMeats,
+      ...pizza.additionalIngredients.filter(
+        item => item.ingredientType === IngredientType.meat,
+      ),
+    ];
+    addedToppings = [
+      ...addedToppings,
+      ...pizza.additionalIngredients.filter(
+        item => item.ingredientType === IngredientType.topping,
+      ),
+    ];
+  }
+  if (addedBases.length !== 1) {
+    return false;
+  }
+  if (addedSauce.length !== 1) {
+    return false;
+  }
+  if (!addedCheeses.length || addedCheeses.length > CHEESE_LIMIT) {
+    return false;
+  }
+  if (addedMeats.length > MEAT_LIMIT || addedToppings.length > TOPPING_LIMIT) {
+    return false;
+  }
+  return true;
 };

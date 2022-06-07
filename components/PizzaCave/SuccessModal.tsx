@@ -32,7 +32,6 @@ export const SuccessModal = ({
     () => myPizzas.find(p => p.tokenId === pizzaTokenId),
     [myPizzas, pizzaTokenId],
   );
-  console.log('pizzas', mintedPizza);
 
   return (
     <>

@@ -20,7 +20,6 @@ export const IngredientList = ({
   tab,
   columns = 1,
 }: Props) => {
-  console.log(ingredientGroup.name, ingredientGroup);
   return (
     <Box mt={4}>
       <Stack>

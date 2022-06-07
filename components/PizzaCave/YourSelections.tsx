@@ -10,19 +10,12 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { parseEther } from 'ethers/lib/utils';
-import { isEmpty } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
-import {
-  BAKING_FEE,
-  MEAT_LIMIT,
-  REBAKE_FEE,
-  TOPPING_LIMIT,
-  UNBAKE_FEE,
-} from '../../constants';
+import { BAKING_FEE, REBAKE_FEE, UNBAKE_FEE } from '../../constants';
 import { useMainContract } from '../../hooks/useContract';
 import { useWallet } from '../../hooks/useWallet';
 import { Ingredient, Pizza, PizzaCave } from '../../types';
-import { getTotalCost, parsePrice } from '../../utils/general';
+import { getTotalCost, isPizzaValid, parsePrice } from '../../utils/general';
 import { AlertModal } from '../shared/AlertModal';
 import { SuccessModal } from './SuccessModal';
 
@@ -50,13 +43,7 @@ export const YourSelections = ({
   const provider = wallet?.web3Provider;
 
   const validatePizza = () => {
-    if (isEmpty(pizza?.allIngredients)) return setDisableBake(true);
-    if (!pizza?.base) return setDisableBake(true);
-    if (!pizza?.sauce) return setDisableBake(true);
-    if (!pizza?.cheeses) return setDisableBake(true);
-    if (pizza?.meats?.length > MEAT_LIMIT) return setDisableBake(true);
-    if (pizza?.toppings?.length > TOPPING_LIMIT) return setDisableBake(true);
-    setDisableBake(false);
+    setDisableBake(!isPizzaValid(pizza));
   };
 
   useEffect(() => {
