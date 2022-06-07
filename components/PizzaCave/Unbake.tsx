@@ -4,7 +4,7 @@ import { CHECK_RARITY_INFO, UNBAKE_FEE } from '../../constants';
 import { useWallet } from '../../hooks/useWallet';
 import { colors } from '../../styles/theme';
 import { Pizza, PizzaCave } from '../../types';
-import { useIsMobile } from '../../utils/general';
+import { parsePrice, useIsMobile } from '../../utils/general';
 import { NavButton } from '../shared/NavButton';
 import { CheckRarity } from './CheckRarity';
 import { SelectYourPizza } from './SelectYourPizza';
@@ -46,7 +46,7 @@ export const Unbake = () => {
     <Box>
       <Stack m="10px">
         <Text color="tomato.500" fontWeight={700} fontSize={'xl'}>
-          Unbake a Pizza ({UNBAKE_FEE} ETH)
+          Unbake a Pizza ({parsePrice(UNBAKE_FEE)})
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
           {`Reverse the BAKE process to burn a pizza you own and receive  its constituent ingredient NFTs in your wallet. Ingredients may then be traded on secondary markets or used to bake another pizza.`}

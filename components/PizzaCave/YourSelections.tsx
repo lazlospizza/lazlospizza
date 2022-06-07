@@ -22,7 +22,7 @@ import {
 import { useMainContract } from '../../hooks/useContract';
 import { useWallet } from '../../hooks/useWallet';
 import { Ingredient, Pizza, PizzaCave } from '../../types';
-import { getTotalCost } from '../../utils/general';
+import { getTotalCost, parsePrice } from '../../utils/general';
 import { AlertModal } from '../shared/AlertModal';
 import { SuccessModal } from './SuccessModal';
 
@@ -275,18 +275,22 @@ export const YourSelections = ({
               className="tomato-btn"
               onClick={handleBuyIngredients}
               isLoading={isMinting}
-            >{`Buy Ingredients Only (${
-              Math.round((totalCost || 0) * 100) / 100
-            })`}</Button>
+            >{`Buy Ingredients Only (${parsePrice(
+              Math.round((totalCost || 0) * 100) / 100,
+              2,
+              false,
+            )})`}</Button>
             <Button
               disabled={!isConnected}
               opacity={disableBake ? '.4' : undefined}
               className="tomato-btn"
               onClick={disableBake ? showAlert : handleBuyAndBake}
               isLoading={isMinting}
-            >{`Buy & Bake (${
-              Math.round(((totalCost || 0) + BAKING_FEE) * 100) / 100
-            })`}</Button>
+            >{`Buy & Bake (${parsePrice(
+              Math.round(((totalCost || 0) + BAKING_FEE) * 100) / 100,
+              2,
+              false,
+            )})`}</Button>
           </Stack>
         );
       case PizzaCave.bake:
@@ -298,7 +302,7 @@ export const YourSelections = ({
               className="tomato-btn"
               onClick={disableBake ? showAlert : handleBake}
               isLoading={isMinting}
-            >{`Bake at ${BAKING_FEE}`}</Button>
+            >{`Bake (${parsePrice(BAKING_FEE, undefined, false)})`}</Button>
           </Stack>
         );
       case PizzaCave.unbake:
@@ -309,7 +313,7 @@ export const YourSelections = ({
               className="tomato-btn"
               onClick={disableBake ? showAlert : handleUnbake}
               isLoading={isMinting}
-            >{`Unbake at ${UNBAKE_FEE}`}</Button>
+            >{`Unbake (${parsePrice(UNBAKE_FEE, undefined, false)})`}</Button>
           </Stack>
         );
       case PizzaCave.rebake:
@@ -321,7 +325,7 @@ export const YourSelections = ({
               className="tomato-btn"
               onClick={disableBake ? showAlert : handleRebake}
               isLoading={isMinting}
-            >{`Rebake Pizza at ${REBAKE_FEE}`}</Button>
+            >{`Rebake (${parsePrice(REBAKE_FEE, undefined, false)})`}</Button>
           </Stack>
         );
       default:
@@ -343,39 +347,48 @@ export const YourSelections = ({
           {/* Image */}
           <Center
             style={{
-              position: 'relative',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
             }}
           >
-            <img src="/assets/tablecloth.png" alt="tablecloth" />
-            {(
-              [
-                ...(pizza?.allIngredients || []),
-                ...(pizza?.additionalIngredients || []),
-              ]
-                .filter(
-                  item =>
-                    !(pizza.burnIngredients || []).find(
-                      burnItem => burnItem.tokenId == item.tokenId,
-                    ),
-                )
-                .sort((a, b) => a.tokenId - b.tokenId) ?? []
-            ).map(item => (
-              <div
-                key={item.tokenId}
-                style={{
-                  position: 'absolute',
-                  width: '80%',
-                  height: '80%',
-                  backgroundImage: `url(https://lazlos-pizza.s3.amazonaws.com/pizza_layers/${item.tokenId}.png)`,
-                  backgroundSize: 'contain',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center center',
-                }}
-              />
-            ))}
+            <Box
+              style={{
+                position: 'relative',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '70%',
+              }}
+            >
+              <img src="/assets/tablecloth.png" alt="tablecloth" />
+              {(
+                [
+                  ...(pizza?.allIngredients || []),
+                  ...(pizza?.additionalIngredients || []),
+                ]
+                  .filter(
+                    item =>
+                      !(pizza.burnIngredients || []).find(
+                        burnItem => burnItem.tokenId == item.tokenId,
+                      ),
+                  )
+                  .sort((a, b) => a.tokenId - b.tokenId) ?? []
+              ).map(item => (
+                <div
+                  key={item.tokenId}
+                  style={{
+                    position: 'absolute',
+                    width: '80%',
+                    height: '80%',
+                    backgroundImage: `url(https://lazlos-pizza.s3.amazonaws.com/pizza_layers/${item.tokenId}.png)`,
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center center',
+                  }}
+                />
+              ))}
+            </Box>
           </Center>
           {renderButtons()}
           {/* Number of Ingredients Selected */}

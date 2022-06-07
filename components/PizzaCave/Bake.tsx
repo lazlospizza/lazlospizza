@@ -10,6 +10,7 @@ import {
   DefaultPizza,
   useIsMobile,
   removeIngredient,
+  parsePrice,
 } from '../../utils/general';
 import { NavButton } from '../shared/NavButton';
 import { BuyAndBakeTabs } from './BuyAndBake';
@@ -75,7 +76,7 @@ export const Bake = () => {
     <Box>
       <Stack m="10px">
         <Text color="tomato.500" fontWeight={700} fontSize={'xl'}>
-          {`Bake a Pizza (${BAKING_FEE} ETH)`}
+          {`Bake a Pizza (${parsePrice(BAKING_FEE)})`}
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
           {`Bake a pizza with ingredients you already have in your wallet.`}

@@ -19,6 +19,7 @@ import {
   useIsMobile,
   getRandomInt,
   removeIngredient,
+  parsePrice,
 } from '../../utils/general';
 import { colors } from '../../styles/theme';
 import { useWallet } from '../../hooks/useWallet';
@@ -121,7 +122,9 @@ export const BuyAndBake = () => {
           fontSize={'xl'}
           cursor="pointer"
         >
-          {`Buy Ingredients and Bake a Pizza (${INGREDIENT_COST} ETH per ingredient + ${BAKING_FEE} ETH Baking fee)`}
+          {`Buy Ingredients and Bake a Pizza (${parsePrice(
+            INGREDIENT_COST,
+          )} per ingredient + ${parsePrice(BAKING_FEE)} Baking fee)`}
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
           {`Buy delicious hand-crafted ingredients freshly prepared by our pixel artistes. Select your ingredients and bake a pizza in a single transaction, or buy ingredients only and bake your pizza later`}

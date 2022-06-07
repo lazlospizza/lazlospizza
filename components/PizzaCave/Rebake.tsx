@@ -10,6 +10,7 @@ import {
   useIsMobile,
   removeAdditionalIngredient,
   removeBurnIngredient,
+  parsePrice,
 } from '../../utils/general';
 import { NavButton } from '../shared/NavButton';
 import { CheckRarity } from './CheckRarity';
@@ -100,7 +101,7 @@ export const Rebake = () => {
     <Box>
       <Stack m="10px">
         <Text color="tomato.500" fontWeight={700} fontSize={'xl'}>
-          Rebake ({REBAKE_FEE} ETH)
+          Rebake ({parsePrice(REBAKE_FEE)})
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
           {`Customize a pizza you already own. Add ingredients from your wallet or remove* ingredients to improve your Rarity Score. (*Removed ingredients are burned, not returned to your wallet. This is an irreversible process.)`}

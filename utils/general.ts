@@ -2,6 +2,19 @@ import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { CHEESE_LIMIT, MEAT_LIMIT, TOPPING_LIMIT } from '../constants';
 import { Ingredient, IngredientType, Pizza } from '../types';
 
+export const parsePrice = (
+  amount: number,
+  defaultToFixed = 2,
+  showCurrency = true,
+) => {
+  const decimal = amount.toString().split('.')[1];
+  let toFixed = defaultToFixed;
+  if (decimal && decimal.length > toFixed) {
+    toFixed = decimal.length;
+  }
+  return `${amount.toFixed(toFixed)}${showCurrency ? ' ETH' : ''}`;
+};
+
 export const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(true);
   useEffect(() => {

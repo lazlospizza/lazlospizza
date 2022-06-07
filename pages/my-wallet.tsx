@@ -14,7 +14,6 @@ enum Tabs {
 export default function MyWallet() {
   const { myIngredients, ingredientGroups, myPizzas } = useWallet();
   const [selectedTab, setSelectedTab] = useState<Tabs>(Tabs.pizzas);
-  console.log(myIngredients, ingredientGroups);
   return (
     <Box p="20px" w="full">
       <Heading fontFamily="Lato" size="lg" color="tomato.500">

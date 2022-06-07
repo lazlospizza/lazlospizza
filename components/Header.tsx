@@ -1,15 +1,13 @@
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { Box, Heading, Stack, Button } from '@chakra-ui/react';
 import axios from 'axios';
-import { BigNumberish } from 'ethers';
-import { parseEther } from 'ethers/lib/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMainContract } from '../hooks/useContract';
 import { useWallet } from '../hooks/useWallet';
 import { headerHeight } from '../styles/theme';
-import { useIsMobile } from '../utils/general';
+import { parsePrice, useIsMobile } from '../utils/general';
 import { ConnectWalletButton } from './ConnectWalletButton';
 import { HeaderMenu } from './shared/HeaderMenu';
 
@@ -36,6 +34,7 @@ export const Header = () => {
       `${process.env.NEXT_PUBLIC_API_URL}/payouts?address=${wallet.address}`,
     );
     const rewards: Reward[] = payoutsRes.data;
+
     if (!rewards?.length) return null;
 
     const _unpaidRewards: Reward[] = [];
@@ -67,13 +66,11 @@ export const Header = () => {
     setIsClaimingRewards(true);
     const payouts: {
       payoutBlock: number;
-      amount: BigNumberish;
+      amount: string;
       r: string;
       s: string;
       v: number;
     }[] = [];
-    const signer = wallet.web3Provider.getSigner();
-    const contractWithSigner = mainContract.connect(signer);
     for (let i = 0; i < unpaidRewards.length; i += 1) {
       try {
         const res = await axios.get(
@@ -82,33 +79,24 @@ export const Header = () => {
 
         const blockReward = res.data;
 
-        const _payout = {
+        payouts.push({
           payoutBlock: blockReward.block,
-          amount: parseEther(`${blockReward.payout_amount}`),
+          amount: `${blockReward.payout_amount * 1000000000000000000.0}`,
           r: blockReward.r,
           s: blockReward.s,
           v: blockReward.v,
-        };
-
-        const _res = await contractWithSigner.estimateGas.redeemPayout(
-          [_payout],
-          {
-            from: signer._address,
-          },
-        );
-
-        payouts.push(_payout);
+        });
       } catch (e) {
         console.log(e);
       }
     }
     try {
-      if (payouts.length) {
-        const result = await contractWithSigner.redeemPayout(payouts, {
-          from: signer._address,
-        });
-        await result.wait();
-      }
+      const signer = wallet.web3Provider.getSigner();
+      const contractWithSigner = mainContract.connect(signer);
+      const result = await contractWithSigner.redeemPayout(payouts, {
+        from: signer._address,
+      });
+      await result.wait();
       setUnpaidRewards([]);
     } catch (e) {
       console.log(e);
@@ -154,7 +142,7 @@ export const Header = () => {
                 onClick={claimRewards}
                 isLoading={isClaimingRewards}
               >
-                Claim Rewards ({unclaimedTotal.toFixed(3)} ETH)
+                Claim Rewards ({parsePrice(unclaimedTotal, 3)})
               </Button>
             )}
           </Stack>
@@ -231,7 +219,7 @@ export const Header = () => {
                   onClick={claimRewards}
                   isLoading={isClaimingRewards}
                 >
-                  Claim Rewards ({unclaimedTotal.toFixed(3)} ETH)
+                  Claim Rewards ({parsePrice(unclaimedTotal, 3)})
                 </Button>
               )}
             </Stack>

@@ -20,6 +20,7 @@ export const IngredientList = ({
   tab,
   columns = 1,
 }: Props) => {
+  console.log(ingredientGroup.name, ingredientGroup);
   return (
     <Box mt={4}>
       <Stack>
@@ -38,6 +39,7 @@ export const IngredientList = ({
                   {`only ${
                     ingredientGroup.max
                   } ${ingredientGroup.name.toLowerCase()}`}
+                  {'.'}
                 </Text>
               </>
             ) : (
@@ -50,6 +52,7 @@ export const IngredientList = ({
                   : `up to ${
                       ingredientGroup.max
                     } ${ingredientGroup.name.toLowerCase()}`}
+                {'.'}
               </Text>
             )}
           </Flex>
