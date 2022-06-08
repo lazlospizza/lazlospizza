@@ -43,7 +43,16 @@ export const YourSelections = ({
   const provider = wallet?.web3Provider;
 
   const validatePizza = () => {
-    setDisableBake(!isPizzaValid(pizza));
+    let pizzaValid = isPizzaValid(pizza);
+    if (
+      pizzaValid &&
+      tab === PizzaCave.rebake &&
+      !pizza.additionalIngredients?.length &&
+      !pizza.burnIngredients?.length
+    ) {
+      pizzaValid = false;
+    }
+    setDisableBake(!pizzaValid);
   };
 
   useEffect(() => {
