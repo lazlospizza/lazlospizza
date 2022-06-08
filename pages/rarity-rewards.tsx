@@ -35,6 +35,17 @@ export default function RarityRewards() {
 
   const getPreviousWinners = useCallback(async () => {
     const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/winners`);
+    const payouts = (
+      await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/payouts`)
+    ).data;
+    res.data.forEach(item => {
+      const payout = payouts[item.owner]?.find(
+        i => i.token_id === item.tokenId,
+      );
+      if (payout) {
+        item.payout = payout;
+      }
+    });
     setPreviousWinners(res.data);
   }, []);
 
@@ -108,6 +119,7 @@ export default function RarityRewards() {
           hideTitle
           useIngredientsForImage
           columns={2}
+          showPayout
         />
       )}
       {selectedTab === Tabs.topPizzas && (

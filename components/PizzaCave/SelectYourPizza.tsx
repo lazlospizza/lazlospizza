@@ -7,9 +7,13 @@ import {
   Heading,
   Center,
   Grid,
+  Link,
 } from '@chakra-ui/react';
 import { colors } from '../../styles/theme';
 import { Pizza } from '../../types';
+import { FaCube, FaEthereum, FaLink } from 'react-icons/fa';
+import { getNetworkConfig } from '../../utils/network';
+import { parsePrice } from '../../utils/general';
 
 interface Props {
   selectPizza?: (pizza: Pizza) => void;
@@ -18,6 +22,7 @@ interface Props {
   hideTitle?: boolean;
   useIngredientsForImage?: boolean;
   columns?: number;
+  showPayout?: boolean;
 }
 export const SelectYourPizza = ({
   selectPizza,
@@ -26,6 +31,7 @@ export const SelectYourPizza = ({
   hideTitle,
   useIngredientsForImage = false,
   columns = 1,
+  showPayout = false,
 }: Props) => {
   return (
     <Box style={{ marginTop: 20, padding: 10 }}>
@@ -53,6 +59,50 @@ export const SelectYourPizza = ({
                 position="relative"
                 overflow="hidden"
               >
+                {showPayout ? (
+                  <Stack
+                    direction="row"
+                    gap={1}
+                    alignItems="center"
+                    fontFamily={'heading'}
+                    fontSize="11"
+                  >
+                    <Text
+                      color={pizza.payout ? 'green.500' : undefined}
+                      textTransform="uppercase"
+                    >
+                      {pizza.payout ? 'Claimed' : 'Not Claimed'}
+                    </Text>
+                    {pizza.payout ? (
+                      <>
+                        <Link
+                          target="_blank"
+                          href={`${getNetworkConfig().openSeaBaseUrl}/${
+                            pizza.owner
+                          }`}
+                        >
+                          <Stack direction="row" alignItems="center">
+                            <FaLink fontSize="14" />{' '}
+                            <Text textDecoration="underline">OpenSea</Text>
+                          </Stack>
+                        </Link>
+                        <Stack direction="row" alignItems="center">
+                          <FaCube fontSize="14" />{' '}
+                          <Text>{pizza.payout.block}</Text>
+                        </Stack>
+                        <Stack direction="row" alignItems="center">
+                          <FaEthereum fontSize="14" />{' '}
+                          <Text>
+                            {parsePrice(
+                              Number(pizza.payout.payout_amount.toFixed(3)),
+                              3,
+                            )}
+                          </Text>
+                        </Stack>
+                      </>
+                    ) : null}
+                  </Stack>
+                ) : null}
                 <Flex>
                   <Center
                     style={{
