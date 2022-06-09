@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useCallback, useMemo, useState } from 'react';
 import { SelectYourPizza } from '../components/PizzaCave/SelectYourPizza';
 import { NavButton } from '../components/shared/NavButton';
+import { useMainContract } from '../hooks/useContract';
 import { useWallet } from '../hooks/useWallet';
 import { colors } from '../styles/theme';
 import { Pizza } from '../types';
@@ -32,21 +33,49 @@ export default function RarityRewards() {
     );
     setWinningPizzas(res.data);
   }, []);
+  const { mainContract } = useMainContract();
 
   const getPreviousWinners = useCallback(async () => {
     const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/winners`);
     const payouts = (
       await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/payouts`)
     ).data;
-    res.data.forEach(item => {
+    let allPayouts = [];
+    Object.values(payouts).forEach(
+      item => (allPayouts = [...allPayouts, ...(item as any)]),
+    );
+    const previousWinners: Pizza[] = [];
+    res.data.forEach(async item => {
       const payout = payouts[item.owner]?.find(
         i => i.token_id === item.tokenId,
       );
-      if (payout) {
-        item.payout = payout;
+      if (!payout) {
+        return;
       }
+      item.payout = { ...payout };
+      const storageKey = `blockPaid:${payout.block}`;
+      try {
+        item.payout.hasBeenPaid = await mainContract.isPaidOutForBlock(
+          item.owner,
+          item.payout.block,
+        );
+        localStorage.setItem(storageKey, payout.hasBeenPaid.toString());
+      } catch (error) {
+        console.error(error);
+        const savedValue = localStorage.getItem(storageKey);
+        if (savedValue) {
+          try {
+            item.payout.hasBeenPaid = JSON.parse(savedValue);
+          } catch (error) {
+            item.payout.hasBeenPaid = false;
+          }
+        } else {
+          item.payout.hasBeenPaid = false;
+        }
+      }
+      previousWinners.push(item);
     });
-    setPreviousWinners(res.data);
+    setPreviousWinners(previousWinners);
   }, []);
 
   useEffect(() => {
@@ -55,7 +84,7 @@ export default function RarityRewards() {
 
   useEffect(() => {
     getPreviousWinners();
-  }, [getPreviousWinners]);
+  }, []);
 
   return (
     <Box p="20px" w="full">

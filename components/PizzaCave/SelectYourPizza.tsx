@@ -5,7 +5,6 @@ import {
   Button,
   Flex,
   Heading,
-  Center,
   Grid,
   Link,
 } from '@chakra-ui/react';
@@ -14,7 +13,31 @@ import { Pizza } from '../../types';
 import { FaCube, FaEthereum, FaLink } from 'react-icons/fa';
 import { getNetworkConfig } from '../../utils/network';
 import { parsePrice } from '../../utils/general';
+import { CSSProperties } from 'react';
 
+const PizzaImage: React.FC<{ img: string; style?: CSSProperties }> = ({
+  img,
+  style,
+}) => (
+  <Box
+    style={{
+      ...{
+        width: '100%',
+        position: 'absolute',
+        backgroundImage: `url(${img})`,
+        backgroundSize: 'contain',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center center',
+      },
+      ...style,
+    }}
+    _after={{
+      content: '" "',
+      display: 'block',
+      paddingBottom: '100%',
+    }}
+  />
+);
 interface Props {
   selectPizza?: (pizza: Pizza) => void;
   pizzas: Pizza[];
@@ -59,78 +82,26 @@ export const SelectYourPizza = ({
                 position="relative"
                 overflow="hidden"
               >
-                {showPayout ? (
-                  <Stack
-                    direction="row"
-                    gap={1}
-                    alignItems="center"
-                    fontFamily={'heading'}
-                    fontSize="11"
-                  >
-                    <Text
-                      color={pizza.payout ? 'green.500' : undefined}
-                      textTransform="uppercase"
-                    >
-                      {pizza.payout ? 'Claimed' : 'Not Claimed'}
-                    </Text>
-                    {pizza.payout ? (
-                      <>
-                        <Link
-                          target="_blank"
-                          href={`${getNetworkConfig().openSeaBaseUrl}/${
-                            pizza.owner
-                          }`}
-                        >
-                          <Stack direction="row" alignItems="center">
-                            <FaLink fontSize="14" />{' '}
-                            <Text textDecoration="underline">OpenSea</Text>
-                          </Stack>
-                        </Link>
-                        <Stack direction="row" alignItems="center">
-                          <FaCube fontSize="14" />{' '}
-                          <Text>{pizza.payout.block}</Text>
-                        </Stack>
-                        <Stack direction="row" alignItems="center">
-                          <FaEthereum fontSize="14" />{' '}
-                          <Text>
-                            {parsePrice(
-                              Number(pizza.payout.payout_amount.toFixed(3)),
-                              3,
-                            )}
-                          </Text>
-                        </Stack>
-                      </>
-                    ) : null}
-                  </Stack>
-                ) : null}
                 <Flex>
-                  <Center
+                  <Stack
+                    gap={3}
                     style={{
-                      position: 'relative',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: 150,
-                      height: 150,
+                      width: '35%',
+                      maxWidth: 150,
+                      marginLeft: 10,
+                      marginTop: 10,
                     }}
                   >
                     {!useIngredientsForImage ? (
-                      <div
-                        style={{
-                          position: 'absolute',
-                          width: '100%',
-                          height: '100%',
-                          backgroundImage: `url(${pizza.image})`,
-                          backgroundSize: 'contain',
-                          backgroundRepeat: 'no-repeat',
-                          backgroundPosition: 'center center',
-                        }}
-                      />
+                      <PizzaImage img={pizza.image} />
                     ) : (
-                      <>
+                      <Box width="100%" position="relative">
                         <img
                           src="https://lazlos-pizza.s3.amazonaws.com/pizza_layers/table_cloth.png"
                           alt="tablecloth"
+                          style={{
+                            width: '100%',
+                          }}
                         />
                         {(
                           [
@@ -145,22 +116,54 @@ export const SelectYourPizza = ({
                             )
                             .sort((a, b) => a.tokenId - b.tokenId) ?? []
                         ).map(item => (
-                          <div
+                          <PizzaImage
                             key={item.tokenId}
+                            img={`https://lazlos-pizza.s3.amazonaws.com/pizza_layers/${item.tokenId}.png`}
                             style={{
                               position: 'absolute',
-                              width: '83.5%',
-                              height: '83.5%',
-                              backgroundImage: `url(https://lazlos-pizza.s3.amazonaws.com/pizza_layers/${item.tokenId}.png)`,
-                              backgroundSize: 'contain',
-                              backgroundRepeat: 'no-repeat',
-                              backgroundPosition: 'center center',
+                              top: 0,
+                              left: 0,
                             }}
                           />
                         ))}
-                      </>
+                      </Box>
                     )}
-                  </Center>
+
+                    {showPayout ? (
+                      <Stack gap={1} fontFamily={'heading'} fontSize="10">
+                        {pizza.payout ? (
+                          <>
+                            <Stack direction="row" alignItems="center">
+                              <FaCube fontSize="14" />{' '}
+                              <Text>{pizza.payout.block}</Text>
+                            </Stack>
+                            <Text
+                              color={
+                                pizza.payout.hasBeenPaid
+                                  ? 'green.500'
+                                  : undefined
+                              }
+                              textTransform="uppercase"
+                            >
+                              {pizza.payout.hasBeenPaid
+                                ? 'Claimed'
+                                : 'Unclaimed'}
+                            </Text>
+                            <Stack direction="row" alignItems="center">
+                              <FaEthereum fontSize="14" />{' '}
+                              <Text>
+                                {parsePrice(
+                                  Number(pizza.payout.payout_amount.toFixed(3)),
+                                  3,
+                                  false,
+                                )}
+                              </Text>
+                            </Stack>
+                          </>
+                        ) : null}
+                      </Stack>
+                    ) : null}
+                  </Stack>
                   {/* Right of Image */}
                   <Flex width={'100%'} justifyContent={'space-between'}>
                     {/* Name and Cost */}
@@ -208,6 +211,27 @@ export const SelectYourPizza = ({
                     </Text>
                   </Flex>
                 </Flex>
+                {pizza.payout && showPayout ? (
+                  <Link
+                    target="_blank"
+                    display="block"
+                    position="absolute"
+                    left="10px"
+                    bottom="5px"
+                    marginLeft="10px"
+                    href={`${getNetworkConfig().openSeaBaseUrl}/${pizza.owner}`}
+                  >
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      fontSize="9"
+                      fontFamily={'heading'}
+                    >
+                      <FaLink />{' '}
+                      <Text textDecoration="underline">{pizza.owner}</Text>
+                    </Stack>
+                  </Link>
+                ) : null}
               </Box>
             );
           })}

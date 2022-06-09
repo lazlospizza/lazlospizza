@@ -73,4 +73,6 @@ export interface Payout {
   payout_amount: number;
   timestamp: number;
   token_id: number;
+  // Manually added (not returned from API)
+  hasBeenPaid?: Payout;
 }
