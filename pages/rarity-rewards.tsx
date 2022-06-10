@@ -101,19 +101,37 @@ export default function RarityRewards() {
 
       <Stack my="20px">
         <Text color="gray.dark">
-          Rarity Rewards are awarded to the holder of the pizza with the lowest
-          Rarity Score at a random Rewards Snapshot that takes place once in
-          each Rewards Cycle. A Rewards Cycle is between 9,000-10,000 blocks on
-          the Ethereum blockchain. A new Rewards Cycle starts one block after a
-          Rewards Snapshot has occurred. The Rarity Reward Recipient (holder of
-          rarest pizza) is then able to claim a reward paid in ETH equal to 1%
-          of the Rewards balance* held in the smart contract at the time of the
-          snapshot.
+          Rarity Rewards are paid to the user that achieves the lowest rarity
+          score in a Rewards Cycle. Rarity scores are calculated by getting the
+          average percentage score of all 21 traits on a pizza. Rarity Scores
+          range from 0-100, with lower rarity scores being more difficult to
+          achieve, thus more desirable.
         </Text>
         <Text color="gray.dark">
+          The value of the next Rarity Reward, the current Score to Beat and a
+          countdown to the next Reward Block are updated in real time above.
+        </Text>
+        <Text color="gray.dark">
+          Reward Cycles typically last 10,000 blocks with the winner receiving
+          1% of the Reward Pool. The Score to Beat resets to the prevailing
+          lowest Rarity Score at the beginning of each new Reward Cycle. On
+          occasion, such as initial launch period, Rewards Cycles may be put on
+          turbo mode with winners being paid every 1,000 blocks!
+        </Text>
+        <Text color="gray.dark">
+          You may use the Check Rarity tool in the Pizza Cave to view up-to-date
+          data on the percentage of pizzas that contain each ingredient. This
+          information may help you improve your score by removing common
+          ingredients and adding rarer ingredients to your pizza.
+        </Text>
+        <Text color="gray.dark">
+          Check out FAQs for an in-depth explainer on how Rarity Rewards are
+          calculated and how winners are chosen.
+        </Text>
+        {/* <Text color="gray.dark">
           (*The Rewards balance is the total ETH balance held in the smart
           contract minus any unclaimed rewards and developer allowances.)
-        </Text>
+        </Text> */}
       </Stack>
 
       <Flex pt="4" px="8" alignContent={'center'} justifyContent={'center'}>
