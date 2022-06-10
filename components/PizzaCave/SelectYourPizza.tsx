@@ -23,6 +23,7 @@ const PizzaImage: React.FC<{ img: string; style?: CSSProperties }> = ({
     style={{
       ...{
         width: '100%',
+        maxWidth: '150px',
         position: 'absolute',
         backgroundImage: `url(${img})`,
         backgroundSize: 'contain',
@@ -217,7 +218,7 @@ export const SelectYourPizza = ({
                     display="block"
                     position="absolute"
                     left="10px"
-                    bottom="5px"
+                    top="5px"
                     marginLeft="10px"
                     href={`${getNetworkConfig().openSeaBaseUrl}/${pizza.owner}`}
                   >

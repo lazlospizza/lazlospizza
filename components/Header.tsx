@@ -1,5 +1,5 @@
 import { HamburgerIcon } from '@chakra-ui/icons';
-import { Box, Heading, Stack, Button } from '@chakra-ui/react';
+import { Box, Heading, Stack, Button, Text } from '@chakra-ui/react';
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -10,6 +10,7 @@ import { headerHeight } from '../styles/theme';
 import { parsePrice, useIsMobile } from '../utils/general';
 import { ConnectWalletButton } from './ConnectWalletButton';
 import { HeaderMenu } from './shared/HeaderMenu';
+import Marquee from 'react-fast-marquee';
 
 interface Reward {
   block: number;
@@ -27,7 +28,44 @@ export const Header = () => {
   const { mainContract } = useMainContract();
   const [unpaidRewards, setUnpaidRewards] = useState<Reward[]>([]);
   const [isClaimingRewards, setIsClaimingRewards] = useState(false);
-
+  const [rewardsInfo, setRewardsInfo] = useState<{
+    blocksRemaining?: number;
+    nextRarityReward?: string;
+    scoreToBeat?: number;
+  }>();
+  useEffect(() => {
+    wallet?.web3Provider?.getBlockNumber().then(async block => {
+      console.log('BLOCK: ', block);
+      const blocksRemaining = 1000 - (block % 1000);
+      const nextBlock = block + blocksRemaining;
+      try {
+        const [winningPizzasRes, blockPayoutRes] = await Promise.all([
+          axios.get(`${process.env.NEXT_PUBLIC_API_URL}/winning_pizzas`),
+          axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/calculate-block-payouts?block=${nextBlock}`,
+          ),
+        ]);
+        const rarityReward = blockPayoutRes.data.find(
+          item => item.reason === 'Rarity reward',
+        );
+        if (!rarityReward) {
+          return;
+        }
+        setRewardsInfo({
+          blocksRemaining,
+          nextRarityReward: parsePrice(
+            parseFloat(
+              (rarityReward.payout_amount / 1000000000000000000.0).toFixed(3),
+            ),
+            3,
+          ),
+          scoreToBeat: winningPizzasRes.data[0]?.rarity,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    });
+  }, [wallet?.web3Provider]);
   const checkRarityRewards = useCallback(async () => {
     if (!wallet?.address) return null;
     const payoutsRes = await axios.get(
@@ -226,6 +264,54 @@ export const Header = () => {
           )}
         </Box>
         {isMobile && showMobileMenu && <MobileMenu />}
+        {rewardsInfo ? (
+          <Marquee
+            style={{
+              position: 'absolute',
+              bottom: '0',
+              left: `${isMobile ? 105 : 140}px`,
+              width: `calc(100% - ${isMobile ? 105 : 140}px)`,
+            }}
+            gradientWidth={isMobile ? 10 : 120}
+            speed={50}
+            gradientColor={[204, 66, 66]}
+          >
+            {[1, 2].map(key => (
+              <Stack
+                key={key}
+                direction="row"
+                gap={isMobile ? 3 : 6}
+                fontFamily={'heading'}
+                minWidth="50%"
+                justifyContent="space-around"
+                px={isMobile ? 3 : 6}
+                fontSize={isMobile ? 10 : 14}
+              >
+                <Text>
+                  Next Rarity Reward:{' '}
+                  <Text color="cheese.200" as="span">
+                    {rewardsInfo.nextRarityReward || '-'}
+                  </Text>
+                </Text>
+                <Text>⦁</Text>
+                <Text>
+                  <Text color="cheese.200" as="span">
+                    {rewardsInfo.blocksRemaining || '-'}
+                  </Text>{' '}
+                  blocks remaining
+                </Text>
+                <Text>⦁</Text>
+                <Text>
+                  Score to Beat:{' '}
+                  <Text color="cheese.200" as="span">
+                    {rewardsInfo.scoreToBeat}
+                  </Text>{' '}
+                </Text>
+                <Text>⦁</Text>
+              </Stack>
+            ))}
+          </Marquee>
+        ) : null}
       </Box>
       <div
         style={{
