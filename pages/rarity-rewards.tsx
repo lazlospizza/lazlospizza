@@ -44,38 +44,42 @@ export default function RarityRewards() {
     Object.values(payouts).forEach(
       item => (allPayouts = [...allPayouts, ...(item as any)]),
     );
-    const previousWinners: Pizza[] = [];
-    res.data.forEach(async item => {
-      const payout = payouts[item.owner]?.find(
-        i => i.token_id === item.tokenId,
-      );
-      if (!payout) {
-        return;
-      }
-      item.payout = { ...payout };
-      const storageKey = `blockPaid:${payout.block}`;
-      try {
-        item.payout.hasBeenPaid = await mainContract.isPaidOutForBlock(
-          item.owner,
-          item.payout.block,
-        );
-        localStorage.setItem(storageKey, payout.hasBeenPaid.toString());
-      } catch (error) {
-        console.error(error);
-        const savedValue = localStorage.getItem(storageKey);
-        if (savedValue) {
-          try {
-            item.payout.hasBeenPaid = JSON.parse(savedValue);
-          } catch (error) {
-            item.payout.hasBeenPaid = false;
+    // const previousWinners: Pizza[] = [];
+    const previousWinners: Pizza[] = await Promise.all(
+      res.data.map(item =>
+        (async () => {
+          const payout = payouts[item.owner]?.find(i => i.block === item.block);
+          if (!payout) {
+            return;
           }
-        } else {
-          item.payout.hasBeenPaid = false;
-        }
-      }
-      previousWinners.push(item);
-    });
-    setPreviousWinners(previousWinners);
+          item.payout = { ...payout };
+          const storageKey = `blockPaid:v2:${payout.block}`;
+          try {
+            item.payout.hasBeenPaid = await mainContract.isPaidOutForBlock(
+              item.owner,
+              item.payout.block,
+            );
+            if (item.payout.hasBeenPaid !== undefined) {
+              try {
+                localStorage.setItem(
+                  storageKey,
+                  JSON.stringify(item.payout.hasBeenPaid),
+                );
+              } catch (error) {}
+            }
+          } catch (error) {
+            const savedValue = localStorage.getItem(storageKey);
+            if (savedValue) {
+              try {
+                item.payout.hasBeenPaid = JSON.parse(savedValue);
+              } catch (error) {}
+            }
+          }
+          return item;
+        })(),
+      ),
+    );
+    setPreviousWinners(previousWinners.filter(item => !!item));
   }, []);
 
   useEffect(() => {
@@ -83,8 +87,11 @@ export default function RarityRewards() {
   }, [getWinningPizzas]);
 
   useEffect(() => {
+    if (!mainContract) {
+      return;
+    }
     getPreviousWinners();
-  }, []);
+  }, [mainContract]);
 
   return (
     <Box p="20px" w="full">

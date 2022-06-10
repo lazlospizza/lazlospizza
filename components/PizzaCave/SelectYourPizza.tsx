@@ -138,18 +138,20 @@ export const SelectYourPizza = ({
                               <FaCube fontSize="14" />{' '}
                               <Text>{pizza.payout.block}</Text>
                             </Stack>
-                            <Text
-                              color={
-                                pizza.payout.hasBeenPaid
-                                  ? 'green.500'
-                                  : undefined
-                              }
-                              textTransform="uppercase"
-                            >
-                              {pizza.payout.hasBeenPaid
-                                ? 'Claimed'
-                                : 'Unclaimed'}
-                            </Text>
+                            {pizza.payout.hasBeenPaid !== undefined && (
+                              <Text
+                                color={
+                                  pizza.payout.hasBeenPaid
+                                    ? 'green.500'
+                                    : undefined
+                                }
+                                textTransform="uppercase"
+                              >
+                                {pizza.payout.hasBeenPaid
+                                  ? 'Claimed'
+                                  : 'Unclaimed'}
+                              </Text>
+                            )}
                             <Stack direction="row" alignItems="center">
                               <FaEthereum fontSize="14" />{' '}
                               <Text>

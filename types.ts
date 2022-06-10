@@ -64,6 +64,7 @@ export interface Pizza {
   rarity?: number;
   rewardedOn?: number;
   totalCost?: number;
+  block?: number;
   // Manually added (not returned from API)
   payout?: Payout;
 }

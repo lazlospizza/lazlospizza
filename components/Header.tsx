@@ -34,37 +34,61 @@ export const Header = () => {
     scoreToBeat?: number;
   }>();
   useEffect(() => {
-    wallet?.web3Provider?.getBlockNumber().then(async block => {
-      console.log('BLOCK: ', block);
-      const blocksRemaining = 1000 - (block % 1000);
-      const nextBlock = block + blocksRemaining;
-      try {
-        const [winningPizzasRes, blockPayoutRes] = await Promise.all([
-          axios.get(`${process.env.NEXT_PUBLIC_API_URL}/winning_pizzas`),
-          axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/calculate-block-payouts?block=${nextBlock}`,
-          ),
-        ]);
-        const rarityReward = blockPayoutRes.data.find(
-          item => item.reason === 'Rarity reward',
-        );
-        if (!rarityReward) {
+    if (!wallet?.web3Provider) {
+      return;
+    }
+    let previousBlock = undefined;
+    let previousNextBlock = undefined;
+    let previousRarityReward = undefined;
+    const updateFunc = () => {
+      wallet?.web3Provider?.getBlockNumber().then(async block => {
+        if (block === previousBlock) {
           return;
         }
-        setRewardsInfo({
-          blocksRemaining,
-          nextRarityReward: parsePrice(
-            parseFloat(
-              (rarityReward.payout_amount / 1000000000000000000.0).toFixed(3),
-            ),
-            3,
-          ),
-          scoreToBeat: winningPizzasRes.data[0]?.rarity,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    });
+        previousBlock = block;
+        const blocksRemaining = 1000 - (block % 1000);
+        const nextBlock = block + blocksRemaining;
+        try {
+          const [winningPizzasRes, blockPayoutRes] = await Promise.all([
+            axios.get(`${process.env.NEXT_PUBLIC_API_URL}/winning_pizzas`),
+            previousNextBlock !== nextBlock
+              ? axios.get(
+                  `${process.env.NEXT_PUBLIC_API_URL}/calculate-block-payouts?block=${nextBlock}`,
+                )
+              : undefined,
+          ]);
+          previousNextBlock = nextBlock;
+          let rarityReward = previousRarityReward;
+          if (blockPayoutRes) {
+            rarityReward = blockPayoutRes?.data.find(
+              item => item.reason === 'Rarity reward',
+            );
+            previousRarityReward = rarityReward;
+          }
+          setRewardsInfo({
+            blocksRemaining,
+            nextRarityReward: rarityReward
+              ? parsePrice(
+                  parseFloat(
+                    (
+                      rarityReward.payout_amount / 1000000000000000000.0
+                    ).toFixed(3),
+                  ),
+                  3,
+                )
+              : undefined,
+            scoreToBeat: winningPizzasRes.data[0]?.rarity,
+          });
+        } catch (error) {
+          console.error(error);
+        }
+      });
+    };
+    const inverval = setInterval(updateFunc, 6000);
+    updateFunc();
+    return () => {
+      clearInterval(inverval);
+    };
   }, [wallet?.web3Provider]);
   const checkRarityRewards = useCallback(async () => {
     if (!wallet?.address) return null;
