@@ -30,7 +30,7 @@ export const SuccessModal = ({
 
   const mintedPizza = useMemo(
     () => myPizzas.find(p => p.tokenId === pizzaTokenId),
-    [myPizzas],
+    [myPizzas, pizzaTokenId],
   );
 
   return (
@@ -47,7 +47,14 @@ export const SuccessModal = ({
           </Center>
           <Center mt={8}>
             {!!mintedPizza && (
-              <img src={mintedPizza.image} style={{ width: '100%' }} />
+              <img
+                alt="Pizza"
+                // NOTE: added hash to invalidate cache
+                src={`${mintedPizza.image}?hash=${Math.round(
+                  Math.random() * 1e10,
+                )}`}
+                style={{ width: '100%' }}
+              />
             )}
           </Center>
           <Center mt={8}>

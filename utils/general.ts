@@ -1,6 +1,20 @@
+import { isEmpty } from 'lodash';
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { CHEESE_LIMIT, MEAT_LIMIT, TOPPING_LIMIT } from '../constants';
 import { Ingredient, IngredientType, Pizza } from '../types';
+
+export const parsePrice = (
+  amount: number,
+  defaultToFixed = 2,
+  showCurrency = true,
+) => {
+  const decimal = amount.toString().split('.')[1];
+  let toFixed = defaultToFixed;
+  if (decimal && decimal.length > toFixed) {
+    toFixed = decimal.length;
+  }
+  return `${amount.toFixed(toFixed)}${showCurrency ? ' ETH' : ''}`;
+};
 
 export const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(true);
@@ -59,60 +73,82 @@ export const getTotalCost = (ingredients: Ingredient[]) => {
   );
 };
 
+export const canAddIngredient = (item: Ingredient, pizza: Pizza) => {
+  switch (item.ingredientType) {
+    case IngredientType.cheese:
+      if (pizza.cheeses?.length >= CHEESE_LIMIT) {
+        return `A pizza may include up to ${CHEESE_LIMIT} cheeses.`;
+      }
+    case IngredientType.meat:
+      if (pizza.meats?.length >= MEAT_LIMIT) {
+        return `A pizza may include up to ${MEAT_LIMIT} meats.`;
+      }
+    case IngredientType.topping:
+      if (pizza.toppings?.length >= TOPPING_LIMIT) {
+        return `A pizza may include up to ${TOPPING_LIMIT} toppings.`;
+      }
+  }
+  return true;
+};
+
 export const addIngredient = ({
   item,
   pizza,
   setPizza,
 }: {
-  item: Ingredient;
+  item: Ingredient | Ingredient[];
   pizza: Pizza;
   setPizza: Dispatch<SetStateAction<Pizza>>;
 }) => {
+  const ingredients: Ingredient[] = Array.isArray(item) ? item : [item];
   const newPizza = { ...pizza };
-  switch (item.ingredientType) {
-    case IngredientType.base:
-      newPizza.base = item;
-      newPizza.allIngredients = ingredientsWithoutDupe(
-        pizza.allIngredients,
-        item,
-        pizza.base,
-      );
-      break;
-    case IngredientType.sauce:
-      newPizza.sauce = item;
-      newPizza.allIngredients = ingredientsWithoutDupe(
-        pizza.allIngredients,
-        item,
-        pizza.sauce,
-      );
-      break;
-    case IngredientType.cheese:
-      if (pizza.cheeses?.length >= CHEESE_LIMIT) return;
-      newPizza.cheeses = ingredientsWithoutDupe(pizza.cheeses || [], item);
-      newPizza.allIngredients = ingredientsWithoutDupe(
-        pizza.allIngredients,
-        item,
-      );
-      break;
-    case IngredientType.meat:
-      if (pizza.meats?.length >= MEAT_LIMIT) return;
-      newPizza.meats = ingredientsWithoutDupe(pizza.meats || [], item);
-      newPizza.allIngredients = ingredientsWithoutDupe(
-        pizza.allIngredients,
-        item,
-      );
-      break;
-    case IngredientType.topping:
-      if (pizza.toppings?.length >= TOPPING_LIMIT) return;
-      newPizza.toppings = ingredientsWithoutDupe(pizza.toppings || [], item);
-      newPizza.allIngredients = ingredientsWithoutDupe(
-        pizza.allIngredients,
-        item,
-      );
-      break;
-    default:
-      break;
-  }
+  ingredients.forEach(item => {
+    switch (item.ingredientType) {
+      case IngredientType.base:
+        newPizza.base = item;
+        newPizza.allIngredients = ingredientsWithoutDupe(
+          pizza.allIngredients,
+          item,
+          pizza.base,
+        );
+        break;
+      case IngredientType.sauce:
+        newPizza.sauce = item;
+        newPizza.allIngredients = ingredientsWithoutDupe(
+          pizza.allIngredients,
+          item,
+          pizza.sauce,
+        );
+        break;
+      case IngredientType.cheese:
+        if (pizza.cheeses?.length >= CHEESE_LIMIT) return;
+        newPizza.cheeses = ingredientsWithoutDupe(pizza.cheeses || [], item);
+        newPizza.allIngredients = ingredientsWithoutDupe(
+          pizza.allIngredients,
+          item,
+        );
+        break;
+      case IngredientType.meat:
+        if (pizza.meats?.length >= MEAT_LIMIT) return;
+        newPizza.meats = ingredientsWithoutDupe(pizza.meats || [], item);
+        newPizza.allIngredients = ingredientsWithoutDupe(
+          pizza.allIngredients,
+          item,
+        );
+        break;
+      case IngredientType.topping:
+        if (pizza.toppings?.length >= TOPPING_LIMIT) return;
+        newPizza.toppings = ingredientsWithoutDupe(pizza.toppings || [], item);
+        newPizza.allIngredients = ingredientsWithoutDupe(
+          pizza.allIngredients,
+          item,
+        );
+        break;
+      default:
+        break;
+    }
+    pizza = { ...newPizza };
+  });
   setPizza({
     ...newPizza,
     totalCost: getTotalCost(newPizza.allIngredients),
@@ -230,4 +266,92 @@ export const removeAdditionalIngredient = ({
 
 export const getRandomInt = (max: number) => {
   return Math.floor(Math.random() * max);
+};
+
+export const isPizzaValid = (pizza?: Pizza) => {
+  if (isEmpty(pizza?.allIngredients)) {
+    return false;
+  }
+  let addedBases = pizza?.base ? [pizza.base] : [];
+  let addedSauce = pizza?.sauce ? [pizza.sauce] : [];
+  let addedCheeses = pizza?.cheeses ? [...pizza.cheeses] : [];
+  let addedMeats = pizza?.meats ? [...pizza.meats] : [];
+  let addedToppings = pizza?.toppings ? [...pizza.toppings] : [];
+  if (pizza.burnIngredients) {
+    addedBases = addedBases.filter(
+      item =>
+        !pizza.burnIngredients.find(
+          ingredient => ingredient.tokenId === item.tokenId,
+        ),
+    );
+    addedSauce = addedSauce.filter(
+      item =>
+        !pizza.burnIngredients.find(
+          ingredient => ingredient.tokenId === item.tokenId,
+        ),
+    );
+    addedCheeses = addedCheeses.filter(
+      item =>
+        !pizza.burnIngredients.find(
+          ingredient => ingredient.tokenId === item.tokenId,
+        ),
+    );
+    addedMeats = addedMeats.filter(
+      item =>
+        !pizza.burnIngredients.find(
+          ingredient => ingredient.tokenId === item.tokenId,
+        ),
+    );
+    addedToppings = addedToppings.filter(
+      item =>
+        !pizza.burnIngredients.find(
+          ingredient => ingredient.tokenId === item.tokenId,
+        ),
+    );
+  }
+  if (pizza.additionalIngredients) {
+    addedBases = [
+      ...addedBases,
+      ...pizza.additionalIngredients.filter(
+        item => item.ingredientType === IngredientType.base,
+      ),
+    ];
+    addedSauce = [
+      ...addedSauce,
+      ...pizza.additionalIngredients.filter(
+        item => item.ingredientType === IngredientType.sauce,
+      ),
+    ];
+    addedCheeses = [
+      ...addedCheeses,
+      ...pizza.additionalIngredients.filter(
+        item => item.ingredientType === IngredientType.cheese,
+      ),
+    ];
+    addedMeats = [
+      ...addedMeats,
+      ...pizza.additionalIngredients.filter(
+        item => item.ingredientType === IngredientType.meat,
+      ),
+    ];
+    addedToppings = [
+      ...addedToppings,
+      ...pizza.additionalIngredients.filter(
+        item => item.ingredientType === IngredientType.topping,
+      ),
+    ];
+  }
+  if (addedBases.length !== 1) {
+    return false;
+  }
+  if (addedSauce.length !== 1) {
+    return false;
+  }
+  if (!addedCheeses.length || addedCheeses.length > CHEESE_LIMIT) {
+    return false;
+  }
+  if (addedMeats.length > MEAT_LIMIT || addedToppings.length > TOPPING_LIMIT) {
+    return false;
+  }
+  return true;
 };

@@ -10,19 +10,13 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { parseEther } from 'ethers/lib/utils';
-import { isEmpty } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
-import {
-  BAKING_FEE,
-  MEAT_LIMIT,
-  REBAKE_FEE,
-  TOPPING_LIMIT,
-  UNBAKE_FEE,
-} from '../../constants';
+import { BAKING_FEE, REBAKE_FEE, UNBAKE_FEE } from '../../constants';
 import { useMainContract } from '../../hooks/useContract';
 import { useWallet } from '../../hooks/useWallet';
 import { Ingredient, Pizza, PizzaCave } from '../../types';
-import { getTotalCost } from '../../utils/general';
+import { getTotalCost, isPizzaValid, parsePrice } from '../../utils/general';
+import { AlertModal } from '../shared/AlertModal';
 import { SuccessModal } from './SuccessModal';
 
 interface Props {
@@ -49,13 +43,16 @@ export const YourSelections = ({
   const provider = wallet?.web3Provider;
 
   const validatePizza = () => {
-    if (isEmpty(pizza?.allIngredients)) return setDisableBake(true);
-    if (!pizza?.base) return setDisableBake(true);
-    if (!pizza?.sauce) return setDisableBake(true);
-    if (!pizza?.cheeses) return setDisableBake(true);
-    if (pizza?.meats?.length > MEAT_LIMIT) return setDisableBake(true);
-    if (pizza?.toppings?.length > TOPPING_LIMIT) return setDisableBake(true);
-    setDisableBake(false);
+    let pizzaValid = isPizzaValid(pizza);
+    if (
+      pizzaValid &&
+      tab === PizzaCave.rebake &&
+      !pizza.additionalIngredients?.length &&
+      !pizza.burnIngredients?.length
+    ) {
+      pizzaValid = false;
+    }
+    setDisableBake(!pizzaValid);
   };
 
   useEffect(() => {
@@ -92,7 +89,6 @@ export const YourSelections = ({
 
       setMintingTxn(result.hash);
       const receipt = await result.wait();
-
       const [mintedId] = receipt.events
         ?.map(({ topics }) => (topics?.[3] ? parseInt(topics?.[3], 16) : null))
         .filter(id => !!id);
@@ -158,13 +154,9 @@ export const YourSelections = ({
       );
 
       setMintingTxn(result.hash);
-      const receipt = await result.wait();
+      await result.wait();
 
-      const [mintedId] = receipt.events
-        ?.map(({ topics }) => (topics?.[3] ? parseInt(topics?.[3], 16) : null))
-        .filter(id => !!id);
-
-      setMintedTokenId(mintedId);
+      setMintedTokenId(pizza.tokenId);
       await fetchPizzas();
       setShowSuccessModal(true);
     } catch (e) {
@@ -178,7 +170,12 @@ export const YourSelections = ({
       setIsMinting(false);
     }
   }, [mainContract, provider, pizza]);
-
+  const [alertOpened, setAlertOpened] = useState<string | null>();
+  const showAlert = () => {
+    setAlertOpened(
+      'Please review your selections. Pizzas must include 1 base, 1 sauce, 1-3 cheeses, 0-4 meats  0-4 toppings.',
+    );
+  };
   const handleBuyAndBake = useCallback(async () => {
     if (!provider) return;
     try {
@@ -204,7 +201,6 @@ export const YourSelections = ({
 
       setMintingTxn(result.hash);
       const receipt = await result.wait();
-
       const [mintedId] = receipt.events
         ?.map(({ topics }) => (topics?.[3] ? parseInt(topics?.[3], 16) : null))
         .filter(id => !!id);
@@ -275,28 +271,34 @@ export const YourSelections = ({
               className="tomato-btn"
               onClick={handleBuyIngredients}
               isLoading={isMinting}
-            >{`Buy Ingredients only at ${
-              Math.round((totalCost || 0) * 100) / 100
-            }`}</Button>
+            >{`Buy Ingredients Only (${parsePrice(
+              Math.round((totalCost || 0) * 100) / 100,
+              2,
+              false,
+            )})`}</Button>
             <Button
-              disabled={disableBake || !isConnected}
+              disabled={!isConnected}
+              opacity={disableBake ? '.4' : undefined}
               className="tomato-btn"
-              onClick={handleBuyAndBake}
+              onClick={disableBake ? showAlert : handleBuyAndBake}
               isLoading={isMinting}
-            >{`Buy & Bake at ${
-              Math.round(((totalCost || 0) + BAKING_FEE) * 100) / 100
-            }`}</Button>
+            >{`Buy & Bake (${parsePrice(
+              Math.round(((totalCost || 0) + BAKING_FEE) * 100) / 100,
+              2,
+              false,
+            )})`}</Button>
           </Stack>
         );
       case PizzaCave.bake:
         return (
           <Stack pt={8}>
             <Button
-              disabled={disableBake || !isConnected}
+              disabled={!isConnected}
+              opacity={disableBake ? '.4' : undefined}
               className="tomato-btn"
-              onClick={handleBake}
+              onClick={disableBake ? showAlert : handleBake}
               isLoading={isMinting}
-            >{`Bake at ${BAKING_FEE}`}</Button>
+            >{`Bake (${parsePrice(BAKING_FEE, undefined, false)})`}</Button>
           </Stack>
         );
       case PizzaCave.unbake:
@@ -305,20 +307,21 @@ export const YourSelections = ({
             <Button
               disabled={disableBake || !isConnected}
               className="tomato-btn"
-              onClick={handleUnbake}
+              onClick={disableBake ? showAlert : handleUnbake}
               isLoading={isMinting}
-            >{`Unbake at ${UNBAKE_FEE}`}</Button>
+            >{`Unbake (${parsePrice(UNBAKE_FEE, undefined, false)})`}</Button>
           </Stack>
         );
       case PizzaCave.rebake:
         return (
           <Stack pt={8}>
             <Button
-              disabled={disableBake || !isConnected}
+              disabled={!isConnected}
+              opacity={disableBake ? '.4' : undefined}
               className="tomato-btn"
-              onClick={handleRebake}
+              onClick={disableBake ? showAlert : handleRebake}
               isLoading={isMinting}
-            >{`Rebake Pizza at ${REBAKE_FEE}`}</Button>
+            >{`Rebake (${parsePrice(REBAKE_FEE, undefined, false)})`}</Button>
           </Stack>
         );
       default:
@@ -327,114 +330,132 @@ export const YourSelections = ({
   };
 
   return (
-    <Box p="8">
-      <Stack>
-        {/* Image */}
-        <Center
-          style={{
-            position: 'relative',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <img src="/assets/tablecloth.svg" alt="tablecloth" />
-          {(
-            [
-              ...(pizza?.allIngredients || []),
-              ...(pizza?.additionalIngredients || []),
-            ]
-              .filter(
-                item =>
-                  !(pizza.burnIngredients || []).find(
-                    burnItem => burnItem.tokenId == item.tokenId,
-                  ),
-              )
-              .sort((a, b) => a.tokenId - b.tokenId) ?? []
-          ).map(item => (
-            <div
-              key={item.tokenId}
+    <>
+      {alertOpened ? (
+        <AlertModal
+          message={alertOpened}
+          isOpen={!!alertOpened}
+          onRequestClose={setAlertOpened.bind(null, false)}
+        />
+      ) : null}
+      <Box p="8">
+        <Stack>
+          {/* Image */}
+          <Center
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Box
               style={{
-                position: 'absolute',
-                width: '80%',
-                height: '80%',
-                backgroundImage: `url(https://lazlos-pizza.s3.amazonaws.com/pizza_layers/${item.tokenId}.png)`,
-                backgroundSize: 'contain',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center center',
+                position: 'relative',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '70%',
               }}
-            />
-          ))}
-        </Center>
-        {/* Number of Ingredients Selected */}
-        <Flex pt={8} justifyContent="space-between">
-          <Text fontWeight={700} color="gray.dark">
-            {`Ingredients Selected`}
-          </Text>
-          <Text fontWeight={700} color="tomato.500">
-            {pizza?.allIngredients.length}
-          </Text>
-        </Flex>
-        {/* Selected Ingredients */}
-        {pizza?.allIngredients.length &&
-          pizza?.allIngredients.map(item => (
-            <Flex key={item.name} pt={8} justifyContent="space-between">
-              {pizza?.burnIngredients?.find(
-                burn => burn.tokenId === item.tokenId,
-              ) ? (
-                <Heading
-                  size={'sm'}
-                  color={'gray.dark'}
-                  textDecoration="line-through"
-                >
-                  {item.name}
-                </Heading>
-              ) : (
+            >
+              <img src="/assets/tablecloth.png" alt="tablecloth" />
+              {(
+                [
+                  ...(pizza?.allIngredients || []),
+                  ...(pizza?.additionalIngredients || []),
+                ]
+                  .filter(
+                    item =>
+                      !(pizza.burnIngredients || []).find(
+                        burnItem => burnItem.tokenId == item.tokenId,
+                      ),
+                  )
+                  .sort((a, b) => a.tokenId - b.tokenId) ?? []
+              ).map(item => (
+                <div
+                  key={item.tokenId}
+                  style={{
+                    position: 'absolute',
+                    width: '80%',
+                    height: '80%',
+                    backgroundImage: `url(https://lazlos-pizza.s3.amazonaws.com/pizza_layers/${item.tokenId}.png)`,
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center center',
+                  }}
+                />
+              ))}
+            </Box>
+          </Center>
+          {renderButtons()}
+          {/* Number of Ingredients Selected */}
+          <Flex pt={8} justifyContent="space-between">
+            <Text fontWeight={700} color="gray.dark">
+              {`Ingredients Selected`}
+            </Text>
+            <Text fontWeight={700} color="tomato.500">
+              {pizza?.allIngredients.length}
+            </Text>
+          </Flex>
+          {/* Selected Ingredients */}
+          {pizza?.allIngredients.length &&
+            pizza?.allIngredients.map(item => (
+              <Flex key={item.name} pt={8} justifyContent="space-between">
+                {pizza?.burnIngredients?.find(
+                  burn => burn.tokenId === item.tokenId,
+                ) ? (
+                  <Heading
+                    size={'sm'}
+                    color={'gray.dark'}
+                    textDecoration="line-through"
+                  >
+                    {item.name}
+                  </Heading>
+                ) : (
+                  <Heading size={'sm'} color={'gray.dark'}>
+                    {item.name}
+                  </Heading>
+                )}
+                {tab === PizzaCave.buyAndBake && (
+                  <Heading size={'sm'} color={'tomato.500'}>
+                    {item.price}
+                  </Heading>
+                )}
+                {tab === PizzaCave.rebake &&
+                  (pizza?.burnIngredients?.find(
+                    burn => burn.tokenId === item.tokenId,
+                  ) ? (
+                    <Button
+                      className="tomato-btn"
+                      onClick={() => removeBurnIngredient(item)}
+                    >
+                      Undo
+                    </Button>
+                  ) : (
+                    <Button
+                      className="tomato-btn"
+                      onClick={() => addBurnIngredient(item)}
+                    >
+                      Burn
+                    </Button>
+                  ))}
+              </Flex>
+            ))}
+          {pizza?.additionalIngredients?.length &&
+            pizza?.additionalIngredients.map(item => (
+              <Flex key={item.name} pt={8} justifyContent="space-between">
                 <Heading size={'sm'} color={'gray.dark'}>
                   {item.name}
                 </Heading>
-              )}
-              {tab === PizzaCave.buyAndBake && (
-                <Heading size={'sm'} color={'tomato.500'}>
-                  {item.price}
-                </Heading>
-              )}
-              {tab === PizzaCave.rebake &&
-                (pizza?.burnIngredients?.find(
-                  burn => burn.tokenId === item.tokenId,
-                ) ? (
-                  <Button
-                    className="tomato-btn"
-                    onClick={() => removeBurnIngredient(item)}
-                  >
-                    Undo
-                  </Button>
-                ) : (
-                  <Button
-                    className="tomato-btn"
-                    onClick={() => addBurnIngredient(item)}
-                  >
-                    Burn
-                  </Button>
-                ))}
-            </Flex>
-          ))}
-        {pizza?.additionalIngredients?.length &&
-          pizza?.additionalIngredients.map(item => (
-            <Flex key={item.name} pt={8} justifyContent="space-between">
-              <Heading size={'sm'} color={'gray.dark'}>
-                {item.name}
-              </Heading>
-            </Flex>
-          ))}
-        {/* Buttons */}
-        {renderButtons()}
-      </Stack>
-      <SuccessModal
-        isOpen={showSuccessModal}
-        setIsOpen={setShowSuccessModal}
-        pizzaTokenId={mintedTokenId}
-      />
-    </Box>
+              </Flex>
+            ))}
+          {/* Buttons */}
+        </Stack>
+        <SuccessModal
+          isOpen={showSuccessModal}
+          setIsOpen={setShowSuccessModal}
+          pizzaTokenId={mintedTokenId}
+        />
+      </Box>
+    </>
   );
 };

@@ -64,4 +64,16 @@ export interface Pizza {
   rarity?: number;
   rewardedOn?: number;
   totalCost?: number;
+  block?: number;
+  // Manually added (not returned from API)
+  payout?: Payout;
+}
+
+export interface Payout {
+  block: number;
+  payout_amount: number;
+  timestamp: number;
+  token_id: number;
+  // Manually added (not returned from API)
+  hasBeenPaid?: Payout;
 }

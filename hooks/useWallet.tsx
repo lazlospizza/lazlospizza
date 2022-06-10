@@ -230,7 +230,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         {
           name: 'Toppings',
           type: IngredientType.topping,
-          min: 1,
+          min: 0,
           max: TOPPING_LIMIT,
           ingredients: ingredients.filter(
             ingredient => ingredient.ingredientType === IngredientType.topping,

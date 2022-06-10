@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { RANDOM_BAKE_FEE } from '../../constants';
 import { useMainContract } from '../../hooks/useContract';
 import { useWallet } from '../../hooks/useWallet';
+import { parsePrice } from '../../utils/general';
 import { SuccessModal } from './SuccessModal';
 
 export const RandomBake = () => {
@@ -85,10 +86,10 @@ export const RandomBake = () => {
     <Stack>
       <Stack m="10px">
         <Text color="tomato.500" fontWeight={700} fontSize={'xl'}>
-          Random Bake ({RANDOM_BAKE_FEE} ETH)
+          Random Bake ({parsePrice(RANDOM_BAKE_FEE)})
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
-          {`Can't decide what you want? Is oke, we have you covered! Get a completed pizza NFT with a random selection of ingredients. (${RANDOM_BAKE_FEE} ETH + gas)`}
+          {`Can't decide what you want, or just want to degen and enjoy a dopamine rush with instant reveal? Randomly baked pizzas have a minimum of 3 ingredients (1 base, 1 sauce, 1 cheese) and up to a maximum of 13 ingredients (1 base, 1 sauce, 3 cheeses, 4 meats, 4 toppings).`}
         </Text>
       </Stack>
 
@@ -109,7 +110,7 @@ export const RandomBake = () => {
               alignItems: 'center',
             }}
           >
-            {loading && !!txn ? (
+            {!pizza?.image ? (
               <img
                 src={'/assets/pizza.gif'}
                 style={{
@@ -122,7 +123,7 @@ export const RandomBake = () => {
               />
             ) : (
               <img
-                src={pizza ? pizza.image : '/assets/tablecloth.svg'}
+                src={pizza ? pizza.image : '/assets/tablecloth.png'}
                 style={{
                   width: '100%',
                   height: '100%',
@@ -143,7 +144,7 @@ export const RandomBake = () => {
               onClick={handleRandomBake}
               disabled={!wallet?.address}
               isLoading={loading}
-            >{`Random Bake at ${RANDOM_BAKE_FEE}`}</Button>
+            >{`Random Bake (${parsePrice(RANDOM_BAKE_FEE, 2, false)})`}</Button>
           </Center>
         </Stack>
       </Box>

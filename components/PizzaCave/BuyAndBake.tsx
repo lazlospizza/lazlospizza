@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Box, Center, Flex, Stack, Text } from '@chakra-ui/react';
+import { Box, Center, Flex, Stack, Text, Tooltip } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import {
   BAKING_FEE,
+  CHECK_RARITY_INFO,
   INGREDIENT_COST,
   MEAT_LIMIT,
   TOPPING_LIMIT,
@@ -18,6 +19,7 @@ import {
   useIsMobile,
   getRandomInt,
   removeIngredient,
+  parsePrice,
 } from '../../utils/general';
 import { colors } from '../../styles/theme';
 import { useWallet } from '../../hooks/useWallet';
@@ -38,7 +40,7 @@ export const BuyAndBake = () => {
     BuyAndBakeTabs.selections,
   );
 
-  const handleAddIngredient = (item: Ingredient) => {
+  const handleAddIngredient = (item: Ingredient | Ingredient[]) => {
     addIngredient({ item, pizza, setPizza });
   };
 
@@ -64,24 +66,26 @@ export const BuyAndBake = () => {
     const cheeses = ingredientGroups[2].ingredients;
     const meats = ingredientGroups[3].ingredients;
     const toppings = ingredientGroups[4].ingredients;
+    const ingredients: Ingredient[] = [];
     // add base
-    handleAddIngredient(bases[getRandomInt(bases.length)]);
+    ingredients.push(bases[getRandomInt(bases.length)]);
     // add sauce
-    handleAddIngredient(sauces[getRandomInt(sauces.length)]);
+    ingredients.push(sauces[getRandomInt(sauces.length)]);
     // add cheese
-    handleAddIngredient(cheeses[getRandomInt(cheeses.length)]);
+    ingredients.push(cheeses[getRandomInt(cheeses.length)]);
     // add meat (first pick rand number of meats to add)
     const numMeatsToPick = getRandomInt(MEAT_LIMIT);
     for (let i = 0; i < numMeatsToPick; i++) {
       const randMeat = meats[getRandomInt(meats.length)];
-      handleAddIngredient(randMeat);
+      ingredients.push(randMeat);
     }
     // add toppings (first pick rand number of toppings to add)
     const numToppingsToPick = getRandomInt(TOPPING_LIMIT);
     for (let i = 0; i < numToppingsToPick; i++) {
       const randTopping = toppings[getRandomInt(toppings.length)];
-      handleAddIngredient(randTopping);
+      ingredients.push(randTopping);
     }
+    handleAddIngredient(ingredients);
   };
 
   const renderTab = (tab: BuyAndBakeTabs) => {
@@ -112,11 +116,18 @@ export const BuyAndBake = () => {
   return (
     <Box>
       <Stack m="10px">
-        <Text color="tomato.500" fontWeight={700} fontSize={'xl'}>
-          Buy Ingredients and Bake a Pizza
+        <Text
+          color="tomato.500"
+          fontWeight={700}
+          fontSize={'xl'}
+          cursor="pointer"
+        >
+          {`Buy Ingredients and Bake a Pizza (${parsePrice(
+            INGREDIENT_COST,
+          )} per ingredient + ${parsePrice(BAKING_FEE)} Baking fee)`}
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
-          {`Select from a delightful selection of hand-crafted ingredients freshly prepared by our pixel artistes. You can buy now and bake later, or buy and bake in one transaction. (${INGREDIENT_COST} ETH per ingredient + ${BAKING_FEE}ETH Baking fee.)`}
+          {`Buy delicious hand-crafted ingredients freshly prepared by our pixel artistes. Select your ingredients and bake a pizza in a single transaction, or buy ingredients only and bake your pizza later`}
         </Text>
       </Stack>
       {/* deterime which view */}
@@ -148,6 +159,7 @@ export const BuyAndBake = () => {
               />
               <NavButton
                 title={BuyAndBakeTabs.checkRarity}
+                infoTooltip={CHECK_RARITY_INFO}
                 isSelected={selectedTab === BuyAndBakeTabs.checkRarity}
                 onClick={() => {
                   setSelectedTab(BuyAndBakeTabs.checkRarity);
@@ -160,8 +172,18 @@ export const BuyAndBake = () => {
         </Stack>
       ) : (
         // desktop view
-        <Flex borderTop="2px" borderColor={'gray.light'}>
-          <div style={{ width: '50%' }}>
+        <Flex
+          borderTop="2px"
+          borderColor={'gray.light'}
+          maxHeight={'900px'}
+          top="20px"
+        >
+          <Box
+            className="scrollable"
+            width={'50%'}
+            maxHeight="900px"
+            overflowY={'auto'}
+          >
             <SelectYourIngredients
               ingredientGroups={ingredientGroups}
               addIngredient={handleAddIngredient}
@@ -170,9 +192,12 @@ export const BuyAndBake = () => {
               tab={PizzaCave.buyAndBake}
               handleQuickStart={handleQuickStart}
             />
-          </div>
+          </Box>
           <Stack
             style={{ width: '50%', backgroundColor: colors.gray.background }}
+            maxHeight="900px"
+            overflowY={'auto'}
+            className="scrollable"
           >
             <Flex
               pt="4"
@@ -196,6 +221,7 @@ export const BuyAndBake = () => {
                   setSelectedTab(BuyAndBakeTabs.checkRarity);
                   setSelectedHalfTab(BuyAndBakeTabs.checkRarity);
                 }}
+                infoTooltip={CHECK_RARITY_INFO}
                 bgColor={colors.gray.background}
               />
             </Flex>
