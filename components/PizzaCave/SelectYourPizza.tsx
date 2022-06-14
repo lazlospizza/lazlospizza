@@ -47,6 +47,8 @@ interface Props {
   useIngredientsForImage?: boolean;
   columns?: number;
   showPayout?: boolean;
+  showOwner?: boolean;
+  style?: CSSProperties;
 }
 export const SelectYourPizza = ({
   selectPizza,
@@ -56,9 +58,11 @@ export const SelectYourPizza = ({
   useIngredientsForImage = false,
   columns = 1,
   showPayout = false,
+  showOwner = false,
+  style,
 }: Props) => {
   return (
-    <Box style={{ marginTop: 20, padding: 10 }}>
+    <Box style={{ marginTop: 20, padding: 10, ...style }}>
       <Stack>
         <Flex justify={'space-between'} alignItems="center">
           <Text color="gray.dark" fontWeight={700} fontSize={'xl'}>
@@ -214,7 +218,7 @@ export const SelectYourPizza = ({
                     </Text>
                   </Flex>
                 </Flex>
-                {pizza.payout && showPayout ? (
+                {pizza.owner && showOwner ? (
                   <Link
                     target="_blank"
                     display="block"
@@ -230,7 +234,6 @@ export const SelectYourPizza = ({
                       fontSize="9"
                       fontFamily={'heading'}
                     >
-                      <FaLink />{' '}
                       <Text textDecoration="underline">{pizza.owner}</Text>
                     </Stack>
                   </Link>
