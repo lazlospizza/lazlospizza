@@ -11,7 +11,7 @@ export const Footer = () => {
         </Heading>
         <Stack spacing={10}>
           <Link href={PageRoutes.meetArtists}>
-            <a>Meet Artists</a>
+            <a>Meet Pizzaiolos</a>
           </Link>
           <Link href={'/faq'}>
             <a>FAQ</a>
