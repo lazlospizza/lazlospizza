@@ -4,19 +4,13 @@ import {
   Center,
   Flex,
   Heading,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalOverlay,
   Stack,
   Text,
 } from '@chakra-ui/react';
 import { useMemo, useState } from 'react';
 import { colors } from '../../styles/theme';
 import { Ingredient, Pizza, PizzaCave } from '../../types';
-import { canAddIngredient } from '../../utils/general';
+import { canAddIngredient, canAddRebakeIngredient } from '../../utils/general';
 import { AlertModal } from '../shared/AlertModal';
 
 interface Props {
@@ -37,7 +31,10 @@ export const IngredientItem = ({
   const { name, price, supply, balance } = ingredient;
   const [alertOpened, setAlertOpened] = useState<string | null>();
   const handleAdd = () => {
-    const ingredientCanBeAdded = canAddIngredient(ingredient, pizza);
+    const ingredientCanBeAdded =
+      tab === PizzaCave.rebake
+        ? canAddRebakeIngredient(ingredient, pizza)
+        : canAddIngredient(ingredient, pizza);
     if (ingredientCanBeAdded !== true) {
       return setAlertOpened(ingredientCanBeAdded);
     }

@@ -13,3 +13,7 @@
 .scrollable::-webkit-scrollbar-thumb:hover {
   background: #ffda54;
 }
+
+.web3modal-modal-lightbox {
+  z-index: 99999 !important;
+}

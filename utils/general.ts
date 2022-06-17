@@ -1,7 +1,12 @@
-import { isEmpty } from 'lodash';
+import { isEmpty, update } from 'lodash';
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
-import { CHEESE_LIMIT, MEAT_LIMIT, TOPPING_LIMIT } from '../constants';
-import { Ingredient, IngredientType, Pizza } from '../types';
+import {
+  BASE_LIMIT,
+  CHEESE_LIMIT,
+  MEAT_LIMIT,
+  TOPPING_LIMIT,
+} from '../constants';
+import { Ingredient, IngredientType, Pizza, PizzaCave } from '../types';
 
 export const parsePrice = (
   amount: number,
@@ -73,22 +78,144 @@ export const getTotalCost = (ingredients: Ingredient[]) => {
   );
 };
 
+export const canUndoBurnIngredient = (item: Ingredient, pizza: Pizza) => {
+  const updatedPizza = {
+    ...pizza,
+    burnIngredients: (pizza.burnIngredients || []).filter(
+      _item => _item.tokenId !== item.tokenId,
+    ),
+  };
+  const isValid = isPizzaValid(updatedPizza);
+  if (isValid) {
+    return true;
+  }
+  switch (item.ingredientType) {
+    case IngredientType.base:
+      return 'A pizza must have only 1 base. Please REMOVE your existing base before un-burning this ingredient.';
+    case IngredientType.sauce:
+      return 'A pizza must have only 1 sauce. Please REMOVE your existing sauce before un-burning this ingredient.';
+    case IngredientType.cheese:
+      return 'A pizza may have up to 3 cheeses. Please REMOVE an existing meat before un-burning this ingredient.';
+    case IngredientType.meat:
+      return 'A pizza may have up to 4 meats. Please REMOVE an existing meat before un-burning this ingredient.';
+    case IngredientType.topping:
+      return 'A pizza may have up to 4 toppings. Please REMOVE an existing topping before un-burning this ingredient.';
+  }
+};
+
+export const canAddRebakeIngredient = (item: Ingredient, pizza: Pizza) => {
+  const isBurned = pizza.burnIngredients?.find(
+    ({ ingredientType }) => ingredientType === item.ingredientType,
+  );
+  if (item.ingredientType === IngredientType.base && pizza.base && !isBurned) {
+    return 'A pizza must have only 1 base. Please BURN your existing base before adding this ingredient.';
+  }
+  if (
+    item.ingredientType === IngredientType.sauce &&
+    pizza.sauce &&
+    !isBurned
+  ) {
+    return 'A pizza must have only 1 sauce. Please BURN your existing sauce before adding this ingredient.';
+  }
+  const updatedPizza = addIngredientToPizza({
+    item,
+    pizza: JSON.parse(JSON.stringify(pizza)),
+  });
+  const isValid = isPizzaValid(updatedPizza);
+  if (isValid) {
+    return true;
+  }
+  switch (item.ingredientType) {
+    case IngredientType.cheese:
+      return 'A pizza may have up to 3 cheeses. Please BURN an existing meat before adding this ingredient.';
+    case IngredientType.meat:
+      return 'A pizza may have up to 4 meats. Please BURN an existing meat before adding this ingredient.';
+    case IngredientType.topping:
+      return 'A pizza may have up to 4 toppings. Please BURN an existing topping before adding this ingredient.';
+  }
+};
+
 export const canAddIngredient = (item: Ingredient, pizza: Pizza) => {
   switch (item.ingredientType) {
     case IngredientType.cheese:
       if (pizza.cheeses?.length >= CHEESE_LIMIT) {
         return `A pizza may include up to ${CHEESE_LIMIT} cheeses.`;
       }
+      break;
     case IngredientType.meat:
       if (pizza.meats?.length >= MEAT_LIMIT) {
         return `A pizza may include up to ${MEAT_LIMIT} meats.`;
       }
+      break;
     case IngredientType.topping:
       if (pizza.toppings?.length >= TOPPING_LIMIT) {
         return `A pizza may include up to ${TOPPING_LIMIT} toppings.`;
       }
+      break;
   }
   return true;
+};
+
+export const addIngredientToPizza = ({
+  item,
+  pizza,
+}: {
+  item: Ingredient | Ingredient[];
+  pizza: Pizza;
+}) => {
+  const ingredients: Ingredient[] = Array.isArray(item) ? item : [item];
+  const newPizza = { ...pizza };
+  ingredients.forEach(item => {
+    switch (item.ingredientType) {
+      case IngredientType.base:
+        newPizza.base = item;
+        newPizza.allIngredients = ingredientsWithoutDupe(
+          pizza.allIngredients,
+          item,
+          pizza.base,
+        );
+        break;
+      case IngredientType.sauce:
+        newPizza.sauce = item;
+        newPizza.allIngredients = ingredientsWithoutDupe(
+          pizza.allIngredients,
+          item,
+          pizza.sauce,
+        );
+        break;
+      case IngredientType.cheese:
+        if (pizza.cheeses?.length >= CHEESE_LIMIT) return;
+        newPizza.cheeses = ingredientsWithoutDupe(pizza.cheeses || [], item);
+        newPizza.allIngredients = ingredientsWithoutDupe(
+          pizza.allIngredients,
+          item,
+        );
+        break;
+      case IngredientType.meat:
+        if (pizza.meats?.length >= MEAT_LIMIT) return;
+        newPizza.meats = ingredientsWithoutDupe(pizza.meats || [], item);
+        newPizza.allIngredients = ingredientsWithoutDupe(
+          pizza.allIngredients,
+          item,
+        );
+        break;
+      case IngredientType.topping:
+        if (pizza.toppings?.length >= TOPPING_LIMIT) return;
+        newPizza.toppings = ingredientsWithoutDupe(pizza.toppings || [], item);
+        newPizza.allIngredients = ingredientsWithoutDupe(
+          pizza.allIngredients,
+          item,
+        );
+        break;
+      default:
+        break;
+    }
+    pizza = { ...newPizza };
+  });
+  return {
+    ...newPizza,
+    totalCost: getTotalCost(newPizza.allIngredients),
+  };
 };
 
 export const addIngredient = ({
@@ -149,10 +276,7 @@ export const addIngredient = ({
     }
     pizza = { ...newPizza };
   });
-  setPizza({
-    ...newPizza,
-    totalCost: getTotalCost(newPizza.allIngredients),
-  });
+  setPizza(addIngredientToPizza({ item, pizza }));
 };
 
 export const removeIngredient = ({
