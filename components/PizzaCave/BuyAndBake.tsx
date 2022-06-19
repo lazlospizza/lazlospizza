@@ -105,7 +105,13 @@ export const BuyAndBake = () => {
           />
         );
       case BuyAndBakeTabs.selections:
-        return <YourSelections pizza={pizza} tab={PizzaCave.buyAndBake} />;
+        return (
+          <YourSelections
+            pizza={pizza}
+            tab={PizzaCave.buyAndBake}
+            setPizza={setPizza}
+          />
+        );
       case BuyAndBakeTabs.checkRarity:
         return <CheckRarity />;
       default:

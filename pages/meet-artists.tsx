@@ -24,9 +24,10 @@ const artists: ArtistProps[] = [
     imgSrc: 'hirsch.jpg',
   },
   {
-    name: 'Taras',
+    name: 'Tarik',
     role: 'Dev Team',
-    bio: 'Front-end and Mobile engeneer.',
+    bio: 'Front-end and Mobile engineer.',
+    imgSrc: 'tarik.jpeg',
   },
   {
     name: 'Rockpole',

@@ -15,7 +15,13 @@ import { BAKING_FEE, REBAKE_FEE, UNBAKE_FEE } from '../../constants';
 import { useMainContract } from '../../hooks/useContract';
 import { useWallet } from '../../hooks/useWallet';
 import { Ingredient, Pizza, PizzaCave } from '../../types';
-import { getTotalCost, isPizzaValid, parsePrice } from '../../utils/general';
+import {
+  getTotalCost,
+  isPizzaValid,
+  parsePrice,
+  removeAdditionalIngredient,
+  removeIngredient,
+} from '../../utils/general';
 import { AlertModal } from '../shared/AlertModal';
 import { SuccessModal } from './SuccessModal';
 
@@ -24,12 +30,14 @@ interface Props {
   removeBurnIngredient?: (item: Ingredient) => void;
   addBurnIngredient?: (item: Ingredient) => void;
   tab: PizzaCave;
+  setPizza: any;
 }
 export const YourSelections = ({
   pizza,
   tab,
   removeBurnIngredient,
   addBurnIngredient,
+  setPizza,
 }: Props) => {
   const { wallet, isConnected, fetchPizzas } = useWallet();
   const { mainContract } = useMainContract();
@@ -399,7 +407,12 @@ export const YourSelections = ({
           {/* Selected Ingredients */}
           {pizza?.allIngredients.length &&
             pizza?.allIngredients.map(item => (
-              <Flex key={item.name} pt={8} justifyContent="space-between">
+              <Flex
+                key={item.name}
+                alignItems="center"
+                pt={8}
+                justifyContent="space-between"
+              >
                 {pizza?.burnIngredients?.find(
                   burn => burn.tokenId === item.tokenId,
                 ) ? (
@@ -415,37 +428,71 @@ export const YourSelections = ({
                     {item.name}
                   </Heading>
                 )}
-                {tab === PizzaCave.buyAndBake && (
-                  <Heading size={'sm'} color={'tomato.500'}>
-                    {item.price}
-                  </Heading>
-                )}
-                {tab === PizzaCave.rebake &&
-                  (pizza?.burnIngredients?.find(
-                    burn => burn.tokenId === item.tokenId,
-                  ) ? (
+                <Flex alignItems="center" gap={3}>
+                  {tab === PizzaCave.buyAndBake && (
+                    <Heading size={'sm'} color={'tomato.500'}>
+                      {item.price}
+                    </Heading>
+                  )}
+                  {tab === PizzaCave.rebake ? (
+                    <>
+                      {pizza?.burnIngredients?.find(
+                        burn => burn.tokenId === item.tokenId,
+                      ) ? (
+                        <Button
+                          className="tomato-btn"
+                          onClick={() => removeBurnIngredient(item)}
+                        >
+                          Undo
+                        </Button>
+                      ) : (
+                        <Button
+                          className="tomato-btn"
+                          onClick={() => addBurnIngredient(item)}
+                        >
+                          Burn
+                        </Button>
+                      )}
+                    </>
+                  ) : tab !== PizzaCave.unbake ? (
                     <Button
                       className="tomato-btn"
-                      onClick={() => removeBurnIngredient(item)}
+                      onClick={() =>
+                        removeIngredient({
+                          item,
+                          pizza,
+                          setPizza,
+                        })
+                      }
                     >
-                      Undo
+                      Remove
                     </Button>
-                  ) : (
-                    <Button
-                      className="tomato-btn"
-                      onClick={() => addBurnIngredient(item)}
-                    >
-                      Burn
-                    </Button>
-                  ))}
+                  ) : null}
+                </Flex>
               </Flex>
             ))}
           {pizza?.additionalIngredients?.length &&
             pizza?.additionalIngredients.map(item => (
-              <Flex key={item.name} pt={8} justifyContent="space-between">
+              <Flex
+                key={item.name}
+                pt={8}
+                justifyContent="space-between"
+                alignItems="center"
+              >
                 <Heading size={'sm'} color={'gray.dark'}>
                   {item.name}
                 </Heading>
+                <Button
+                  className="tomato-btn"
+                  onClick={() =>
+                    removeAdditionalIngredient({
+                      item,
+                      setPizza,
+                    })
+                  }
+                >
+                  Remove
+                </Button>
               </Flex>
             ))}
           {/* Buttons */}

@@ -95,6 +95,7 @@ export const Rebake = () => {
             tab={PizzaCave.rebake}
             addBurnIngredient={handleAddBurnIngredient}
             removeBurnIngredient={handleRemoveBurnIngredient}
+            setPizza={setPizza}
           />
         );
       case RebakeTabs.checkRarity:

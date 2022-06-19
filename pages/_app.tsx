@@ -4,6 +4,7 @@ import { Header } from '../components/Header';
 import { WalletProvider } from '../hooks/useWallet';
 import { colors, styles } from '../styles/theme';
 
+import 'react-image-lightbox/style.css';
 import '../styles/global.css';
 import '../styles/fonts.css';
 import { Footer } from '../components/Footer';

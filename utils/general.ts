@@ -91,15 +91,15 @@ export const canUndoBurnIngredient = (item: Ingredient, pizza: Pizza) => {
   }
   switch (item.ingredientType) {
     case IngredientType.base:
-      return 'A pizza must have only 1 base. Please REMOVE your existing base before un-burning this ingredient.';
+      return 'A pizza must have only 1 base. To UNDO, you must REMOVE the base you added.';
     case IngredientType.sauce:
-      return 'A pizza must have only 1 sauce. Please REMOVE your existing sauce before un-burning this ingredient.';
+      return 'A pizza must have only 1 sauce. To UNDO, you must REMOVE the sause you added.';
     case IngredientType.cheese:
-      return 'A pizza may have up to 3 cheeses. Please REMOVE an existing meat before un-burning this ingredient.';
+      return 'A pizza may have up to 3 cheeses. To UNDO, you must REMOVE another cheese.';
     case IngredientType.meat:
-      return 'A pizza may have up to 4 meats. Please REMOVE an existing meat before un-burning this ingredient.';
+      return 'A pizza may have up to 4 meats. To UNDO, you must REMOVE another meat.';
     case IngredientType.topping:
-      return 'A pizza may have up to 4 toppings. Please REMOVE an existing topping before un-burning this ingredient.';
+      return 'A pizza may have up to 4 toppings. To UNDO, you must REMOVE another topping.';
   }
 };
 
