@@ -10,6 +10,7 @@ interface Props {
   pizza?: Pizza;
   tab?: PizzaCave;
   columns?: number;
+  showLimits?: boolean;
 }
 export const IngredientList = ({
   ingredientGroup,
@@ -19,6 +20,7 @@ export const IngredientList = ({
   pizza,
   tab,
   columns = 1,
+  showLimits = true,
 }: Props) => {
   return (
     <Box mt={4}>
@@ -26,7 +28,7 @@ export const IngredientList = ({
         <Text color="tomato.500" fontWeight={900} fontSize={'xl'}>
           {ingredientGroup.name}
         </Text>
-        {!!ingredientGroup.max && (
+        {showLimits && !!ingredientGroup.max && (
           <Flex>
             <Text color="gray.dark">{`A pizza ${
               ingredientGroup.min ? 'must' : 'may'

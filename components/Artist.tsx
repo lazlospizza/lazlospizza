@@ -6,7 +6,7 @@ import { useGetWindowSize } from '../utils/general';
 export interface ArtistProps {
   name: string;
   role: string;
-  bio?: string;
+  bio?: React.ReactNode;
   link?: string;
   imgSrc?: string;
 }

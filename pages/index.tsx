@@ -206,7 +206,7 @@ export default function Home() {
 
   return (
     <Box p="0px" w="full">
-      <Stack>
+      <Stack spacing={0}>
         <PromoHeader></PromoHeader>
 
         <Stack
@@ -216,6 +216,7 @@ export default function Home() {
           p="20px"
           spacing="20px"
           backgroundColor="background.light"
+          marginTop={0}
         >
           <Heading fontFamily="Lato" size={'lg'} color="tomato.500">
             Get Started

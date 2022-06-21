@@ -58,6 +58,7 @@ export default function MyWallet() {
                   ownedIngredients={myIngredients}
                   key={_group.name}
                   columns={2}
+                  showLimits={false}
                 />
               ) : null;
             })}

@@ -11,7 +11,15 @@ const artists: ArtistProps[] = [
   },
   {
     name: 'hypnobrando',
-    bio: `A California native who loves building new things in Web3. Founder of https://www.chainpass.xyz.`,
+    bio: (
+      <>
+        A California native who loves building new things in Web3. Founder of{' '}
+        <a href="https://www.chainpass.xyz" target="_blank" rel="noreferrer">
+          chainpass.xyz
+        </a>
+        .
+      </>
+    ),
     role: 'Dev Team',
     link: 'https://twitter.com/hypnobrando',
     imgSrc: 'HypnoBrando.png',
