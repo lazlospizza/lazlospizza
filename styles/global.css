@@ -1,15 +1,19 @@
-.scrollable::-webkit-scrollbar {
+*::-webkit-scrollbar {
   width: 16px;
 }
-.scrollable::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
   background: #3d3431;
 }
-.scrollable::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
   background: #ffda54;
   border: 3px solid #3d3431;
   width: 10px;
   border-radius: 7px;
 }
-.scrollable::-webkit-scrollbar-thumb:hover {
+*::-webkit-scrollbar-thumb:hover {
   background: #ffda54;
+}
+
+.web3modal-modal-lightbox {
+  z-index: 99999 !important;
 }

@@ -64,7 +64,13 @@ export const Bake = () => {
           />
         );
       case BuyAndBakeTabs.selections:
-        return <YourSelections pizza={pizza} tab={PizzaCave.bake} />;
+        return (
+          <YourSelections
+            pizza={pizza}
+            tab={PizzaCave.bake}
+            setPizza={setPizza}
+          />
+        );
       case BuyAndBakeTabs.checkRarity:
         return <CheckRarity />;
       default:

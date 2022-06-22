@@ -10,14 +10,13 @@ import { colors } from '../styles/theme';
 import { Pizza } from '../types';
 
 enum Tabs {
-  'winningPizzas',
   'previousWinners',
   'topPizzas',
 }
 
 export default function RarityRewards() {
   const { pizzas } = useWallet();
-  const [selectedTab, setSelectedTab] = useState(Tabs.winningPizzas);
+  const [selectedTab, setSelectedTab] = useState(Tabs.previousWinners);
   const [winningPizzas, setWinningPizzas] = useState<Pizza[]>([]);
   const [previousWinners, setPreviousWinners] = useState<Pizza[]>([]);
 
@@ -95,54 +94,61 @@ export default function RarityRewards() {
 
   return (
     <Box p="20px" w="full">
-      <Heading fontFamily="Lato" size="lg" color="tomato.500">
-        Rarity Rewards
-      </Heading>
+      <Stack direction={['column', 'row']}>
+        <Box width={['100%', '55%']}>
+          <Heading fontFamily="Lato" size="lg" color="tomato.500">
+            Rarity Rewards
+          </Heading>
 
-      <Stack my="20px">
-        <Text color="gray.dark">
-          Rarity Rewards are paid to the user that achieves the lowest rarity
-          score in a Rewards Cycle. Rarity scores are calculated by getting the
-          average percentage score of all 21 traits on a pizza. Rarity Scores
-          range from 0-100, with lower rarity scores being more difficult to
-          achieve, thus more desirable.
-        </Text>
-        <Text color="gray.dark">
-          The value of the next Rarity Reward, the current Score to Beat and a
-          countdown to the next Reward Block are updated in real time above.
-        </Text>
-        <Text color="gray.dark">
-          Reward Cycles typically last 10,000 blocks with the winner receiving
-          1% of the Reward Pool. The Score to Beat resets to the prevailing
-          lowest Rarity Score at the beginning of each new Reward Cycle. On
-          occasion, such as initial launch period, Rewards Cycles may be put on
-          turbo mode with winners being paid every 1,000 blocks!
-        </Text>
-        <Text color="gray.dark">
-          You may use the Check Rarity tool in the Pizza Cave to view up-to-date
-          data on the percentage of pizzas that contain each ingredient. This
-          information may help you improve your score by removing common
-          ingredients and adding rarer ingredients to your pizza.
-        </Text>
-        <Text color="gray.dark">
-          Check out FAQs for an in-depth explainer on how Rarity Rewards are
-          calculated and how winners are chosen.
-        </Text>
-        {/* <Text color="gray.dark">
-          (*The Rewards balance is the total ETH balance held in the smart
-          contract minus any unclaimed rewards and developer allowances.)
-        </Text> */}
+          <Stack my="20px">
+            <Text color="gray.dark">
+              Rarity Rewards are paid to the user that achieves the lowest
+              rarity score in a Rewards Cycle. Rarity scores are calculated by
+              getting the average percentage score of all 21 traits on a pizza.
+              Rarity Scores range from 0-100, with lower rarity scores being
+              more difficult to achieve, thus more desirable.
+            </Text>
+            <Text color="gray.dark">
+              The value of the next Rarity Reward, the current Score to Beat and
+              a countdown to the next Reward Block are updated in real time
+              above.
+            </Text>
+            <Text color="gray.dark">
+              Reward Cycles typically last 10,000 blocks with the winner
+              receiving 1% of the Reward Pool. The Score to Beat resets to the
+              prevailing lowest Rarity Score at the beginning of each new Reward
+              Cycle. On occasion, such as initial launch period, Rewards Cycles
+              may be put on turbo mode with winners being paid every 1,000
+              blocks!
+            </Text>
+            <Text color="gray.dark">
+              You may use the Check Rarity tool in the Pizza Cave to view
+              up-to-date data on the percentage of pizzas that contain each
+              ingredient. This information may help you improve your score by
+              removing common ingredients and adding rarer ingredients to your
+              pizza.
+            </Text>
+            <Text color="gray.dark">
+              Check out FAQs for an in-depth explainer on how Rarity Rewards are
+              calculated and how winners are chosen.
+            </Text>
+          </Stack>
+        </Box>
+        <Box width={['100%', '45%']}>
+          <Heading fontFamily="Lato" size="lg" color="tomato.500">
+            Score to beat
+          </Heading>
+          <SelectYourPizza
+            style={{ marginTop: 0 }}
+            pizzas={winningPizzas}
+            hideTitle
+            useIngredientsForImage
+            showOwner
+          />
+        </Box>
       </Stack>
 
       <Flex pt="4" px="8" alignContent={'center'} justifyContent={'center'}>
-        <NavButton
-          title="Winning Pizzas"
-          isSelected={selectedTab === Tabs.winningPizzas}
-          onClick={() => {
-            setSelectedTab(Tabs.winningPizzas);
-          }}
-          bgColor={colors.gray.background}
-        />
         <NavButton
           title="Previous Winners"
           isSelected={selectedTab === Tabs.previousWinners}
@@ -160,13 +166,6 @@ export default function RarityRewards() {
           bgColor={colors.gray.background}
         />
       </Flex>
-      {selectedTab === Tabs.winningPizzas && (
-        <SelectYourPizza
-          pizzas={winningPizzas}
-          hideTitle
-          useIngredientsForImage
-        />
-      )}
       {selectedTab === Tabs.previousWinners && (
         <SelectYourPizza
           pizzas={previousWinners}
@@ -174,10 +173,16 @@ export default function RarityRewards() {
           useIngredientsForImage
           columns={2}
           showPayout
+          showOwner
         />
       )}
       {selectedTab === Tabs.topPizzas && (
-        <SelectYourPizza pizzas={rarestPizzas} columns={2} hideTitle />
+        <SelectYourPizza
+          pizzas={rarestPizzas}
+          columns={2}
+          hideTitle
+          showOwner
+        />
       )}
     </Box>
   );

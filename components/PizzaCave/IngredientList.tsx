@@ -7,18 +7,22 @@ interface Props {
   ownedIngredients?: Ingredient[];
   addIngredient?: (ingredient: Ingredient) => void;
   removeIngredient?: (ingredient: Ingredient) => void;
+  unburnIngredient?: (ingredient: Ingredient) => void;
   pizza?: Pizza;
   tab?: PizzaCave;
   columns?: number;
+  showLimits?: boolean;
 }
 export const IngredientList = ({
   ingredientGroup,
   ownedIngredients,
   addIngredient,
   removeIngredient,
+  unburnIngredient,
   pizza,
   tab,
   columns = 1,
+  showLimits = true,
 }: Props) => {
   return (
     <Box mt={4}>
@@ -26,7 +30,7 @@ export const IngredientList = ({
         <Text color="tomato.500" fontWeight={900} fontSize={'xl'}>
           {ingredientGroup.name}
         </Text>
-        {!!ingredientGroup.max && (
+        {showLimits && !!ingredientGroup.max && (
           <Flex>
             <Text color="gray.dark">{`A pizza ${
               ingredientGroup.min ? 'must' : 'may'
@@ -77,6 +81,7 @@ export const IngredientList = ({
               }
               addIngredient={addIngredient}
               removeIngredient={removeIngredient}
+              unburnIngredient={unburnIngredient}
               pizza={pizza}
               tab={tab}
             />

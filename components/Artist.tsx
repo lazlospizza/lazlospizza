@@ -1,11 +1,12 @@
-import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, Stack, Text } from '@chakra-ui/react';
 import Link from 'next/link';
+import { FaTwitter } from 'react-icons/fa';
 import { useGetWindowSize } from '../utils/general';
 
 export interface ArtistProps {
   name: string;
   role: string;
-  bio?: string;
+  bio?: React.ReactNode;
   link?: string;
   imgSrc?: string;
 }
@@ -17,8 +18,22 @@ interface Artist {
 export const Artist = ({ artist }: Artist) => {
   const { bio, name, role, imgSrc, link } = artist;
   const size = useGetWindowSize();
+  const $link = link ? (
+    <Box>
+      <Button
+        leftIcon={<FaTwitter />}
+        colorScheme="#1DA1F2"
+        backgroundColor="#1DA1F2"
+        color="white"
+        size="xs"
+        onClick={() => window.open(link, '_blank')}
+      >
+        Twitter
+      </Button>
+    </Box>
+  ) : null;
   return (
-    <Box className="artist-card" mr="8px" w="100%">
+    <Box className="artist-card" mr="8px" w="100%" display={'inline-block'}>
       {size > 600 ? (
         <Flex>
           <img
@@ -36,11 +51,7 @@ export const Artist = ({ artist }: Artist) => {
             <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
               {bio}
             </Text>
-            {link && (
-              <Link href={link}>
-                <a>{link}</a>
-              </Link>
-            )}
+            {$link}
           </Stack>
         </Flex>
       ) : (
@@ -61,11 +72,7 @@ export const Artist = ({ artist }: Artist) => {
           <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
             {bio}
           </Text>
-          {link && (
-            <Link href={link}>
-              <a>{link}</a>
-            </Link>
-          )}
+          {$link}
         </Stack>
       )}
     </Box>

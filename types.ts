@@ -1,9 +1,10 @@
 export const enum Pages {
   home = 'Home',
   pizzaCave = 'Pizza Cave',
-  meetArtists = 'Meet Artists',
+  meetArtists = 'Meet Pizzaiolos',
   rarityRewards = 'Rarity Rewards',
   myWallet = 'My Wallet',
+  faq = 'FAQ',
 }
 
 export const enum PageRoutes {
@@ -12,6 +13,7 @@ export const enum PageRoutes {
   meetArtists = '/meet-artists',
   rarityRewards = '/rarity-rewards',
   myWallet = '/my-wallet',
+  faq = '/faq',
 }
 
 export const enum PizzaCave {

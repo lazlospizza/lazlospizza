@@ -38,7 +38,7 @@ export default function MyWallet() {
         />
       </Flex>
       {selectedTab === Tabs.pizzas && (
-        <SelectYourPizza pizzas={myPizzas} columns={2} />
+        <SelectYourPizza showOptions={true} pizzas={myPizzas} columns={2} />
       )}
       {selectedTab === Tabs.ingredients && (
         <Box style={{ marginTop: 20, padding: 10 }}>
@@ -58,6 +58,7 @@ export default function MyWallet() {
                   ownedIngredients={myIngredients}
                   key={_group.name}
                   columns={2}
+                  showLimits={false}
                 />
               ) : null;
             })}

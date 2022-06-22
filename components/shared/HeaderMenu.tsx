@@ -54,6 +54,14 @@ export const HeaderMenu = ({
           {Pages.rarityRewards}
         </a>
       </Link>
+      <Link href={PageRoutes.faq}>
+        <a
+          style={{ marginRight: 16 }}
+          className={pathname.startsWith(PageRoutes.faq) ? 'current' : ''}
+        >
+          {Pages.faq}
+        </a>
+      </Link>
       {isWalletConnected && (
         <Link href={PageRoutes.myWallet}>
           <a

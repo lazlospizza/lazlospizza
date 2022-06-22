@@ -10,16 +10,39 @@ import {
 } from '@chakra-ui/react';
 import { colors } from '../../styles/theme';
 import { Pizza } from '../../types';
-import { FaCube, FaEthereum, FaLink } from 'react-icons/fa';
+import { FaCube, FaEthereum } from 'react-icons/fa';
 import { getNetworkConfig } from '../../utils/network';
 import { parsePrice } from '../../utils/general';
-import { CSSProperties } from 'react';
+import { CSSProperties, useMemo, useState } from 'react';
+import { orderBy } from 'lodash';
+import { useWallet } from '../../hooks/useWallet';
+import MultiSelectMenu from '../MultiSelect/MultiSelect';
+import Lightbox from 'react-image-lightbox';
 
-const PizzaImage: React.FC<{ img: string; style?: CSSProperties }> = ({
-  img,
-  style,
-}) => (
+enum PizzaOrder {
+  rarityAsc = 'Rarity (asc)',
+  rarityDesc = 'Rarity (desc)',
+  tokenIdAsc = 'Token ID (asc)',
+  tokenIdDesc = 'Token ID (desc)',
+  creationDateAsc = 'Creation Date (asc)',
+  creationDateDesc = 'Creation Date (desc)',
+}
+const orderList = [
+  PizzaOrder.rarityAsc,
+  PizzaOrder.rarityDesc,
+  PizzaOrder.tokenIdAsc,
+  PizzaOrder.tokenIdDesc,
+  PizzaOrder.creationDateAsc,
+  PizzaOrder.creationDateDesc,
+];
+
+const PizzaImage: React.FC<{
+  img: string;
+  style?: CSSProperties;
+  onClick?: () => void;
+}> = ({ img, style, onClick }) => (
   <Box
+    onClick={onClick}
     style={{
       ...{
         width: '100%',
@@ -47,6 +70,9 @@ interface Props {
   useIngredientsForImage?: boolean;
   columns?: number;
   showPayout?: boolean;
+  showOwner?: boolean;
+  showOptions?: boolean;
+  style?: CSSProperties;
 }
 export const SelectYourPizza = ({
   selectPizza,
@@ -56,20 +82,119 @@ export const SelectYourPizza = ({
   useIngredientsForImage = false,
   columns = 1,
   showPayout = false,
+  showOwner = false,
+  showOptions = false,
+  style,
 }: Props) => {
+  const [lightBoxImage, setLightBoxImage] = useState<string>();
+  const [order, setOrder] = useState<PizzaOrder>(PizzaOrder.rarityDesc);
+  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+  const { ingredientGroups } = useWallet();
+  const allIngredientOptions = useMemo(
+    () =>
+      [
+        ...ingredientGroups[0].ingredients,
+        ...ingredientGroups[1].ingredients,
+        ...ingredientGroups[2].ingredients,
+        ...ingredientGroups[3].ingredients,
+        ...ingredientGroups[4].ingredients,
+      ].map(item => ({ value: item.tokenId.toString(), label: item.name })),
+    [ingredientGroups],
+  );
+  const visiblePizzas = useMemo(() => {
+    if (!showOptions) {
+      return pizzas;
+    }
+    let filtered = [...pizzas];
+    if (selectedIngredients && selectedIngredients.length) {
+      filtered = filtered.filter(
+        pizza =>
+          !selectedIngredients.find(
+            ingredientTokenId =>
+              !pizza.allIngredients.find(
+                ingredient =>
+                  ingredientTokenId === ingredient.tokenId.toString(),
+              ),
+          ),
+      );
+      filtered = filtered.filter(item =>
+        item.allIngredients.find(
+          ingredient =>
+            !!selectedIngredients.find(
+              tokenId => tokenId === ingredient.tokenId.toString(),
+            ),
+        ),
+      );
+    }
+    switch (order) {
+      case PizzaOrder.creationDateDesc:
+        return filtered.reverse();
+      case PizzaOrder.creationDateAsc:
+        return filtered;
+      case PizzaOrder.tokenIdAsc:
+        return orderBy(filtered, ['tokenId'], ['asc']);
+      case PizzaOrder.tokenIdDesc:
+        return orderBy(filtered, ['tokenId'], ['desc']);
+      case PizzaOrder.rarityAsc:
+        return orderBy(filtered, ['rarity'], ['asc']);
+      case PizzaOrder.rarityDesc:
+        return orderBy(filtered, ['rarity'], ['desc']);
+    }
+  }, [pizzas, order, selectedIngredients, showOptions]);
   return (
-    <Box style={{ marginTop: 20, padding: 10 }}>
+    <Box style={{ marginTop: 20, padding: 10, ...style }}>
+      {lightBoxImage && (
+        <Lightbox
+          mainSrc={lightBoxImage}
+          onImageLoad={() => {
+            window.dispatchEvent(new Event('resize'));
+          }}
+          onCloseRequest={() => setLightBoxImage(null)}
+        />
+      )}
       <Stack>
         <Flex justify={'space-between'} alignItems="center">
           <Text color="gray.dark" fontWeight={700} fontSize={'xl'}>
             {!hideTitle && 'Your Pizzas'}
           </Text>
         </Flex>
+        {pizzas.length && showOptions ? (
+          <Stack direction={'row'} gap="10px">
+            <MultiSelectMenu
+              options={orderList.map(item => ({
+                value: item,
+                label: item,
+              }))}
+              value={order}
+              label={order}
+              onChange={val => {
+                setOrder(val as PizzaOrder);
+              }}
+            ></MultiSelectMenu>
+            {allIngredientOptions?.length ? (
+              <MultiSelectMenu
+                options={allIngredientOptions}
+                value={selectedIngredients}
+                multi={true}
+                label={
+                  selectedIngredients?.length
+                    ? 'Selected Ingredients'
+                    : 'All Ingredients'
+                }
+                onChange={val => {
+                  console.log(val);
+                  setSelectedIngredients(val as string[]);
+                }}
+              ></MultiSelectMenu>
+            ) : null}
+          </Stack>
+        ) : null}
         <Grid
           templateColumns={{ md: `repeat(${columns}, 1fr)` }}
           gap={{ md: 6 }}
+          minH="500px"
         >
-          {pizzas.map((pizza, i) => {
+          {visiblePizzas.map((pizza, i) => {
             return (
               <Box
                 key={`${pizza.tokenId}-${i}`}
@@ -80,6 +205,7 @@ export const SelectYourPizza = ({
                     : ''
                 }
                 p="2"
+                paddingTop={showOwner && pizza.owner ? '24px' : undefined}
                 position="relative"
                 overflow="hidden"
               >
@@ -94,7 +220,13 @@ export const SelectYourPizza = ({
                     }}
                   >
                     {!useIngredientsForImage ? (
-                      <PizzaImage img={pizza.image} />
+                      <PizzaImage
+                        img={pizza.image}
+                        onClick={() => {
+                          console.log('SELECTING');
+                          setLightBoxImage(pizza.image);
+                        }}
+                      />
                     ) : (
                       <Box width="100%" position="relative">
                         <img
@@ -214,13 +346,13 @@ export const SelectYourPizza = ({
                     </Text>
                   </Flex>
                 </Flex>
-                {pizza.payout && showPayout ? (
+                {pizza.owner && showOwner ? (
                   <Link
                     target="_blank"
                     display="block"
                     position="absolute"
                     left="10px"
-                    top="5px"
+                    top="10px"
                     marginLeft="10px"
                     href={`${getNetworkConfig().openSeaBaseUrl}/${pizza.owner}`}
                   >
@@ -230,7 +362,6 @@ export const SelectYourPizza = ({
                       fontSize="9"
                       fontFamily={'heading'}
                     >
-                      <FaLink />{' '}
                       <Text textDecoration="underline">{pizza.owner}</Text>
                     </Stack>
                   </Link>
