@@ -479,3 +479,15 @@ export const isPizzaValid = (pizza?: Pizza) => {
   }
   return true;
 };
+
+export const getIngredientsCount = (pizza: Pizza) => {
+  return [
+    ...(pizza?.allIngredients.filter(
+      item =>
+        !pizza.burnIngredients?.find(
+          burnedItem => burnedItem.tokenId === item.tokenId,
+        ),
+    ) || []),
+    ...(pizza?.additionalIngredients || []),
+  ].length;
+};

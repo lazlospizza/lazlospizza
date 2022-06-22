@@ -7,6 +7,7 @@ interface Props {
   ownedIngredients?: Ingredient[];
   addIngredient?: (ingredient: Ingredient) => void;
   removeIngredient?: (ingredient: Ingredient) => void;
+  unburnIngredient?: (ingredient: Ingredient) => void;
   pizza?: Pizza;
   tab?: PizzaCave;
   columns?: number;
@@ -17,6 +18,7 @@ export const IngredientList = ({
   ownedIngredients,
   addIngredient,
   removeIngredient,
+  unburnIngredient,
   pizza,
   tab,
   columns = 1,
@@ -79,6 +81,7 @@ export const IngredientList = ({
               }
               addIngredient={addIngredient}
               removeIngredient={removeIngredient}
+              unburnIngredient={unburnIngredient}
               pizza={pizza}
               tab={tab}
             />

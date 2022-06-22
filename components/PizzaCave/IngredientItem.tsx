@@ -17,6 +17,7 @@ interface Props {
   ingredient: Ingredient;
   addIngredient?: (ingredient: Ingredient) => void;
   removeIngredient?: (ingredient: Ingredient) => void;
+  unburnIngredient?: (ingredient: Ingredient) => void;
   pizza?: Pizza;
   tab?: PizzaCave;
 }
@@ -27,14 +28,23 @@ export const IngredientItem = ({
   removeIngredient,
   pizza,
   tab,
+  unburnIngredient,
 }: Props) => {
   const { name, price, supply, balance } = ingredient;
   const [alertOpened, setAlertOpened] = useState<string | null>();
   const handleAdd = () => {
+    const isBurned = !!pizza?.burnIngredients?.find(
+      item => ingredient.tokenId === item.tokenId,
+    );
+    console.log('isBurned', isBurned);
+    if (isBurned) {
+      return unburnIngredient?.(ingredient);
+    }
     const ingredientCanBeAdded =
       tab === PizzaCave.rebake
         ? canAddRebakeIngredient(ingredient, pizza)
         : canAddIngredient(ingredient, pizza);
+
     if (ingredientCanBeAdded !== true) {
       return setAlertOpened(ingredientCanBeAdded);
     }
@@ -46,7 +56,14 @@ export const IngredientItem = ({
   };
 
   const pizzaHasItem = useMemo(
-    () => !!pizza?.allIngredients?.find(item => item.name === name),
+    () =>
+      !!pizza?.allIngredients?.find(
+        item =>
+          item.name === name &&
+          !pizza?.burnIngredients?.find(
+            burnItem => burnItem.tokenId === item.tokenId,
+          ),
+      ),
     [pizza, name],
   );
 

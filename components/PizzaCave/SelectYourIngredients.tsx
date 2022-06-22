@@ -16,6 +16,7 @@ interface Props {
   ownedIngredients?: Ingredient[];
   addIngredient: (ingredient: Ingredient) => void;
   removeIngredient?: (Ingredient: Ingredient) => void;
+  unburnIngredient?: (Ingredient: Ingredient) => void;
   pizza: Pizza;
   tab: PizzaCave;
   handleQuickStart?: () => void;
@@ -27,6 +28,7 @@ export const SelectYourIngredients = ({
   ownedIngredients,
   addIngredient,
   removeIngredient,
+  unburnIngredient,
   pizza,
   tab,
   handleQuickStart,
@@ -123,6 +125,7 @@ export const SelectYourIngredients = ({
                 key={_group.name}
                 addIngredient={addIngredient}
                 removeIngredient={removeIngredient}
+                unburnIngredient={unburnIngredient}
                 pizza={pizza}
                 tab={tab}
               />

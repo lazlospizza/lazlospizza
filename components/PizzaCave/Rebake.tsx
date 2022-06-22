@@ -188,6 +188,7 @@ export const Rebake = () => {
                   ownedIngredients={myIngredients}
                   addIngredient={handleAddAdditionalIngredient}
                   removeIngredient={handleRemoveAdditionalIngredient}
+                  unburnIngredient={handleRemoveBurnIngredient}
                   pizza={pizza}
                   tab={PizzaCave.rebake}
                   unselectPizza={() => setPizza(null)}

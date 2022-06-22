@@ -10,12 +10,13 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { parseEther } from 'ethers/lib/utils';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { BAKING_FEE, REBAKE_FEE, UNBAKE_FEE } from '../../constants';
 import { useMainContract } from '../../hooks/useContract';
 import { useWallet } from '../../hooks/useWallet';
 import { Ingredient, Pizza, PizzaCave } from '../../types';
 import {
+  getIngredientsCount,
   getTotalCost,
   isPizzaValid,
   parsePrice,
@@ -49,7 +50,7 @@ export const YourSelections = ({
   const [errorMessage, setErrorMessage] = useState('');
   const toast = useToast();
   const provider = wallet?.web3Provider;
-
+  const ingredientsCount = useMemo(() => getIngredientsCount(pizza), [pizza]);
   const validatePizza = () => {
     let pizzaValid = isPizzaValid(pizza);
     if (
@@ -401,7 +402,7 @@ export const YourSelections = ({
               {`Ingredients Selected`}
             </Text>
             <Text fontWeight={700} color="tomato.500">
-              {pizza?.allIngredients.length}
+              {ingredientsCount}
             </Text>
           </Flex>
           {/* Selected Ingredients */}
