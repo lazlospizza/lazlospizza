@@ -26,15 +26,17 @@ export default function Faq() {
                 py={3}
                 borderWidth={['1px', '2px']}
                 borderColor="tomato.500"
-                backgroundColor="cheese.100"
+                backgroundColor="cheese.200"
                 borderStyle="solid"
+                color="tomato.500"
                 _hover={{
-                  backgroundColor: 'cheese.100',
+                  backgroundColor: 'cheese.200',
                 }}
                 fontSize={[18, 24]}
                 display="flex"
                 justifyContent="space-between"
                 alignItems="center"
+                textAlign="left"
               >
                 {item.question}
                 <AccordionIcon ml={5} fontSize={30} />
@@ -52,6 +54,7 @@ export default function Faq() {
                 p={4}
                 fontSize={[18, 22]}
                 fontWeight={600}
+                whiteSpace="pre-line"
               >
                 {item.answer}
               </Text>

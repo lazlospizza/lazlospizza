@@ -347,6 +347,12 @@ export const YourSelections = ({
           onRequestClose={setAlertOpened.bind(null, false)}
         />
       ) : null}
+      <AlertModal
+        showLoader={true}
+        isOpen={isMinting}
+        hideClose
+        message="Transaction in progress..."
+      />
       <Box p="8">
         <Stack>
           {/* Image */}

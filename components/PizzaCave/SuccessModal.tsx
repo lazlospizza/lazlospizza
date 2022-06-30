@@ -57,28 +57,35 @@ export const SuccessModal = ({
               />
             )}
           </Center>
-          <Center mt={8}>
-            <TwitterShareButton
-              url={mintedPizza?.image}
-              title="Look what I made @LazlosPizza. Bet you can't beat my score and win the $ETH rewards, anon!"
-              hashtags={['BitcoinPizzaDay', 'NFTCommunity', 'LazlosPizza']}
-            >
-              <Stack spacing={4} direction="row" alignItems="center">
-                <Text color="white">Share on Twitter!</Text>
-                <TwitterIcon size={32} round={true} />
-              </Stack>
-            </TwitterShareButton>
-          </Center>
-          <Center mt={8}>
-            <Button
-              backgroundColor={'white'}
-              color="gray.dark"
-              mr={3}
-              onClick={handleOnClose}
-            >
-              Close
-            </Button>
-          </Center>
+          <Stack direction="row" justifyContent="center" mt={8}>
+            <Center>
+              <TwitterShareButton
+                url={mintedPizza?.image}
+                title="Look what I made @LazlosPizza. Bet you can't beat my score and win the $ETH rewards, anon!"
+                hashtags={['BitcoinPizzaDay', 'NFTCommunity', 'LazlosPizza']}
+              >
+                <Button backgroundColor="cheese.200">
+                  <TwitterIcon
+                    size={32}
+                    round={true}
+                    iconFillColor="#00acee"
+                    bgStyle={{ fill: 'rgba(0,0,0,0)' }}
+                  />
+                  <Text color="gray.dark">Share on Twitter!</Text>
+                </Button>
+              </TwitterShareButton>
+            </Center>
+            <Center>
+              <Button
+                backgroundColor={'white'}
+                color="gray.dark"
+                mr={3}
+                onClick={handleOnClose}
+              >
+                Close
+              </Button>
+            </Center>
+          </Stack>
         </ModalContent>
       </Modal>
     </>

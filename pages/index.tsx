@@ -9,6 +9,7 @@ import {
   Link,
 } from '@chakra-ui/react';
 import { PromoHeader } from '../components/PromoHeader';
+import { AlertModal } from '../components/shared/AlertModal';
 import { useGetWindowSize } from '../utils/general';
 
 export default function Home() {
