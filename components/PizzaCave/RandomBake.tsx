@@ -6,6 +6,7 @@ import { RANDOM_BAKE_FEE } from '../../constants';
 import { useMainContract } from '../../hooks/useContract';
 import { useWallet } from '../../hooks/useWallet';
 import { parsePrice } from '../../utils/general';
+import { AlertModal } from '../shared/AlertModal';
 import { SuccessModal } from './SuccessModal';
 
 export const RandomBake = () => {
@@ -84,6 +85,12 @@ export const RandomBake = () => {
 
   return (
     <Stack>
+      <AlertModal
+        showLoader={true}
+        isOpen={loading}
+        hideClose
+        message="Transaction in progress..."
+      />
       <Stack m="10px">
         <Text color="tomato.500" fontWeight={700} fontSize={'xl'}>
           Random Bake ({parsePrice(RANDOM_BAKE_FEE)})
