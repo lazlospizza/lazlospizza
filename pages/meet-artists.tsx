@@ -4,7 +4,7 @@ import { Artist, ArtistProps } from '../components/Artist';
 const artists: ArtistProps[] = [
   {
     name: 'when_lambo',
-    bio: `Founder of Lazlo's Pizza, Co-founder of Flipmap and MAHASSIVE pizza lover! Combining his two of his favourite things with this project: PIZZA and NFTs!`,
+    bio: `Founder of Lazlo's Pizza, Co-founder of Flipmap and MAHASSIVE pizza lover! Combining two favourite things: PIZZA and NFTs!`,
     role: 'Founder',
     link: 'https://twitter.com/WhenLambo6135',
     imgSrc: `when_lambo.png`,
@@ -39,7 +39,7 @@ const artists: ArtistProps[] = [
   },
   {
     name: 'Rockpole',
-    bio: `Rockpole is a web2 UI expert making steps into the world of web3. He designed the streamlined UI of Lazlo's Pizza, making it simple and intuitive to bake your favorite pie!`,
+    bio: `Rockpole is a UI Designer that has previously worked on the design of Known Origin and Nifty Football sites.`,
     role: 'Dev Team',
     imgSrc: 'RockPole.png',
   },
@@ -93,7 +93,7 @@ const artists: ArtistProps[] = [
   },
   {
     name: 'Sato',
-    bio: `Long time enthusiast/investor/collector in crypto and NFTs with a passion for the arts. `,
+    bio: `Long-time crypto and NFT enthusiast, investor and collector with a passion for the arts.`,
     role: 'Artists',
     link: 'https://twitter.com/TheAIArtist',
     imgSrc: 'Sato.jpg',
@@ -142,7 +142,7 @@ const artists: ArtistProps[] = [
   },
   {
     name: 'Lexicon Devils',
-    bio: `Metaverse architects & experience design`,
+    bio: `Metaverse architects & experience design.`,
     role: 'Metaverse Team',
     link: 'https://twitter.com/devils_lexicon',
     imgSrc: 'Lexicon Devils.png',
