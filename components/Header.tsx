@@ -119,7 +119,10 @@ export const Header = () => {
 
   const unclaimedTotal = useMemo(
     () =>
-      unpaidRewards.reduce((prev, current) => prev + current.payout_amount, 0),
+      unpaidRewards.reduce(
+        (prev, current) => Number((prev + current.payout_amount).toFixed(8)),
+        0,
+      ),
     [unpaidRewards],
   );
 
