@@ -62,7 +62,7 @@ export const SuccessModal = ({
               <TwitterShareButton
                 url={mintedPizza?.image}
                 title="Look what I made @LazlosPizza. Bet you can't beat my score and win the $ETH rewards, anon!"
-                hashtags={['BitcoinPizzaDay', 'NFTCommunity', 'LazlosPizza']}
+                hashtags={['NFT', 'LazlosPizza']}
               >
                 <Button backgroundColor="cheese.200">
                   <TwitterIcon
