@@ -144,6 +144,8 @@ export const SelectYourPizza = ({
   return (
     <Box style={{ marginTop: 20, padding: 10, ...style }}>
       {lightBoxImage && (
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         <Lightbox
           mainSrc={lightBoxImage}
           onImageLoad={() => {
