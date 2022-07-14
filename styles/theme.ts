@@ -1,6 +1,6 @@
 export const headerHeight = {
-  mobile: '120px',
-  desktop: '159px',
+  mobile: 120,
+  desktop: 179,
 };
 
 export const colors = {
@@ -50,16 +50,17 @@ export const styles = {
       borderBottomWidth: '2px',
       borderColor: 'gray.dark',
       zIndex: 1000,
+      background: 'url("/assets/header-bg.png") repeat',
+      backgroundSize: 'cover',
     },
     '.header .header-content': {
       flex: 1,
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-between',
-      padding: 4,
     },
     '.header .logo': {
-      maxHeight: headerHeight.desktop,
+      maxHeight: `${headerHeight.desktop}px`,
       width: 'auto',
     },
     '.menu a': {
