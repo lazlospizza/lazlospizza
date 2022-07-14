@@ -43,7 +43,7 @@ export const CheckRarity = () => {
             return (
               <Center key={item.name}>
                 <Heading h="50" mr="2" size={'xs'} color={'gray.dark'} pt="4">
-                  {`${item.rarity.toFixed(2)}%`}
+                  {`${item.rarity?.toFixed(2)}%`}
                 </Heading>
               </Center>
             );

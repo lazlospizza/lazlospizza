@@ -8,6 +8,8 @@ import 'react-image-lightbox/style.css';
 import '../styles/global.css';
 import '../styles/fonts.css';
 import { Footer } from '../components/Footer';
+import { Provider } from 'react-redux';
+import store from '../store';
 
 const config = {
   initialColorMode: 'dark',
@@ -60,11 +62,13 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <ChakraProvider theme={theme}>
         <WalletProvider>
-          <>
-            <Header />
-            <Component {...pageProps} />
-            <Footer />
-          </>
+          <Provider store={store}>
+            <>
+              <Header />
+              <Component {...pageProps} />
+              <Footer />
+            </>
+          </Provider>
         </WalletProvider>
       </ChakraProvider>
     </>

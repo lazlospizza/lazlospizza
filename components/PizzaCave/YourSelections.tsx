@@ -508,6 +508,7 @@ export const YourSelections = ({
           isOpen={showSuccessModal}
           setIsOpen={setShowSuccessModal}
           pizzaTokenId={mintedTokenId}
+          type={tab}
         />
       </Box>
     </>

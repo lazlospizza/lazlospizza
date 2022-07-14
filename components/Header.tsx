@@ -11,6 +11,9 @@ import { parsePrice, useIsMobile } from '../utils/general';
 import { ConnectWalletButton } from './ConnectWalletButton';
 import { HeaderMenu } from './shared/HeaderMenu';
 import Marquee from 'react-fast-marquee';
+import { useAppDispatch } from '../store';
+import { selectRewardsInfo, updateRewardsInfo } from '../store/appSlice';
+import { useSelector } from 'react-redux';
 
 interface Reward {
   block: number;
@@ -28,11 +31,8 @@ export const Header = () => {
   const { mainContract } = useMainContract();
   const [unpaidRewards, setUnpaidRewards] = useState<Reward[]>([]);
   const [isClaimingRewards, setIsClaimingRewards] = useState(false);
-  const [rewardsInfo, setRewardsInfo] = useState<{
-    blocksRemaining?: number;
-    nextRarityReward?: string;
-    scoreToBeat?: number;
-  }>();
+  const dispatch = useAppDispatch();
+  const rewardsInfo = useSelector(selectRewardsInfo);
   useEffect(() => {
     if (!wallet?.web3Provider) {
       return;
@@ -65,20 +65,22 @@ export const Header = () => {
             );
             previousRarityReward = rarityReward;
           }
-          setRewardsInfo({
-            blocksRemaining,
-            nextRarityReward: rarityReward
-              ? parsePrice(
-                  parseFloat(
-                    (
-                      rarityReward.payout_amount / 1000000000000000000.0
-                    ).toFixed(3),
-                  ),
-                  3,
-                )
-              : undefined,
-            scoreToBeat: winningPizzasRes.data[0]?.rarity,
-          });
+          dispatch(
+            updateRewardsInfo({
+              blocksRemaining,
+              nextRarityReward: rarityReward
+                ? parsePrice(
+                    parseFloat(
+                      (
+                        rarityReward.payout_amount / 1000000000000000000.0
+                      ).toFixed(3),
+                    ),
+                    3,
+                  )
+                : undefined,
+              scoreToBeat: winningPizzasRes.data[0]?.rarity,
+            }),
+          );
         } catch (error) {
           console.error(error);
         }

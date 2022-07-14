@@ -2,9 +2,11 @@ import { Box, Button, Center, Stack, Text, useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { parseEther } from 'ethers/lib/utils';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { RANDOM_BAKE_FEE } from '../../constants';
 import { useMainContract } from '../../hooks/useContract';
 import { useWallet } from '../../hooks/useWallet';
+import { selectRewardsInfo } from '../../store/appSlice';
 import { parsePrice } from '../../utils/general';
 import { AlertModal } from '../shared/AlertModal';
 import { SuccessModal } from './SuccessModal';
@@ -17,6 +19,7 @@ export const RandomBake = () => {
   const [tokenId, setTokenId] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const rewardsInfo = useSelector(selectRewardsInfo);
   const toast = useToast();
 
   useEffect(() => {
@@ -159,6 +162,7 @@ export const RandomBake = () => {
         isOpen={showSuccessModal}
         setIsOpen={setShowSuccessModal}
         pizzaTokenId={tokenId}
+        type="random"
       />
     </Stack>
   );

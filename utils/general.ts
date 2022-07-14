@@ -13,6 +13,9 @@ export const parsePrice = (
   defaultToFixed = 2,
   showCurrency = true,
 ) => {
+  if (!amount) {
+    return '0 ETH';
+  }
   const decimal = amount.toString().split('.')[1];
   let toFixed = defaultToFixed;
   if (decimal && decimal.length > toFixed) {

@@ -182,7 +182,6 @@ export const SelectYourPizza = ({
                     : 'All Ingredients'
                 }
                 onChange={val => {
-                  console.log(val);
                   setSelectedIngredients(val as string[]);
                 }}
               ></MultiSelectMenu>
@@ -223,7 +222,6 @@ export const SelectYourPizza = ({
                       <PizzaImage
                         img={pizza.image}
                         onClick={() => {
-                          console.log('SELECTING');
                           setLightBoxImage(pizza.image);
                         }}
                       />
@@ -286,13 +284,17 @@ export const SelectYourPizza = ({
                             )}
                             <Stack direction="row" alignItems="center">
                               <FaEthereum fontSize="14" />{' '}
-                              <Text>
-                                {parsePrice(
-                                  Number(pizza.payout.payout_amount.toFixed(3)),
-                                  3,
-                                  false,
-                                )}
-                              </Text>
+                              {pizza.payout.payout_amount && (
+                                <Text>
+                                  {parsePrice(
+                                    Number(
+                                      pizza.payout.payout_amount.toFixed(3),
+                                    ),
+                                    3,
+                                    false,
+                                  )}
+                                </Text>
+                              )}
                             </Stack>
                           </>
                         ) : null}
@@ -310,7 +312,7 @@ export const SelectYourPizza = ({
                             size={'sm'}
                             color="gray.dark"
                           >
-                            {ingredient.name} - {ingredient.rarity.toFixed(2)}%
+                            {ingredient.name} - {ingredient.rarity?.toFixed(2)}%
                           </Heading>
                         ))}
                       </Stack>
@@ -331,19 +333,21 @@ export const SelectYourPizza = ({
                         </Button>
                       </Flex>
                     )}
-                    <Text
-                      color="white"
-                      bg="tomato.500"
-                      fontWeight="bold"
-                      position="absolute"
-                      top={0}
-                      right={0}
-                      py="2"
-                      px="4"
-                      fontSize="lg"
-                    >
-                      {pizza.rarity.toFixed(3)}
-                    </Text>
+                    {pizza.rarity && (
+                      <Text
+                        color="white"
+                        bg="tomato.500"
+                        fontWeight="bold"
+                        position="absolute"
+                        top={0}
+                        right={0}
+                        py="2"
+                        px="4"
+                        fontSize="lg"
+                      >
+                        {pizza.rarity.toFixed(3)}
+                      </Text>
+                    )}
                   </Flex>
                 </Flex>
                 {pizza.owner && showOwner ? (

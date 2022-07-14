@@ -36,7 +36,6 @@ export const IngredientItem = ({
     const isBurned = !!pizza?.burnIngredients?.find(
       item => ingredient.tokenId === item.tokenId,
     );
-    console.log('isBurned', isBurned);
     if (isBurned) {
       return unburnIngredient?.(ingredient);
     }
