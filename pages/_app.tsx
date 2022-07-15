@@ -67,6 +67,7 @@ function MyApp({ Component, pageProps }) {
               <Header />
               <Component {...pageProps} />
               <Footer />
+              <audio src="/assets/cafe-music.mp3" autoPlay loop hidden />
             </>
           </Provider>
         </WalletProvider>

@@ -157,7 +157,7 @@ export default function MeetArtists() {
           Meet Pizzaiolos
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
-          {`Meet our Awesome Artist`}
+          {`Meet our awesome team!`}
         </Text>
       </Stack>
       <Grid gridTemplateColumns={[`1fr`, `1fr`, `1fr`, '1fr 1fr']} gap={5}>

@@ -17,7 +17,20 @@ export const HeaderMenu = ({
   children?: any;
 }) => {
   return (
-    <Stack direction={direction} className="menu">
+    <Stack
+      direction={direction}
+      className={`menu menu--${direction}`}
+      sx={{
+        ...(direction === 'row'
+          ? {
+              width: '100%',
+              justifyContent: 'space-around',
+              fontFamily: 'heading',
+              fontSize: '12px',
+            }
+          : {}),
+      }}
+    >
       <Link href={PageRoutes.home}>
         <a
           style={{ marginRight: 16 }}

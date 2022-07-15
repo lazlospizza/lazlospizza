@@ -12,6 +12,7 @@ export const colors = {
   },
   tomato: {
     500: '#CC4443',
+    700: '#ff0144',
   },
   gray: {
     background: '#F5F5F5',
@@ -56,7 +57,7 @@ export const styles = {
     '.header .header-content': {
       flex: 1,
       display: 'flex',
-      flexDirection: 'row',
+      flexDirection: 'row-reverse',
       justifyContent: 'space-between',
     },
     '.header .logo': {
@@ -71,6 +72,9 @@ export const styles = {
       fontWeight: '900',
       width: 'max-content',
       whiteSpaceWrap: 'nowrap',
+    },
+    '.menu--row a': {
+      fontSize: '14px',
     },
     '.menu a:hover, .menu a.current': {
       color: 'cheese.200',

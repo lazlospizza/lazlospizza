@@ -231,18 +231,88 @@ export const Header = () => {
   return (
     <Stack spacing={0}>
       <Box className="header">
+        <Link href="/">
+          <a>
+            <img
+              style={{
+                height: `${
+                  isMobile
+                    ? headerHeight.mobile - 40
+                    : headerHeight.desktop - 90
+                }px`,
+                margin: isMobile ? `20px 10px` : `30px 15px 60px 15px`,
+              }}
+              src="/assets/logo-header.png"
+              className="logo"
+              alt="Logo"
+            />
+          </a>
+        </Link>
+        <Box
+          className="header-content"
+          sx={{
+            paddingTop: 2,
+            paddingBottom: 2,
+            paddingLeft: 4,
+            paddingRight: 4,
+          }}
+        >
+          {isMobile ? (
+            <Stack justifyContent="center">
+              <Box
+                sx={{ background: 'tomato.500', borderRadius: '10px', p: 2 }}
+              >
+                <HamburgerIcon
+                  ref={ref}
+                  onClick={() => {
+                    setShowMobileMenu(prev => !prev);
+                  }}
+                  color="cheese.200"
+                  w="40px"
+                  h="40px"
+                  maxW="60px"
+                />
+              </Box>
+            </Stack>
+          ) : (
+            <Stack pt={5} justifyContent="flex-end" flexDirection="row-reverse">
+              <ConnectWalletButton />
+              {!!unclaimedTotal && (
+                <Button
+                  backgroundColor="cheese.200"
+                  borderWidth={2}
+                  borderColor="cheese.200"
+                  fontWeight="900"
+                  color="gray.800"
+                  _hover={{
+                    textDecoration: 'none',
+                    backgroundColor: 'tomato.500',
+                    borderColor: 'cheese.200',
+                    color: 'cheese.200',
+                  }}
+                  size="lg"
+                  onClick={claimRewards}
+                  isLoading={isClaimingRewards}
+                >
+                  Claim Rewards ({parsePrice(unclaimedTotal, 3)})
+                </Button>
+              )}
+            </Stack>
+          )}
+        </Box>
+
         {rewardsInfo ? (
           <Marquee
             style={{
               position: 'absolute',
-              top: '0',
+              bottom: isMobile ? '-16px' : '-20px',
               left: `0`,
               width: `100%`,
-              backgroundColor: '#CC4443',
+              backgroundColor: '#ff0144',
             }}
             gradientWidth={isMobile ? 10 : 120}
             speed={50}
-            gradientColor={[204, 66, 66]}
+            gradientColor={[255, 1, 68]}
           >
             {[1, 2].map(key => (
               <Stack
@@ -280,107 +350,47 @@ export const Header = () => {
             ))}
           </Marquee>
         ) : null}
-        <Link href="/">
-          <a>
-            <img
-              style={{
-                height: `${
-                  isMobile
-                    ? headerHeight.mobile - 40
-                    : headerHeight.desktop - 60
-                }px`,
-                margin: isMobile ? `20px 10px` : `30px 15px`,
-              }}
-              src="/assets/logo-header.png"
-              className="logo"
-              alt="Logo"
-            />
-          </a>
-        </Link>
+        {/* Menu Desktop */}
+        {!isMobile && (
+          <Box
+            bgColor="tomato.700"
+            px={4}
+            pt={2}
+            pb={1}
+            width="100%"
+            position="absolute"
+            bottom="0"
+          >
+            <DesktopMenu />
+          </Box>
+        )}
         <Box
-          className="header-content"
           sx={{
-            paddingTop: 2,
-            paddingBottom: 2,
-            paddingLeft: 4,
-            paddingRight: 4,
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: `translate3d(-50%, calc(-50% - ${
+              isMobile ? '0px' : '20px'
+            }), 0)`,
           }}
         >
-          <Stack
-            direction="column"
-            justifyContent={isMobile ? 'center' : 'space-between'}
-          >
-            <Box paddingTop={isMobile ? 2 : 6}>
-              <img
-                src="/assets/header-logo.png"
-                className="logo"
-                alt="Logo"
-                style={{ height: isMobile ? '70px' : '90px' }}
-              />
-            </Box>
-            {/* Menu Desktop */}
-            {!isMobile && (
-              <Box
-                bgColor="tomato.500"
-                px={4}
-                pt={2}
-                borderTopEndRadius={10}
-                borderTopStartRadius={10}
-                position="absolute"
-                bottom="0"
-              >
-                <DesktopMenu />
-              </Box>
-            )}
-          </Stack>
-          {isMobile ? (
-            <Stack justifyContent="center">
-              <Box
-                sx={{ background: 'tomato.500', borderRadius: '10px', p: 2 }}
-              >
-                <HamburgerIcon
-                  ref={ref}
-                  onClick={() => {
-                    setShowMobileMenu(prev => !prev);
-                  }}
-                  color="cheese.200"
-                  w="40px"
-                  h="40px"
-                  maxW="60px"
-                />
-              </Box>
-            </Stack>
-          ) : (
-            <Stack pt={5}>
-              <ConnectWalletButton />
-              {!!unclaimedTotal && (
-                <Button
-                  backgroundColor="cheese.200"
-                  borderWidth={2}
-                  borderColor="cheese.200"
-                  fontWeight="900"
-                  color="gray.800"
-                  _hover={{
-                    textDecoration: 'none',
-                    backgroundColor: 'tomato.500',
-                    borderColor: 'cheese.200',
-                    color: 'cheese.200',
-                  }}
-                  size="lg"
-                  onClick={claimRewards}
-                  isLoading={isClaimingRewards}
-                >
-                  Claim Rewards ({parsePrice(unclaimedTotal, 3)})
-                </Button>
-              )}
-            </Stack>
-          )}
+          <img
+            src="/assets/header-logo.png"
+            className="logo"
+            alt="Logo"
+            style={{
+              height: isMobile ? '60px' : '90px',
+              transform: 'scaleX(1.5)',
+            }}
+          />
         </Box>
         {isMobile && showMobileMenu && <MobileMenu />}
       </Box>
       <div
         style={{
-          height: `${isMobile ? headerHeight.mobile : headerHeight.desktop}px`,
+          height: `calc(${
+            isMobile ? headerHeight.mobile : headerHeight.desktop
+          }px + ${!rewardsInfo ? '0px' : isMobile ? '16px' : '20px'})`,
         }}
       />
     </Stack>
