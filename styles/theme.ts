@@ -52,7 +52,8 @@ export const styles = {
       borderColor: 'gray.dark',
       zIndex: 1000,
       background: 'url("/assets/header-bg.png") repeat',
-      backgroundSize: 'cover',
+      backgroundSize: '170px',
+      backgroundPosition: 'center bottom',
     },
     '.header .header-content': {
       flex: 1,
