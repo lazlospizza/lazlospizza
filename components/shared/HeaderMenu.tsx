@@ -31,18 +31,18 @@ export const HeaderMenu = ({
           : {}),
       }}
     >
-      <Link href={PageRoutes.home}>
+      {/* <Link href={PageRoutes.home}>
         <a
           style={{ marginRight: 16 }}
           className={pathname === PageRoutes.home ? 'current' : ''}
         >
           {Pages.home}
         </a>
-      </Link>
+      </Link> */}
       <Link href={PageRoutes.pizzaCave}>
         <a
           style={{ marginRight: 16 }}
-          className={pathname.startsWith(PageRoutes.pizzaCave) ? 'current' : ''}
+          className={pathname === PageRoutes.pizzaCave ? 'current' : ''}
         >
           {Pages.pizzaCave}
         </a>
@@ -50,9 +50,9 @@ export const HeaderMenu = ({
       <Link href={PageRoutes.meetArtists}>
         <a
           style={{ marginRight: 16 }}
-          className={
-            pathname.startsWith(PageRoutes.meetArtists) ? 'current' : ''
-          }
+          className={`${
+            pathname.startsWith(PageRoutes.meetArtists) ? 'current ' : ''
+          }tour-meet-artists`}
         >
           {Pages.meetArtists}
         </a>
@@ -60,9 +60,9 @@ export const HeaderMenu = ({
       <Link href={PageRoutes.rarityRewards}>
         <a
           style={{ marginRight: 16 }}
-          className={
-            pathname.startsWith(PageRoutes.rarityRewards) ? 'current' : ''
-          }
+          className={`${
+            pathname.startsWith(PageRoutes.rarityRewards) ? 'current ' : ''
+          }tour-rarity-rewards`}
         >
           {Pages.rarityRewards}
         </a>
@@ -70,7 +70,9 @@ export const HeaderMenu = ({
       <Link href={PageRoutes.faq}>
         <a
           style={{ marginRight: 16 }}
-          className={pathname.startsWith(PageRoutes.faq) ? 'current' : ''}
+          className={`${
+            pathname.startsWith(PageRoutes.faq) ? 'current ' : ''
+          }tour-faq`}
         >
           {Pages.faq}
         </a>
@@ -79,9 +81,9 @@ export const HeaderMenu = ({
         <Link href={PageRoutes.myWallet}>
           <a
             style={{ marginRight: 16 }}
-            className={
-              pathname.startsWith(PageRoutes.myWallet) ? 'current' : ''
-            }
+            className={`${
+              pathname.startsWith(PageRoutes.myWallet) ? 'current ' : ''
+            }tour-my-wallet`}
           >
             {Pages.myWallet}
           </a>

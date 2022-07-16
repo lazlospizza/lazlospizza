@@ -349,7 +349,7 @@ export const YourSelections = ({
       ) : null}
       <AlertModal
         showLoader={true}
-        isOpen={isMinting}
+        isOpen={isMinting && !!mintingTxn}
         hideClose
         message="Transaction in progress..."
       />

@@ -8,8 +8,8 @@ export const enum Pages {
 }
 
 export const enum PageRoutes {
-  home = '/',
-  pizzaCave = '/pizza-cave',
+  home = '/home',
+  pizzaCave = '/',
   meetArtists = '/meet-artists',
   rarityRewards = '/rarity-rewards',
   myWallet = '/my-wallet',

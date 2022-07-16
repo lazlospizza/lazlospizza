@@ -164,6 +164,9 @@ export const addIngredientToPizza = ({
   const ingredients: Ingredient[] = Array.isArray(item) ? item : [item];
   const newPizza = { ...pizza };
   ingredients.forEach(item => {
+    if (!item || !item.ingredientType) {
+      return;
+    }
     switch (item.ingredientType) {
       case IngredientType.base:
         newPizza.base = item;
@@ -228,6 +231,9 @@ export const addIngredient = ({
   const ingredients: Ingredient[] = Array.isArray(item) ? item : [item];
   const newPizza = { ...pizza };
   ingredients.forEach(item => {
+    if (!item || !item.ingredientType) {
+      return;
+    }
     switch (item.ingredientType) {
       case IngredientType.base:
         newPizza.base = item;
