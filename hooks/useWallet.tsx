@@ -170,6 +170,9 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     provider.on('chainChanged', handleChainChanged);
     provider.on('disconnect', handleDisconnect);
 
+    provider.on('confirmation', () => console.log('CONFIRMATION'));
+    provider.on('receipt', () => console.log('RECEIPT'));
+
     // Subscription Cleanup
     return () => {
       if (provider.removeListener) {

@@ -42,7 +42,7 @@ export const HeaderMenu = ({
       <Link href={PageRoutes.pizzaCave}>
         <a
           style={{ marginRight: 16 }}
-          className={pathname.startsWith(PageRoutes.pizzaCave) ? 'current' : ''}
+          className={pathname === PageRoutes.pizzaCave ? 'current' : ''}
         >
           {Pages.pizzaCave}
         </a>

@@ -319,7 +319,6 @@ export const Header = () => {
             alt="Logo"
             style={{
               height: isMobile ? '60px' : '90px',
-              transform: 'scaleX(1.5)',
             }}
           />
         </Box>
