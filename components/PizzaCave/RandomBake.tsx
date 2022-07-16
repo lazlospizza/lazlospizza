@@ -53,6 +53,7 @@ export const RandomBake = () => {
       } = res.data;
       const signer = wallet.web3Provider.getSigner();
       const contractWithSigner = mainContract.connect(signer);
+      console.log('HERE 1');
       const _txn = await contractWithSigner.bakeRandomPizza(
         data.token_ids,
         data.timestamp,
@@ -65,6 +66,8 @@ export const RandomBake = () => {
           gasLimit: 500000,
         },
       );
+      console.log('HERE 2');
+      console.log('TXN', _txn);
       setTxn(_txn);
       const receipt = await _txn.wait();
 
@@ -90,7 +93,7 @@ export const RandomBake = () => {
     <Stack>
       <AlertModal
         showLoader={true}
-        isOpen={loading}
+        isOpen={loading && !!txn}
         hideClose
         message="Transaction in progress..."
       />
@@ -153,7 +156,7 @@ export const RandomBake = () => {
               mt="16"
               onClick={handleRandomBake}
               disabled={!wallet?.address}
-              isLoading={loading}
+              isLoading={loading && txn}
             >{`Random Bake (${parsePrice(RANDOM_BAKE_FEE, 2, false)})`}</Button>
           </Center>
         </Stack>
