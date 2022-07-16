@@ -22,6 +22,7 @@ export type EthNetworkConfig = {
   openSeaBaseUrl?: string;
   openSeaProjectSlug?: string;
   openSeaBaseApiUrl: string;
+  defaultBlockInterval?: number;
 };
 
 export const NETWORK_CONFIG: Record<EthNetwork, EthNetworkConfig> = {
@@ -34,6 +35,7 @@ export const NETWORK_CONFIG: Record<EthNetwork, EthNetworkConfig> = {
     openSeaBaseUrl: 'https://opensea.io',
     openSeaProjectSlug: 'lazlospizza',
     openSeaBaseApiUrl: 'https://api.opensea.io',
+    defaultBlockInterval: 1000,
   },
   rinkeby: {
     name: 'rinkeby',
@@ -44,5 +46,6 @@ export const NETWORK_CONFIG: Record<EthNetwork, EthNetworkConfig> = {
     openSeaBaseUrl: 'https://testnets.opensea.io',
     openSeaProjectSlug: 'lazlospizza',
     openSeaBaseApiUrl: 'https://testnets-api.opensea.io',
+    defaultBlockInterval: 100,
   },
 };

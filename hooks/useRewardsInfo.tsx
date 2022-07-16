@@ -5,6 +5,7 @@ import { parsePrice } from '../utils/general';
 import { useAppDispatch } from '../store';
 import { selectRewardsInfo, updateRewardsInfo } from '../store/appSlice';
 import { useSelector } from 'react-redux';
+import { getNetworkConfig } from '../utils/network';
 
 export const useRewardsInfo = () => {
   const { wallet } = useWallet();
@@ -21,9 +22,10 @@ export const useRewardsInfo = () => {
           return;
         }
         previousBlock = block;
-        const blocksRemaining =
-          parseInt(process.env.BLOCK_INTERVAL) -
-          (block % parseInt(process.env.BLOCK_INTERVAL));
+        const blockInterval = process.env.BLOCK_INTERVAL
+          ? parseInt(process.env.BLOCK_INTERVAL)
+          : getNetworkConfig().defaultBlockInterval;
+        const blocksRemaining = blockInterval - (block % blockInterval);
         const nextBlock = block + blocksRemaining;
         try {
           const [winningPizzasRes, blockPayoutRes] = await Promise.all([
