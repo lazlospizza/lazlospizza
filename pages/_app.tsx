@@ -7,6 +7,8 @@ import { colors, styles } from '../styles/theme';
 import 'react-image-lightbox/style.css';
 import '../styles/global.css';
 import '../styles/fonts.css';
+import 'intro.js';
+import 'intro.js/introjs.css';
 import { Footer } from '../components/Footer';
 import { Provider } from 'react-redux';
 import store from '../store';
@@ -27,6 +29,17 @@ export const theme = extendTheme({
 });
 
 function MyApp({ Component, pageProps }) {
+  const steps = [
+    {
+      intro: 'This is my awesome feature!',
+      element: '.step-1',
+    },
+    {
+      intro: 'This another awesome feature!',
+      element: '.step-2',
+    },
+  ];
+
   return (
     <>
       <Head>

@@ -31,14 +31,14 @@ export const HeaderMenu = ({
           : {}),
       }}
     >
-      <Link href={PageRoutes.home}>
+      {/* <Link href={PageRoutes.home}>
         <a
           style={{ marginRight: 16 }}
           className={pathname === PageRoutes.home ? 'current' : ''}
         >
           {Pages.home}
         </a>
-      </Link>
+      </Link> */}
       <Link href={PageRoutes.pizzaCave}>
         <a
           style={{ marginRight: 16 }}
@@ -50,9 +50,9 @@ export const HeaderMenu = ({
       <Link href={PageRoutes.meetArtists}>
         <a
           style={{ marginRight: 16 }}
-          className={
+          className={`${
             pathname.startsWith(PageRoutes.meetArtists) ? 'current' : ''
-          }
+          } step-1`}
         >
           {Pages.meetArtists}
         </a>
@@ -60,9 +60,9 @@ export const HeaderMenu = ({
       <Link href={PageRoutes.rarityRewards}>
         <a
           style={{ marginRight: 16 }}
-          className={
+          className={`${
             pathname.startsWith(PageRoutes.rarityRewards) ? 'current' : ''
-          }
+          } step-2`}
         >
           {Pages.rarityRewards}
         </a>
