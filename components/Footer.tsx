@@ -1,6 +1,7 @@
 import { Box, Center, Heading, Stack } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRef } from 'react';
+import { useWallet } from '../hooks/useWallet';
 import { useAppDispatch } from '../store';
 import { toggleTutorial } from '../store/appSlice';
 import { PageRoutes } from '../types';
@@ -8,6 +9,7 @@ import { PageRoutes } from '../types';
 export const Footer = () => {
   const dispatch = useAppDispatch();
   const tutorialTimeout = useRef<any>();
+  const wallet = useWallet();
   const showTutorial = () => {
     if (tutorialTimeout.current) {
       clearTimeout(tutorialTimeout.current);
@@ -29,9 +31,11 @@ export const Footer = () => {
           <Link href={'/faq'}>
             <a>FAQ</a>
           </Link>
-          <Link href={'/'}>
-            <a onClick={showTutorial}>Tutorial</a>
-          </Link>
+          {wallet && (
+            <Link href={'/'}>
+              <a onClick={showTutorial}>Tutorial</a>
+            </Link>
+          )}
           <Link href={'https://opensea.io/collection/lazlos-pizza'}>
             <a>OpenSea</a>
           </Link>

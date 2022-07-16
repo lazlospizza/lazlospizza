@@ -12,6 +12,9 @@ import { Footer } from '../components/Footer';
 import { Provider } from 'react-redux';
 import store from '../store';
 import { Tutorial } from '../components/Tutorial';
+import dynamic from 'next/dynamic';
+
+const MusicNoSSR = dynamic(() => import('../components/Music'), { ssr: false });
 
 const config = {
   initialColorMode: 'dark',
@@ -69,8 +72,10 @@ function MyApp({ Component, pageProps }) {
               <Header />
               <Component {...pageProps} />
               <Footer />
-              <audio src="/assets/cafe-music.mp3" autoPlay loop hidden />
-              <Tutorial />
+              <>
+                <MusicNoSSR />
+                <Tutorial />
+              </>
             </>
           </Provider>
         </WalletProvider>
