@@ -110,9 +110,9 @@ export const YourSelections = ({
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       window.MM_ERR = e;
-      setMintingTxn(null);
       setErrorMessage('Unexpected Error');
     } finally {
+      setMintingTxn(null);
       setIsMinting(false);
     }
   }, [mainContract, provider, pizza]);
@@ -141,6 +141,7 @@ export const YourSelections = ({
       setMintingTxn(null);
       setErrorMessage('Unexpected Error');
     } finally {
+      setMintingTxn(null);
       setIsMinting(false);
     }
   }, [mainContract, provider, pizza]);
@@ -173,9 +174,9 @@ export const YourSelections = ({
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       window.MM_ERR = e;
-      setMintingTxn(null);
       setErrorMessage('Unexpected Error');
     } finally {
+      setMintingTxn(null);
       setIsMinting(false);
     }
   }, [mainContract, provider, pizza]);
@@ -222,9 +223,9 @@ export const YourSelections = ({
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       window.MM_ERR = e;
-      setMintingTxn(null);
       setErrorMessage('Unexpected Error');
     } finally {
+      setMintingTxn(null);
       setIsMinting(false);
     }
   }, [mainContract, provider, pizza]);
@@ -260,9 +261,9 @@ export const YourSelections = ({
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       window.MM_ERR = e;
-      setMintingTxn(null);
       setErrorMessage('Unexpected Error');
     } finally {
+      setMintingTxn(null);
       setIsMinting(false);
     }
   }, [mainContract, provider, pizza]);

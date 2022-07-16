@@ -83,6 +83,8 @@ export const RandomBake = () => {
       // @ts-ignore
       window.MM_ERR = e;
       setErrorMessage('Unexpected Error');
+    } finally {
+      setTxn(null);
     }
     setLoading(false);
   };
