@@ -213,7 +213,7 @@ export const Header = () => {
               </Box>
             </Stack>
           ) : (
-            <Stack pt={5} justifyContent="flex-end" flexDirection="row-reverse">
+            <Stack pt={5} justifyContent="start" flexDirection="column">
               <ConnectWalletButton />
               {!!unclaimedTotal && (
                 <Button
