@@ -81,10 +81,9 @@ async def get_payout(request):
     if payout_amount == None:
         return text('no payout for this block', status=404)
 
-    converted_payout_amount = int(payout_amount * 1000000000000000000.0)
     hashed_message = w3.soliditySha3(
         ['uint256', 'address', 'uint256'],
-        [block, w3.toChecksumAddress(addr), converted_payout_amount]
+        [block, w3.toChecksumAddress(addr), payout_amount]
     )
 
     message = encode_defunct(hashed_message)

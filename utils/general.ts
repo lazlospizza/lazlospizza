@@ -10,16 +10,11 @@ import { Ingredient, IngredientType, Pizza, PizzaCave } from '../types';
 
 export const parsePrice = (
   amount: number,
-  defaultToFixed = 2,
+  toFixed = 2,
   showCurrency = true,
 ) => {
   if (!amount) {
     return '0 ETH';
-  }
-  const decimal = amount.toString().split('.')[1];
-  let toFixed = defaultToFixed;
-  if (decimal && decimal.length > toFixed) {
-    toFixed = decimal.length;
   }
   return `${amount.toFixed(toFixed)}${showCurrency ? ' ETH' : ''}`;
 };

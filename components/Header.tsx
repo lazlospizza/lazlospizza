@@ -1,5 +1,5 @@
 import { HamburgerIcon } from '@chakra-ui/icons';
-import { Box, Heading, Stack, Button, Text } from '@chakra-ui/react';
+import { Box, Stack, Button, Text } from '@chakra-ui/react';
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -121,10 +121,8 @@ export const Header = () => {
 
   const unclaimedTotal = useMemo(
     () =>
-      unpaidRewards.reduce(
-        (prev, current) => Number((prev + current.payout_amount).toFixed(8)),
-        0,
-      ),
+      unpaidRewards.reduce((prev, current) => prev + current.payout_amount, 0) /
+      1000000000000000000,
     [unpaidRewards],
   );
 
@@ -148,7 +146,7 @@ export const Header = () => {
 
         payouts.push({
           payoutBlock: blockReward.block,
-          amount: `${blockReward.payout_amount * 1000000000000000000.0}`,
+          amount: `${blockReward.payout_amount}`,
           r: blockReward.r,
           s: blockReward.s,
           v: blockReward.v,
@@ -275,7 +273,7 @@ export const Header = () => {
               </Box>
             </Stack>
           ) : (
-            <Stack pt={5} justifyContent="flex-end" flexDirection="row-reverse">
+            <Stack pt={5}>
               <ConnectWalletButton />
               {!!unclaimedTotal && (
                 <Button
