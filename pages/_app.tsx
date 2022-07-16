@@ -73,6 +73,8 @@ function MyApp({ Component, pageProps }) {
               <Component {...pageProps} />
               <Footer />
               <>
+                {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                {/* @ts-ignore */}
                 <MusicNoSSR />
                 <Tutorial />
               </>

@@ -21,7 +21,7 @@ export const useRewardsInfo = () => {
           return;
         }
         previousBlock = block;
-        const blocksRemaining = 1000 - (block % 1000);
+        const blocksRemaining = 100 - (block % 100);
         const nextBlock = block + blocksRemaining;
         try {
           const [winningPizzasRes, blockPayoutRes] = await Promise.all([

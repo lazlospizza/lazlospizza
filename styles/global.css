@@ -26,6 +26,8 @@
   background-color: #cc4443;
   font-family: 'Press Start 2P', cursive;
   font-size: 14px;
+  text-align: justify;
+  text-justify: inter-word;
 }
 .pizza-tour.reactour__helper:after {
   content: ' ';
@@ -56,4 +58,9 @@
   top: 8px;
   right: 8px;
   color: #fff;
+}
+
+.pizza-tour-step {
+  max-height: 200px;
+  overflow-y: auto;
 }

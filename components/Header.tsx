@@ -249,6 +249,7 @@ export const Header = () => {
             gradientWidth={isMobile ? 10 : 120}
             speed={50}
             gradientColor={[255, 1, 68]}
+            className="tour-rewards-step"
           >
             {[1, 2].map(key => (
               <Stack
@@ -260,7 +261,6 @@ export const Header = () => {
                 justifyContent="space-around"
                 px={isMobile ? 3 : 6}
                 fontSize={isMobile ? 10 : 14}
-                className="tour-rewards-step"
               >
                 <Text>
                   Next Rarity Reward:{' '}

@@ -41,13 +41,19 @@ export const Tutorial: React.FC = () => {
             selector: 'body',
           },
           {
-            content:
-              'Lazlo’s Pizza lets users build their own pizza and create their own rarity, rewarding users that that achieve the best Rarity Score with ETH rewards. Reward amounts and a countdown to the payout can be viewed here.',
+            content: (
+              <div className="pizza-tour-step">
+                Lazlo’s Pizza lets users build their own pizza and create their
+                own rarity, rewarding users that that achieve the best Rarity
+                Score with ETH rewards. Reward amounts and a countdown to the
+                payout can be viewed here.
+              </div>
+            ),
             selector: '.tour-rewards-step',
           },
           {
             content: (
-              <div>
+              <div className="pizza-tour-step">
                 All pizzas are created here in the Pizza Cave. There are 5
                 functions:
                 <p>
@@ -69,23 +75,44 @@ export const Tutorial: React.FC = () => {
             selector: '.tour-pizza-cave',
           },
           {
-            content:
-              'Use the Check Rarity tool to help you find the rarest ingredients to add to your pizza for a better Rarity Score.',
+            content: (
+              <div className="pizza-tour-step">
+                Use the Check Rarity tool to help you find the rarest
+                ingredients to add to your pizza for a better Rarity Score.
+              </div>
+            ),
             selector: '.tour-check-rarity',
           },
           {
-            content:
-              'Once you have baked your pizza you can check out your current Rarity Score by visiting My Wallet. Rarity Scores update dynamically as pizzas are baked and unbaked by all users so it is worth checking your score on a regular basis.',
+            content: (
+              <div className="pizza-tour-step">
+                Once you have baked your pizza you can check out your current
+                Rarity Score by visiting My Wallet. Rarity Scores update
+                dynamically as pizzas are baked and unbaked by all users so it
+                is worth checking your score on a regular basis.
+              </div>
+            ),
             selector: '.tour-my-wallet',
           },
           {
-            content:
-              'Learn more about Rarity Scores and how Rewards are awarded on the Rarity Rewards page. you can also view a list of previous winners.',
+            content: (
+              <div className="pizza-tour-step">
+                Learn more about Rarity Scores and how Rewards are awarded on
+                the Rarity Rewards page. you can also view a list of previous
+                winners.
+              </div>
+            ),
             selector: '.tour-rarity-rewards',
           },
           {
-            content:
-              'Lazlo’s Pizza is not only a game, it is a collaborative art project involving many respected NFT pixel artists that each receive commission when you buy their ingredients. You can meet them here.',
+            content: (
+              <div className="pizza-tour-step">
+                Lazlo’s Pizza is not only a game, it is a collaborative art
+                project involving many respected NFT pixel artists that each
+                receive commission when you buy their ingredients. You can meet
+                them here.
+              </div>
+            ),
             selector: '.tour-meet-artists',
           },
           {
@@ -97,6 +124,8 @@ export const Tutorial: React.FC = () => {
         isOpen={showTutorial}
         disableDotsNavigation={true}
         className="pizza-tour"
+        maskSpace={0}
+        lastStepNextButton={<div>Done</div>}
       />
     </>
   );
