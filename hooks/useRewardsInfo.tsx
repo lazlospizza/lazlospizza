@@ -21,7 +21,9 @@ export const useRewardsInfo = () => {
           return;
         }
         previousBlock = block;
-        const blocksRemaining = 100 - (block % 100);
+        const blocksRemaining =
+          parseInt(process.env.BLOCK_INTERVAL) -
+          (block % parseInt(process.env.BLOCK_INTERVAL));
         const nextBlock = block + blocksRemaining;
         try {
           const [winningPizzasRes, blockPayoutRes] = await Promise.all([
