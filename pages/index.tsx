@@ -16,16 +16,6 @@ enum Tabs {
 }
 
 export default function PizzaCave() {
-  const steps = [
-    {
-      content: 'This is my awesome feature!',
-      target: '.step-1',
-    },
-    {
-      content: 'This another awesome feature!',
-      target: '.step-2',
-    },
-  ];
   const isMobile = useIsMobile();
   const [tab, setTab] = useState(Tabs.buyAndBake);
 
@@ -45,7 +35,6 @@ export default function PizzaCave() {
         break;
     }
   };
-
   return (
     <Box>
       {/* sub head */}
@@ -69,6 +58,7 @@ export default function PizzaCave() {
       <Flex
         m="20px"
         style={isMobile ? { flexWrap: 'wrap', justifyContent: 'center' } : {}}
+        className="tour-pizza-cave"
       >
         <Button
           onClick={() => setTab(Tabs.buyAndBake)}

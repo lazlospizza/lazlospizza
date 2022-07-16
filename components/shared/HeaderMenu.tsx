@@ -51,8 +51,8 @@ export const HeaderMenu = ({
         <a
           style={{ marginRight: 16 }}
           className={`${
-            pathname.startsWith(PageRoutes.meetArtists) ? 'current' : ''
-          } step-1`}
+            pathname.startsWith(PageRoutes.meetArtists) ? 'current ' : ''
+          }tour-meet-artists`}
         >
           {Pages.meetArtists}
         </a>
@@ -61,8 +61,8 @@ export const HeaderMenu = ({
         <a
           style={{ marginRight: 16 }}
           className={`${
-            pathname.startsWith(PageRoutes.rarityRewards) ? 'current' : ''
-          } step-2`}
+            pathname.startsWith(PageRoutes.rarityRewards) ? 'current ' : ''
+          }tour-rarity-rewards`}
         >
           {Pages.rarityRewards}
         </a>
@@ -70,7 +70,9 @@ export const HeaderMenu = ({
       <Link href={PageRoutes.faq}>
         <a
           style={{ marginRight: 16 }}
-          className={pathname.startsWith(PageRoutes.faq) ? 'current' : ''}
+          className={`${
+            pathname.startsWith(PageRoutes.faq) ? 'current ' : ''
+          }tour-faq`}
         >
           {Pages.faq}
         </a>
@@ -79,9 +81,9 @@ export const HeaderMenu = ({
         <Link href={PageRoutes.myWallet}>
           <a
             style={{ marginRight: 16 }}
-            className={
-              pathname.startsWith(PageRoutes.myWallet) ? 'current' : ''
-            }
+            className={`${
+              pathname.startsWith(PageRoutes.myWallet) ? 'current ' : ''
+            }tour-my-wallet`}
           >
             {Pages.myWallet}
           </a>
