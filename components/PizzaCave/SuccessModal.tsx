@@ -7,14 +7,13 @@ import {
   Center,
   Text,
   Stack,
+  usePrevious,
 } from '@chakra-ui/react';
-import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useMemo } from 'react';
 import { TwitterShareButton, TwitterIcon } from 'react-share';
+import { useRewardsInfo } from '../../hooks/useRewardsInfo';
 import { useWallet } from '../../hooks/useWallet';
-import { selectRewardsInfo } from '../../store/appSlice';
 import { PizzaCave } from '../../types';
-import { parsePrice } from '../../utils/general';
 
 export const SuccessModal = ({
   isOpen,
@@ -27,6 +26,13 @@ export const SuccessModal = ({
   pizzaTokenId?: number;
   type: PizzaCave | 'random';
 }) => {
+  const { rewardsInfo, load } = useRewardsInfo();
+  const previousIsOpen = usePrevious(isOpen);
+  useEffect(() => {
+    if (isOpen && !previousIsOpen) {
+      load();
+    }
+  }, [isOpen, previousIsOpen, load]);
   const { myPizzas } = useWallet();
   const { onClose } = useDisclosure();
 
@@ -34,14 +40,13 @@ export const SuccessModal = ({
     () => myPizzas.find(p => p.tokenId === pizzaTokenId),
     [myPizzas, pizzaTokenId],
   );
-  const rewardInfo = useSelector(selectRewardsInfo);
 
   const info: { title: string; hashtags: string[]; url: string } =
     useMemo(() => {
       switch (type) {
         case 'random':
           return {
-            title: `Mama Mia! I just baked a Random Pizza and got a Rarity Score of ${mintedPizza?.rarity} @LazlosPizza. Can you beat my score and win the ${rewardInfo?.nextRarityReward} reward? ${rewardInfo?.blocksRemaining} blocks to go`,
+            title: `Mama Mia! I just baked a Random Pizza and got a Rarity Score of ${mintedPizza?.rarity} @LazlosPizza. Can you beat my score and win the ${rewardsInfo?.nextRarityReward} reward? ${rewardsInfo?.blocksRemaining} blocks to go`,
             url: 'https://twitter.com/LazlosPizza/status/1543193434219024384?s=20&t=AZkR97N3JkmGYHUsB62hqQ',
             hashtags: ['ETH', 'NFT', 'LazlosPizza'],
           };
@@ -49,8 +54,8 @@ export const SuccessModal = ({
         case PizzaCave.buyAndBake:
           return {
             title: mintedPizza
-              ? `Mama Mia! I just baked a pie over @LazlosPizza and scored ${mintedPizza?.rarity}. The best score wins ${rewardInfo?.nextRarityReward} in ${rewardInfo?.blocksRemaining} blocks. Bet you can’t beat me!`
-              : `Nom, nom, nom! I just stocked up on some ingredients over @LazlosPizza. Designed by some of the hottest #NFT pixel artists. Now to bake a pie and see if I can win the ${rewardInfo?.nextRarityReward} Reward.`,
+              ? `Mama Mia! I just baked a pie over @LazlosPizza and scored ${mintedPizza?.rarity}. The best score wins ${rewardsInfo?.nextRarityReward} in ${rewardsInfo?.blocksRemaining} blocks. Bet you can’t beat me!`
+              : `Nom, nom, nom! I just stocked up on some ingredients over @LazlosPizza. Designed by some of the hottest #NFT pixel artists. Now to bake a pie and see if I can win the ${rewardsInfo?.nextRarityReward} Reward.`,
             hashtags: mintedPizza
               ? ['LazlosPizza', 'ETH', 'NFT']
               : ['LazlosPizza', 'ETH'],
@@ -60,18 +65,18 @@ export const SuccessModal = ({
           };
         case PizzaCave.rebake:
           return {
-            title: `Bellisima, I just Rebaked my pizza to improve my Rarity Score and got ${mintedPizza?.rarity} @LazlosPizza. Nom, nom, the current ${rewardInfo?.nextRarityReward} Reward. Tell me quick — only ${rewardInfo?.blocksRemaining} more blocks before the next reward payout!`,
+            title: `Bellisima, I just Rebaked my pizza to improve my Rarity Score and got ${mintedPizza?.rarity} @LazlosPizza. Nom, nom, the current ${rewardsInfo?.nextRarityReward} Reward. Tell me quick — only ${rewardsInfo?.blocksRemaining} more blocks before the next reward payout!`,
             hashtags: ['LazlosPizza', 'ETH', 'NFTs'],
             url: 'https://twitter.com/LazlosPizza/status/1547330369770475520?s=20&t=mLU0fMrDajeZ29uGv5UwqQ',
           };
         case PizzaCave.unbake:
           return {
-            title: `I just Unbaked my pizza to get all my ingredients back in my wallet. What should I bake to win the ${rewardInfo?.nextRarityReward} Reward. Tell me quick — only ${rewardInfo?.blocksRemaining} more blocks before the next reward payout!`,
+            title: `I just Unbaked my pizza to get all my ingredients back in my wallet. What should I bake to win the ${rewardsInfo?.nextRarityReward} Reward. Tell me quick — only ${rewardsInfo?.blocksRemaining} more blocks before the next reward payout!`,
             hashtags: ['LazlosPizza', 'NFTs', 'ETH'],
             url: 'https://twitter.com/LazlosPizza/status/1547339842664660993?s=20&t=PvIa-N-TGWKDYYyVv8o27w',
           };
       }
-    }, [type, mintedPizza, rewardInfo]);
+    }, [type, mintedPizza, rewardsInfo]);
 
   const handleOnClose = () => {
     setIsOpen(false);

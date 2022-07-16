@@ -149,7 +149,13 @@ export const BuyAndBake = () => {
             borderBottom="1px"
             borderColor={'gray.dark'}
           >
-            <Flex flex="grow" w="100%" maxW="400" justifyContent="space-around">
+            <Flex
+              flex="grow"
+              w="100%"
+              maxW="400"
+              justifyContent="space-around"
+              className="tour-check-rarity"
+            >
               <NavButton
                 title={BuyAndBakeTabs.ingredients}
                 isSelected={selectedTab === BuyAndBakeTabs.ingredients}
@@ -210,6 +216,7 @@ export const BuyAndBake = () => {
               px="8"
               alignContent={'center'}
               justifyContent={'center'}
+              className="tour-check-rarity"
             >
               <NavButton
                 title={BuyAndBakeTabs.selections}

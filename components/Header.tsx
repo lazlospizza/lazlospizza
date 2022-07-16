@@ -1,5 +1,5 @@
 import { HamburgerIcon } from '@chakra-ui/icons';
-import { Box, Heading, Stack, Button, Text } from '@chakra-ui/react';
+import { Box, Stack, Button, Text } from '@chakra-ui/react';
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -11,9 +11,7 @@ import { parsePrice, useIsMobile } from '../utils/general';
 import { ConnectWalletButton } from './ConnectWalletButton';
 import { HeaderMenu } from './shared/HeaderMenu';
 import Marquee from 'react-fast-marquee';
-import { useAppDispatch } from '../store';
-import { selectRewardsInfo, updateRewardsInfo } from '../store/appSlice';
-import { useSelector } from 'react-redux';
+import { useRewardsInfo } from '../hooks/useRewardsInfo';
 
 interface Reward {
   block: number;
@@ -31,67 +29,7 @@ export const Header = () => {
   const { mainContract } = useMainContract();
   const [unpaidRewards, setUnpaidRewards] = useState<Reward[]>([]);
   const [isClaimingRewards, setIsClaimingRewards] = useState(false);
-  const dispatch = useAppDispatch();
-  const rewardsInfo = useSelector(selectRewardsInfo);
-  useEffect(() => {
-    if (!wallet?.web3Provider) {
-      return;
-    }
-    let previousBlock = undefined;
-    let previousNextBlock = undefined;
-    let previousRarityReward = undefined;
-    const updateFunc = () => {
-      wallet?.web3Provider?.getBlockNumber().then(async block => {
-        if (block === previousBlock) {
-          return;
-        }
-        previousBlock = block;
-        const blocksRemaining = 1000 - (block % 1000);
-        const nextBlock = block + blocksRemaining;
-        try {
-          const [winningPizzasRes, blockPayoutRes] = await Promise.all([
-            axios.get(`${process.env.NEXT_PUBLIC_API_URL}/winning_pizzas`),
-            previousNextBlock !== nextBlock
-              ? axios.get(
-                  `${process.env.NEXT_PUBLIC_API_URL}/calculate-block-payouts?block=${nextBlock}`,
-                )
-              : undefined,
-          ]);
-          previousNextBlock = nextBlock;
-          let rarityReward = previousRarityReward;
-          if (blockPayoutRes) {
-            rarityReward = blockPayoutRes?.data.find(
-              item => item.reason === 'Rarity reward',
-            );
-            previousRarityReward = rarityReward;
-          }
-          dispatch(
-            updateRewardsInfo({
-              blocksRemaining,
-              nextRarityReward: rarityReward
-                ? parsePrice(
-                    parseFloat(
-                      (
-                        rarityReward.payout_amount / 1000000000000000000.0
-                      ).toFixed(3),
-                    ),
-                    3,
-                  )
-                : undefined,
-              scoreToBeat: winningPizzasRes.data[0]?.rarity,
-            }),
-          );
-        } catch (error) {
-          console.error(error);
-        }
-      });
-    };
-    const inverval = setInterval(updateFunc, 6000);
-    updateFunc();
-    return () => {
-      clearInterval(inverval);
-    };
-  }, [wallet?.web3Provider]);
+  const { rewardsInfo } = useRewardsInfo();
   const checkRarityRewards = useCallback(async () => {
     if (!wallet?.address) return null;
     const payoutsRes = await axios.get(
@@ -324,6 +262,7 @@ export const Header = () => {
                 justifyContent="space-around"
                 px={isMobile ? 3 : 6}
                 fontSize={isMobile ? 10 : 14}
+                className="tour-rewards-step"
               >
                 <Text>
                   Next Rarity Reward:{' '}

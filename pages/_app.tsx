@@ -7,9 +7,11 @@ import { colors, styles } from '../styles/theme';
 import 'react-image-lightbox/style.css';
 import '../styles/global.css';
 import '../styles/fonts.css';
+import 'intro.js/introjs.css';
 import { Footer } from '../components/Footer';
 import { Provider } from 'react-redux';
 import store from '../store';
+import { Tutorial } from '../components/Tutorial';
 
 const config = {
   initialColorMode: 'dark',
@@ -68,6 +70,7 @@ function MyApp({ Component, pageProps }) {
               <Component {...pageProps} />
               <Footer />
               <audio src="/assets/cafe-music.mp3" autoPlay loop hidden />
+              <Tutorial />
             </>
           </Provider>
         </WalletProvider>
