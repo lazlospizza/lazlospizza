@@ -271,7 +271,9 @@ export const Header = () => {
                 <Text>⦁</Text>
                 <Text>
                   <Text color="cheese.200" as="span">
-                    {rewardsInfo.blocksRemaining || '-'}
+                    {rewardsInfo.blocksRemaining !== undefined
+                      ? rewardsInfo.blocksRemaining
+                      : '-'}
                   </Text>{' '}
                   blocks remaining
                 </Text>
