@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Box, Center, Flex, Stack, Text, useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { BAKING_FEE } from '../../constants';
+import { BAKING_FEE, CHECK_RARITY_INFO } from '../../constants';
 import { useWallet } from '../../hooks/useWallet';
 import { colors } from '../../styles/theme';
 import { Pizza, Ingredient, PizzaCave } from '../../types';
@@ -10,6 +10,7 @@ import {
   DefaultPizza,
   useIsMobile,
   removeIngredient,
+  parsePrice,
 } from '../../utils/general';
 import { NavButton } from '../shared/NavButton';
 import { BuyAndBakeTabs } from './BuyAndBake';
@@ -63,7 +64,13 @@ export const Bake = () => {
           />
         );
       case BuyAndBakeTabs.selections:
-        return <YourSelections pizza={pizza} tab={PizzaCave.bake} />;
+        return (
+          <YourSelections
+            pizza={pizza}
+            tab={PizzaCave.bake}
+            setPizza={setPizza}
+          />
+        );
       case BuyAndBakeTabs.checkRarity:
         return <CheckRarity />;
       default:
@@ -75,11 +82,10 @@ export const Bake = () => {
     <Box>
       <Stack m="10px">
         <Text color="tomato.500" fontWeight={700} fontSize={'xl'}>
-          Bake a Pizza
+          {`Bake a Pizza (${parsePrice(BAKING_FEE)})`}
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
-          {`Bake a pizzza with ingredients you already have in your wallet. ${BAKING_FEE}ETH
-        Baking fee.`}
+          {`Bake a pizza with ingredients you already have in your wallet.`}
         </Text>
       </Stack>
       {/* deterime which view */}
@@ -112,6 +118,7 @@ export const Bake = () => {
               <NavButton
                 title={BuyAndBakeTabs.checkRarity}
                 isSelected={selectedTab === BuyAndBakeTabs.checkRarity}
+                infoTooltip={CHECK_RARITY_INFO}
                 onClick={() => {
                   setSelectedTab(BuyAndBakeTabs.checkRarity);
                   setSelectedHalfTab(BuyAndBakeTabs.checkRarity);
@@ -123,8 +130,18 @@ export const Bake = () => {
         </Stack>
       ) : (
         // desktop view
-        <Flex borderTop="2px" borderColor={'gray.light'}>
-          <div style={{ width: '50%' }}>
+        <Flex
+          borderTop="2px"
+          borderColor={'gray.light'}
+          maxHeight={'900px'}
+          top="20px"
+        >
+          <Box
+            className="scrollable"
+            width={'50%'}
+            maxHeight="900px"
+            overflowY={'auto'}
+          >
             <SelectYourIngredients
               ingredientGroups={ingredientGroups}
               ownedIngredients={myIngredients}
@@ -133,9 +150,11 @@ export const Bake = () => {
               pizza={pizza}
               tab={PizzaCave.bake}
             />
-          </div>
+          </Box>
           <Stack
             style={{ width: '50%', backgroundColor: colors.gray.background }}
+            maxHeight="900px"
+            overflowY={'auto'}
           >
             <Flex
               pt="4"
@@ -155,6 +174,7 @@ export const Bake = () => {
               <NavButton
                 title={BuyAndBakeTabs.checkRarity}
                 isSelected={selectedHalfTab === BuyAndBakeTabs.checkRarity}
+                infoTooltip={CHECK_RARITY_INFO}
                 onClick={() => {
                   setSelectedTab(BuyAndBakeTabs.checkRarity);
                   setSelectedHalfTab(BuyAndBakeTabs.checkRarity);

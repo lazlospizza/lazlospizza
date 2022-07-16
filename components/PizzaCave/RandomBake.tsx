@@ -2,9 +2,13 @@ import { Box, Button, Center, Stack, Text, useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { parseEther } from 'ethers/lib/utils';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { RANDOM_BAKE_FEE } from '../../constants';
 import { useMainContract } from '../../hooks/useContract';
 import { useWallet } from '../../hooks/useWallet';
+import { selectRewardsInfo } from '../../store/appSlice';
+import { parsePrice } from '../../utils/general';
+import { AlertModal } from '../shared/AlertModal';
 import { SuccessModal } from './SuccessModal';
 
 export const RandomBake = () => {
@@ -15,6 +19,7 @@ export const RandomBake = () => {
   const [tokenId, setTokenId] = useState<number | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const rewardsInfo = useSelector(selectRewardsInfo);
   const toast = useToast();
 
   useEffect(() => {
@@ -48,6 +53,7 @@ export const RandomBake = () => {
       } = res.data;
       const signer = wallet.web3Provider.getSigner();
       const contractWithSigner = mainContract.connect(signer);
+      console.log('HERE 1');
       const _txn = await contractWithSigner.bakeRandomPizza(
         data.token_ids,
         data.timestamp,
@@ -60,6 +66,8 @@ export const RandomBake = () => {
           gasLimit: 500000,
         },
       );
+      console.log('HERE 2');
+      console.log('TXN', _txn);
       setTxn(_txn);
       const receipt = await _txn.wait();
 
@@ -75,6 +83,8 @@ export const RandomBake = () => {
       // @ts-ignore
       window.MM_ERR = e;
       setErrorMessage('Unexpected Error');
+    } finally {
+      setTxn(null);
     }
     setLoading(false);
   };
@@ -83,12 +93,18 @@ export const RandomBake = () => {
 
   return (
     <Stack>
+      <AlertModal
+        showLoader={true}
+        isOpen={loading && !!txn}
+        hideClose
+        message="Transaction in progress..."
+      />
       <Stack m="10px">
         <Text color="tomato.500" fontWeight={700} fontSize={'xl'}>
-          Random Bake ({RANDOM_BAKE_FEE} ETH)
+          Random Bake ({parsePrice(RANDOM_BAKE_FEE)})
         </Text>
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
-          {`Can't decide what you want? Is oke, we have you covered! Get a completed pizza NFT with a random selection of ingredients. (${RANDOM_BAKE_FEE} ETH + gas)`}
+          {`Can't decide what you want, or just want to degen and enjoy a dopamine rush with instant reveal? Randomly baked pizzas have a minimum of 3 ingredients (1 base, 1 sauce, 1 cheese) and up to a maximum of 13 ingredients (1 base, 1 sauce, 3 cheeses, 4 meats, 4 toppings).`}
         </Text>
       </Stack>
 
@@ -109,7 +125,7 @@ export const RandomBake = () => {
               alignItems: 'center',
             }}
           >
-            {loading && !!txn ? (
+            {!pizza?.image ? (
               <img
                 src={'/assets/pizza.gif'}
                 style={{
@@ -122,7 +138,7 @@ export const RandomBake = () => {
               />
             ) : (
               <img
-                src={pizza ? pizza.image : '/assets/tablecloth.svg'}
+                src={pizza ? pizza.image : '/assets/tablecloth.png'}
                 style={{
                   width: '100%',
                   height: '100%',
@@ -142,8 +158,8 @@ export const RandomBake = () => {
               mt="16"
               onClick={handleRandomBake}
               disabled={!wallet?.address}
-              isLoading={loading}
-            >{`Random Bake at ${RANDOM_BAKE_FEE}`}</Button>
+              isLoading={loading && txn}
+            >{`Random Bake (${parsePrice(RANDOM_BAKE_FEE, 2, false)})`}</Button>
           </Center>
         </Stack>
       </Box>
@@ -151,6 +167,7 @@ export const RandomBake = () => {
         isOpen={showSuccessModal}
         setIsOpen={setShowSuccessModal}
         pizzaTokenId={tokenId}
+        type="random"
       />
     </Stack>
   );

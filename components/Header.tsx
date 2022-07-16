@@ -1,5 +1,5 @@
 import { HamburgerIcon } from '@chakra-ui/icons';
-import { Box, Heading, Stack, Button } from '@chakra-ui/react';
+import { Box, Stack, Button, Text } from '@chakra-ui/react';
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -7,9 +7,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMainContract } from '../hooks/useContract';
 import { useWallet } from '../hooks/useWallet';
 import { headerHeight } from '../styles/theme';
-import { useIsMobile } from '../utils/general';
+import { parsePrice, useIsMobile } from '../utils/general';
 import { ConnectWalletButton } from './ConnectWalletButton';
 import { HeaderMenu } from './shared/HeaderMenu';
+import Marquee from 'react-fast-marquee';
+import { useRewardsInfo } from '../hooks/useRewardsInfo';
 
 interface Reward {
   block: number;
@@ -27,7 +29,7 @@ export const Header = () => {
   const { mainContract } = useMainContract();
   const [unpaidRewards, setUnpaidRewards] = useState<Reward[]>([]);
   const [isClaimingRewards, setIsClaimingRewards] = useState(false);
-
+  const { rewardsInfo } = useRewardsInfo();
   const checkRarityRewards = useCallback(async () => {
     if (!wallet?.address) return null;
     const payoutsRes = await axios.get(
@@ -57,7 +59,8 @@ export const Header = () => {
 
   const unclaimedTotal = useMemo(
     () =>
-      unpaidRewards.reduce((prev, current) => prev + current.payout_amount, 0),
+      unpaidRewards.reduce((prev, current) => prev + current.payout_amount, 0) /
+      1000000000000000000,
     [unpaidRewards],
   );
 
@@ -81,7 +84,7 @@ export const Header = () => {
 
         payouts.push({
           payoutBlock: blockReward.block,
-          amount: `${blockReward.payout_amount * 1000000000000000000.0}`,
+          amount: `${blockReward.payout_amount}`,
           r: blockReward.r,
           s: blockReward.s,
           v: blockReward.v,
@@ -142,7 +145,7 @@ export const Header = () => {
                 onClick={claimRewards}
                 isLoading={isClaimingRewards}
               >
-                Claim Rewards ({unclaimedTotal.toFixed(3)} ETH)
+                Claim Rewards ({parsePrice(unclaimedTotal, 3)})
               </Button>
             )}
           </Stack>
@@ -168,39 +171,47 @@ export const Header = () => {
           <a>
             <img
               style={{
-                height: isMobile ? headerHeight.mobile : headerHeight.desktop,
+                height: `${
+                  isMobile
+                    ? headerHeight.mobile - 40
+                    : headerHeight.desktop - 90
+                }px`,
+                margin: isMobile ? `20px 10px` : `30px 15px 60px 15px`,
               }}
-              src="/assets/logo.png"
+              src="/assets/logo-header.png"
               className="logo"
               alt="Logo"
             />
           </a>
         </Link>
-        <Box className="header-content">
-          <Stack direction="column" justifyContent="center">
-            <Heading
-              style={
-                isMobile ? { fontSize: '20px' } : { letterSpacing: '10px' }
-              }
-            >
-              {"Lazlo's Pizza"}
-            </Heading>
-            {/* Menu Desktop */}
-            {!isMobile && <DesktopMenu />}
-          </Stack>
+        <Box
+          className="header-content"
+          sx={{
+            paddingTop: 2,
+            paddingBottom: 2,
+            paddingLeft: 4,
+            paddingRight: 4,
+          }}
+        >
           {isMobile ? (
-            <HamburgerIcon
-              ref={ref}
-              onClick={() => {
-                setShowMobileMenu(prev => !prev);
-              }}
-              color="cheese.200"
-              h="100%"
-              w="auto"
-              maxW="60px"
-            />
+            <Stack justifyContent="center">
+              <Box
+                sx={{ background: 'tomato.500', borderRadius: '10px', p: 2 }}
+              >
+                <HamburgerIcon
+                  ref={ref}
+                  onClick={() => {
+                    setShowMobileMenu(prev => !prev);
+                  }}
+                  color="cheese.200"
+                  w="40px"
+                  h="40px"
+                  maxW="60px"
+                />
+              </Box>
+            </Stack>
           ) : (
-            <Stack>
+            <Stack pt={5}>
               <ConnectWalletButton />
               {!!unclaimedTotal && (
                 <Button
@@ -219,17 +230,103 @@ export const Header = () => {
                   onClick={claimRewards}
                   isLoading={isClaimingRewards}
                 >
-                  Claim Rewards ({unclaimedTotal.toFixed(3)} ETH)
+                  Claim Rewards ({parsePrice(unclaimedTotal, 3)})
                 </Button>
               )}
             </Stack>
           )}
         </Box>
+
+        {rewardsInfo ? (
+          <Marquee
+            style={{
+              position: 'absolute',
+              bottom: isMobile ? '-16px' : '-20px',
+              left: `0`,
+              width: `100%`,
+              backgroundColor: '#ff0144',
+            }}
+            gradientWidth={isMobile ? 10 : 120}
+            speed={50}
+            gradientColor={[255, 1, 68]}
+            className="tour-rewards-step"
+          >
+            {[1, 2].map(key => (
+              <Stack
+                key={key}
+                direction="row"
+                gap={isMobile ? 3 : 6}
+                fontFamily={'heading'}
+                minWidth="50%"
+                justifyContent="space-around"
+                px={isMobile ? 3 : 6}
+                fontSize={isMobile ? 10 : 14}
+              >
+                <Text>
+                  Next Rarity Reward:{' '}
+                  <Text color="cheese.200" as="span">
+                    {rewardsInfo.nextRarityReward || '-'}
+                  </Text>
+                </Text>
+                <Text>⦁</Text>
+                <Text>
+                  <Text color="cheese.200" as="span">
+                    {rewardsInfo.blocksRemaining || '-'}
+                  </Text>{' '}
+                  blocks remaining
+                </Text>
+                <Text>⦁</Text>
+                <Text>
+                  Score to Beat:{' '}
+                  <Text color="cheese.200" as="span">
+                    {rewardsInfo.scoreToBeat}
+                  </Text>{' '}
+                </Text>
+                <Text>⦁</Text>
+              </Stack>
+            ))}
+          </Marquee>
+        ) : null}
+        {/* Menu Desktop */}
+        {!isMobile && (
+          <Box
+            bgColor="tomato.700"
+            px={4}
+            pt={2}
+            pb={1}
+            width="100%"
+            position="absolute"
+            bottom="0"
+          >
+            <DesktopMenu />
+          </Box>
+        )}
+        <Box
+          sx={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: `translate3d(-50%, calc(-50% - ${
+              isMobile ? '0px' : '20px'
+            }), 0)`,
+          }}
+        >
+          <img
+            src="/assets/header-logo.png"
+            className="logo"
+            alt="Logo"
+            style={{
+              height: isMobile ? '60px' : '90px',
+            }}
+          />
+        </Box>
         {isMobile && showMobileMenu && <MobileMenu />}
       </Box>
       <div
         style={{
-          height: isMobile ? headerHeight.mobile : headerHeight.desktop,
+          height: `calc(${
+            isMobile ? headerHeight.mobile : headerHeight.desktop
+          }px + ${!rewardsInfo ? '0px' : isMobile ? '16px' : '20px'})`,
         }}
       />
     </Stack>

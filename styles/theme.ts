@@ -1,6 +1,6 @@
 export const headerHeight = {
-  mobile: '120px',
-  desktop: '159px',
+  mobile: 120,
+  desktop: 179,
 };
 
 export const colors = {
@@ -12,6 +12,7 @@ export const colors = {
   },
   tomato: {
     500: '#CC4443',
+    700: '#ff0144',
   },
   gray: {
     background: '#F5F5F5',
@@ -50,16 +51,18 @@ export const styles = {
       borderBottomWidth: '2px',
       borderColor: 'gray.dark',
       zIndex: 1000,
+      background: 'url("/assets/header-bg.png") repeat',
+      backgroundSize: '170px',
+      backgroundPosition: 'center bottom',
     },
     '.header .header-content': {
       flex: 1,
       display: 'flex',
-      flexDirection: 'row',
+      flexDirection: 'row-reverse',
       justifyContent: 'space-between',
-      padding: 4,
     },
     '.header .logo': {
-      maxHeight: headerHeight.desktop,
+      maxHeight: `${headerHeight.desktop}px`,
       width: 'auto',
     },
     '.menu a': {
@@ -70,6 +73,9 @@ export const styles = {
       fontWeight: '900',
       width: 'max-content',
       whiteSpaceWrap: 'nowrap',
+    },
+    '.menu--row a': {
+      fontSize: '14px',
     },
     '.menu a:hover, .menu a.current': {
       color: 'cheese.200',

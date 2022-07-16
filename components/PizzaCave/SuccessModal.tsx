@@ -7,32 +7,80 @@ import {
   Center,
   Text,
   Stack,
+  usePrevious,
 } from '@chakra-ui/react';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { TwitterShareButton, TwitterIcon } from 'react-share';
+import { useRewardsInfo } from '../../hooks/useRewardsInfo';
 import { useWallet } from '../../hooks/useWallet';
+import { PizzaCave } from '../../types';
 
 export const SuccessModal = ({
   isOpen,
   setIsOpen,
   pizzaTokenId,
+  type,
 }: {
   isOpen: boolean;
   setIsOpen: (show: boolean) => void;
   pizzaTokenId?: number;
+  type: PizzaCave | 'random';
 }) => {
+  const { rewardsInfo, load } = useRewardsInfo();
+  const previousIsOpen = usePrevious(isOpen);
+  useEffect(() => {
+    if (isOpen && !previousIsOpen) {
+      load();
+    }
+  }, [isOpen, previousIsOpen, load]);
   const { myPizzas } = useWallet();
   const { onClose } = useDisclosure();
+
+  const mintedPizza = useMemo(
+    () => myPizzas.find(p => p.tokenId === pizzaTokenId),
+    [myPizzas, pizzaTokenId],
+  );
+
+  const info: { title: string; hashtags: string[]; url: string } =
+    useMemo(() => {
+      switch (type) {
+        case 'random':
+          return {
+            title: `Mama Mia! I just baked a Random Pizza and got a Rarity Score of ${mintedPizza?.rarity} @LazlosPizza. Can you beat my score and win the ${rewardsInfo?.nextRarityReward} reward? ${rewardsInfo?.blocksRemaining} blocks to go`,
+            url: 'https://twitter.com/LazlosPizza/status/1543193434219024384?s=20&t=AZkR97N3JkmGYHUsB62hqQ',
+            hashtags: ['ETH', 'NFT', 'LazlosPizza'],
+          };
+        case PizzaCave.bake:
+        case PizzaCave.buyAndBake:
+          return {
+            title: mintedPizza
+              ? `Mama Mia! I just baked a pie over @LazlosPizza and scored ${mintedPizza?.rarity}. The best score wins ${rewardsInfo?.nextRarityReward} in ${rewardsInfo?.blocksRemaining} blocks. Bet you can’t beat me!`
+              : `Nom, nom, nom! I just stocked up on some ingredients over @LazlosPizza. Designed by some of the hottest #NFT pixel artists. Now to bake a pie and see if I can win the ${rewardsInfo?.nextRarityReward} Reward.`,
+            hashtags: mintedPizza
+              ? ['LazlosPizza', 'ETH', 'NFT']
+              : ['LazlosPizza', 'ETH'],
+            url: mintedPizza
+              ? 'https://twitter.com/LazlosPizza/status/1547332075627417603?s=20&t=mLU0fMrDajeZ29uGv5UwqQ'
+              : 'https://twitter.com/LazlosPizza/status/1547328531058802688?s=20&t=mLU0fMrDajeZ29uGv5UwqQ',
+          };
+        case PizzaCave.rebake:
+          return {
+            title: `Bellisima, I just Rebaked my pizza to improve my Rarity Score and got ${mintedPizza?.rarity} @LazlosPizza. Nom, nom, the current ${rewardsInfo?.nextRarityReward} Reward. Tell me quick — only ${rewardsInfo?.blocksRemaining} more blocks before the next reward payout!`,
+            hashtags: ['LazlosPizza', 'ETH', 'NFTs'],
+            url: 'https://twitter.com/LazlosPizza/status/1547330369770475520?s=20&t=mLU0fMrDajeZ29uGv5UwqQ',
+          };
+        case PizzaCave.unbake:
+          return {
+            title: `I just Unbaked my pizza to get all my ingredients back in my wallet. What should I bake to win the ${rewardsInfo?.nextRarityReward} Reward. Tell me quick — only ${rewardsInfo?.blocksRemaining} more blocks before the next reward payout!`,
+            hashtags: ['LazlosPizza', 'NFTs', 'ETH'],
+            url: 'https://twitter.com/LazlosPizza/status/1547339842664660993?s=20&t=PvIa-N-TGWKDYYyVv8o27w',
+          };
+      }
+    }, [type, mintedPizza, rewardsInfo]);
 
   const handleOnClose = () => {
     setIsOpen(false);
   };
-
-  const mintedPizza = useMemo(
-    () => myPizzas.find(p => p.tokenId === pizzaTokenId),
-    [myPizzas],
-  );
-
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -46,32 +94,48 @@ export const SuccessModal = ({
             >{`Transaction Complete`}</Text>
           </Center>
           <Center mt={8}>
-            {!!mintedPizza && (
-              <img src={mintedPizza.image} style={{ width: '100%' }} />
-            )}
+            <img
+              alt="Pizza"
+              // NOTE: added hash to invalidate cache
+              src={
+                mintedPizza?.image
+                  ? `${mintedPizza.image}?hash=${Math.round(
+                      Math.random() * 1e10,
+                    )}`
+                  : '/assets/ingredients-pane.png'
+              }
+              style={{ width: '100%' }}
+            />
           </Center>
-          <Center mt={8}>
-            <TwitterShareButton
-              url={mintedPizza?.image}
-              title="Look what I made @LazlosPizza. Bet you can't beat my score and win the $ETH rewards, anon!"
-              hashtags={['BitcoinPizzaDay', 'NFTCommunity', 'LazlosPizza']}
-            >
-              <Stack spacing={4} direction="row" alignItems="center">
-                <Text color="white">Share on Twitter!</Text>
-                <TwitterIcon size={32} round={true} />
-              </Stack>
-            </TwitterShareButton>
-          </Center>
-          <Center mt={8}>
-            <Button
-              backgroundColor={'white'}
-              color="gray.dark"
-              mr={3}
-              onClick={handleOnClose}
-            >
-              Close
-            </Button>
-          </Center>
+          <Stack direction="row" justifyContent="center" mt={8}>
+            <Center>
+              <TwitterShareButton
+                url={info?.url}
+                title={info?.title}
+                hashtags={info?.hashtags}
+              >
+                <Button backgroundColor="cheese.200">
+                  <TwitterIcon
+                    size={32}
+                    round={true}
+                    iconFillColor="#00acee"
+                    bgStyle={{ fill: 'rgba(0,0,0,0)' }}
+                  />
+                  <Text color="gray.dark">Share on Twitter!</Text>
+                </Button>
+              </TwitterShareButton>
+            </Center>
+            <Center>
+              <Button
+                backgroundColor={'white'}
+                color="gray.dark"
+                mr={3}
+                onClick={handleOnClose}
+              >
+                Close
+              </Button>
+            </Center>
+          </Stack>
         </ModalContent>
       </Modal>
     </>

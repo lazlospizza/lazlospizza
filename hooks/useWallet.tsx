@@ -170,6 +170,9 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     provider.on('chainChanged', handleChainChanged);
     provider.on('disconnect', handleDisconnect);
 
+    provider.on('confirmation', () => console.log('CONFIRMATION'));
+    provider.on('receipt', () => console.log('RECEIPT'));
+
     // Subscription Cleanup
     return () => {
       if (provider.removeListener) {
@@ -230,7 +233,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
         {
           name: 'Toppings',
           type: IngredientType.topping,
-          min: 1,
+          min: 0,
           max: TOPPING_LIMIT,
           ingredients: ingredients.filter(
             ingredient => ingredient.ingredientType === IngredientType.topping,

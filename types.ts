@@ -1,17 +1,19 @@
 export const enum Pages {
   home = 'Home',
   pizzaCave = 'Pizza Cave',
-  meetArtists = 'Meet Artists',
+  meetArtists = 'Meet Pizzaiolos',
   rarityRewards = 'Rarity Rewards',
   myWallet = 'My Wallet',
+  faq = 'FAQ',
 }
 
 export const enum PageRoutes {
-  home = '/',
-  pizzaCave = '/pizza-cave',
+  home = '/home',
+  pizzaCave = '/',
   meetArtists = '/meet-artists',
   rarityRewards = '/rarity-rewards',
   myWallet = '/my-wallet',
+  faq = '/faq',
 }
 
 export const enum PizzaCave {
@@ -64,4 +66,16 @@ export interface Pizza {
   rarity?: number;
   rewardedOn?: number;
   totalCost?: number;
+  block?: number;
+  // Manually added (not returned from API)
+  payout?: Payout;
+}
+
+export interface Payout {
+  block: number;
+  payout_amount: number;
+  timestamp: number;
+  token_id: number;
+  // Manually added (not returned from API)
+  hasBeenPaid?: Payout;
 }

@@ -1,233 +1,113 @@
-import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  Heading,
-  Stack,
-  Text,
-  Link,
-} from '@chakra-ui/react';
-import { PromoHeader } from '../components/PromoHeader';
-import { useGetWindowSize } from '../utils/general';
+import { Box, Button, Center, Flex, Heading } from '@chakra-ui/react';
+import { useState } from 'react';
+import { Bake } from '../components/PizzaCave/Bake';
+import { BuyAndBake } from '../components/PizzaCave/BuyAndBake';
+import { RandomBake } from '../components/PizzaCave/RandomBake';
+import { Rebake } from '../components/PizzaCave/Rebake';
+import { Unbake } from '../components/PizzaCave/Unbake';
+import { useIsMobile } from '../utils/general';
 
-export default function Home() {
-  const size = useGetWindowSize();
+enum Tabs {
+  buyAndBake = 'Buy & Bake',
+  bake = 'Bake',
+  unbake = 'Unbake',
+  rebake = 'Rebake',
+  randomBake = 'Random Bake',
+}
 
-  const firstBoxMobile = () => {
-    return (
-      <Box
-        className="card"
-        padding="20px"
-        backgroundColor="cheese.200"
-        borderWidth="1px"
-        borderColor="tomato.500"
-      >
-        <Stack>
-          <Flex direction="row">
-            <Center minW="100px">
-              <img
-                src="/assets/pizza.svg"
-                alt="pizza"
-                width="200px"
-                height="200px"
-              />
-            </Center>
-            {/* Text */}
-            <Stack spacing="20px" mb={10}>
-              <Heading color="gray.dark" fontSize={16}>
-                Buy Ingredients and Bake a Pizza
-              </Heading>
-              <Text fontFamily="Lato" color="gray.dark" fontSize={18}>
-                Select your hand-crafted ingredients freshy prepared by our
-                pixel artists.
-              </Text>
-            </Stack>
-          </Flex>
-          {/* Button */}
-          <Center>
-            <Link
-              href="/pizza-cave"
-              _hover={{
-                textDecoration: 'none',
-                color: 'tomato.500',
-              }}
-            >
-              <Button
-                backgroundColor="tomato.500"
-                borderWidth={2}
-                borderColor="tomato.500"
-                fontWeight="900"
-                _hover={{
-                  textDecoration: 'none',
-                  backgroundColor: 'cheese.200',
-                  borderColor: 'tomato.500',
-                  color: 'tomato.500',
-                }}
-                size="lg"
-              >
-                {"Head to Lazlo's Pizza Cave"}
-              </Button>
-            </Link>
-          </Center>
-        </Stack>
-      </Box>
-    );
+export default function PizzaCave() {
+  const isMobile = useIsMobile();
+  const [tab, setTab] = useState(Tabs.buyAndBake);
+
+  const renderSubpage = (tab: Tabs) => {
+    switch (tab) {
+      case Tabs.buyAndBake:
+        return <BuyAndBake />;
+      case Tabs.bake:
+        return <Bake />;
+      case Tabs.unbake:
+        return <Unbake />;
+      case Tabs.rebake:
+        return <Rebake />;
+      case Tabs.randomBake:
+        return <RandomBake />;
+      default:
+        break;
+    }
   };
-
-  const firstBoxDesktop = () => {
-    return (
-      <Box
-        className="card"
-        padding="20px"
-        backgroundColor="cheese.200"
-        borderWidth="1px"
-        borderColor="tomato.500"
-      >
-        <Stack direction="row">
-          <Center w="250px">
-            <img
-              src="/assets/pizza.svg"
-              alt="pizza"
-              width="250px"
-              height="250px"
-            />
-          </Center>
-          <Flex
-            flexDirection="column"
-            justifyContent="space-between"
-            padding="20px"
-          >
-            <Stack spacing="20px" mb={10}>
-              <Heading color="gray.dark" fontSize={28}>
-                Buy Ingredients and Bake a Pizza
-              </Heading>
-              <Text fontFamily="Lato" color="gray.dark" fontSize={22}>
-                Select your hand-crafted ingredients freshy prepared by our
-                pixel artists.
-              </Text>
-            </Stack>
-            <Flex flexDirection="row">
-              <Link
-                href="/pizza-cave"
-                _hover={{
-                  textDecoration: 'none',
-                  color: 'tomato.500',
-                }}
-              >
-                <Button
-                  backgroundColor="tomato.500"
-                  borderWidth={2}
-                  borderColor="tomato.500"
-                  fontWeight="900"
-                  _hover={{
-                    textDecoration: 'none',
-                    backgroundColor: 'cheese.200',
-                    borderColor: 'tomato.500',
-                    color: 'tomato.500',
-                  }}
-                  size="lg"
-                >
-                  {"Head to Lazlo's Pizza Cave"}
-                </Button>
-              </Link>
-            </Flex>
-          </Flex>
-        </Stack>
-      </Box>
-    );
-  };
-
-  const secondBox = () => {
-    return (
-      <Box className="card" backgroundColor="tomato.500">
-        <Flex
-          flexDirection={size < 1000 ? 'column' : 'row'}
-          justifyContent="space-between"
-        >
-          <Flex
-            flexDirection="column"
-            justifyContent="space-between"
-            padding="40px"
-            // minH="250px"
-            maxH="300px"
-          >
-            {/* Text */}
-            <Stack spacing="20px" mb={10}>
-              <Heading color="cheese.200" fontSize={size < 530 ? 16 : 32}>
-                Check Rarity Rewards
-              </Heading>
-              <Text
-                fontFamily="Lato"
-                color="white"
-                fontSize={size < 530 ? 18 : 24}
-              >
-                Find out more about Rarity Rewards
-              </Text>
-            </Stack>
-            <Flex flexDirection="row">
-              {/* Button */}
-              <Link
-                href="/rarity-rewards"
-                color="auto"
-                _hover={{
-                  textDecoration: 'none',
-                  color: 'cheese.200',
-                }}
-              >
-                <Button
-                  backgroundColor="cheese.200"
-                  borderWidth={2}
-                  borderColor="cheese.200"
-                  fontWeight="900"
-                  color="gray.800"
-                  _hover={{
-                    textDecoration: 'none',
-                    backgroundColor: 'tomato.500',
-                    borderColor: 'cheese.200',
-                    color: 'cheese.200',
-                  }}
-                  size="lg"
-                >
-                  Rarity Rewards
-                </Button>
-              </Link>
-            </Flex>
-          </Flex>
-          <img
-            src="/assets/double-pizza.svg"
-            alt="pizza"
-            style={{ maxWidth: '100%', maxHeight: '100%' }}
-          />
-        </Flex>
-      </Box>
-    );
-  };
-
   return (
-    <Box p="0px" w="full">
-      <Stack>
-        <PromoHeader></PromoHeader>
-
-        <Stack
-          zIndex={10}
-          borderTop={'2px'}
-          borderColor="background.brown"
-          p="20px"
-          spacing="20px"
-          backgroundColor="background.light"
-        >
-          <Heading fontFamily="Lato" size={'lg'} color="tomato.500">
-            Get Started
+    <Box>
+      {/* sub head */}
+      <Flex w="full" backgroundColor="cheese.200">
+        <Center mx="30px" my="10px">
+          <img
+            src="/assets/pizza.svg"
+            alt="pizza"
+            width="100px"
+            height="100px"
+          />
+        </Center>
+        <Center>
+          <Heading size="lg" color="gray.dark">
+            Pizza Cave
           </Heading>
+        </Center>
+      </Flex>
 
-          {/* First card */}
-          {size < 700 ? firstBoxMobile() : firstBoxDesktop()}
+      {/* Page nav */}
+      <Flex
+        m="20px"
+        style={isMobile ? { flexWrap: 'wrap', justifyContent: 'center' } : {}}
+        className="tour-pizza-cave"
+      >
+        <Button
+          onClick={() => setTab(Tabs.buyAndBake)}
+          backgroundColor={tab === Tabs.buyAndBake ? '#3D3431' : ''}
+          className={
+            tab === Tabs.buyAndBake ? 'cave-nav-btn-selected' : 'cave-nav-btn'
+          }
+        >
+          {Tabs.buyAndBake}
+        </Button>
+        <Button
+          onClick={() => setTab(Tabs.bake)}
+          backgroundColor={tab === Tabs.bake ? '#3D3431' : ''}
+          className={
+            tab === Tabs.bake ? 'cave-nav-btn-selected' : 'cave-nav-btn'
+          }
+        >
+          {Tabs.bake}
+        </Button>
+        <Button
+          onClick={() => setTab(Tabs.unbake)}
+          backgroundColor={tab === Tabs.unbake ? '#3D3431' : ''}
+          className={
+            tab === Tabs.unbake ? 'cave-nav-btn-selected' : 'cave-nav-btn'
+          }
+        >
+          {'Unbake'}
+        </Button>
+        <Button
+          onClick={() => setTab(Tabs.rebake)}
+          backgroundColor={tab === Tabs.rebake ? '#3D3431' : ''}
+          className={
+            tab === Tabs.rebake ? 'cave-nav-btn-selected' : 'cave-nav-btn'
+          }
+        >
+          {Tabs.rebake}
+        </Button>
+        <Button
+          onClick={() => setTab(Tabs.randomBake)}
+          backgroundColor={tab === Tabs.randomBake ? '#3D3431' : ''}
+          className={
+            tab === Tabs.randomBake ? 'cave-nav-btn-selected' : 'cave-nav-btn'
+          }
+        >
+          {Tabs.randomBake}
+        </Button>
+      </Flex>
 
-          {/* Second card */}
-          {secondBox()}
-        </Stack>
-      </Stack>
+      {renderSubpage(tab)}
     </Box>
   );
 }

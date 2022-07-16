@@ -1,10 +1,12 @@
-import { Text } from '@chakra-ui/react';
+import { InfoIcon } from '@chakra-ui/icons';
+import { Icon, Text, Tooltip } from '@chakra-ui/react';
 import { CSSProperties } from 'react';
 
 interface Props {
   title: string;
   isSelected: boolean;
   onClick: () => void;
+  infoTooltip?: string;
   bgColor?: string; // to 'hide' bottom border when not selected
 }
 
@@ -12,6 +14,7 @@ export const NavButton = ({
   title,
   isSelected,
   onClick,
+  infoTooltip,
   bgColor = 'white',
 }: Props) => {
   const selectedStyle: CSSProperties = {
@@ -39,6 +42,19 @@ export const NavButton = ({
       onClick={onClick}
     >
       {title}
+      {infoTooltip ? (
+        <Tooltip
+          backgroundColor="blackAlpha.800"
+          color="whiteAlpha.900"
+          px={5}
+          py={3}
+          fontSize="initial"
+          label={infoTooltip}
+          placement="left"
+        >
+          <InfoIcon ml={2} color="tomato.500" fontSize={'l'} />
+        </Tooltip>
+      ) : null}
     </Text>
   );
 };
