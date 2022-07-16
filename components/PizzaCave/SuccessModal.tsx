@@ -110,9 +110,9 @@ export const SuccessModal = ({
           <Stack direction="row" justifyContent="center" mt={8}>
             <Center>
               <TwitterShareButton
-                url={info?.url}
-                title={info?.title}
-                hashtags={info?.hashtags}
+                url={mintedPizza?.image}
+                title="Look what I made @LazlosPizza. Bet you can't beat my score and win the $ETH rewards, anon!"
+                hashtags={['NFT', 'LazlosPizza']}
               >
                 <Button backgroundColor="cheese.200">
                   <TwitterIcon
