@@ -168,7 +168,7 @@ export default function RarityRewards() {
       </Flex>
       {selectedTab === Tabs.previousWinners && (
         <SelectYourPizza
-          pizzas={previousWinners}
+          pizzas={previousWinners.slice(0, 50)}
           hideTitle
           useIngredientsForImage
           columns={2}
@@ -178,7 +178,7 @@ export default function RarityRewards() {
       )}
       {selectedTab === Tabs.topPizzas && (
         <SelectYourPizza
-          pizzas={rarestPizzas}
+          pizzas={rarestPizzas.slice(0, 50)}
           columns={2}
           hideTitle
           showOwner

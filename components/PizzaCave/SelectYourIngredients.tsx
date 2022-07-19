@@ -1,3 +1,4 @@
+import { InfoIcon } from '@chakra-ui/icons';
 import {
   Box,
   Text,
@@ -6,9 +7,16 @@ import {
   Flex,
   Center,
   Heading,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
 } from '@chakra-ui/react';
+import { useMemo, useState } from 'react';
 import { colors } from '../../styles/theme';
 import { Ingredient, IngredientGroup, Pizza, PizzaCave } from '../../types';
+import { AlertModal } from '../shared/AlertModal';
 import { IngredientList } from './IngredientList';
 
 interface Props {
@@ -34,6 +42,12 @@ export const SelectYourIngredients = ({
   handleQuickStart,
   unselectPizza,
 }: Props) => {
+  const [alertOpened, setAlertOpened] = useState<string | null>();
+  const showAlert = () => {
+    setAlertOpened(
+      'All pizzas must have 1 base, 1 sauce, 1-3 cheeses, 0-4 meats  0-4 toppings.',
+    );
+  };
   const renderPizza = () => {
     return (
       <Box
@@ -92,46 +106,95 @@ export const SelectYourIngredients = ({
     );
   };
 
+  const ingredientsTabs = useMemo(() => {
+    return ingredientGroups?.map(group => {
+      const ownedFromGroup =
+        group.ingredients?.filter(ingredient =>
+          ownedIngredients?.find(
+            ownedIngredient =>
+              ingredient.tokenId === ownedIngredient.tokenId &&
+              !!ownedIngredient.balance,
+          ),
+        ) || [];
+      return { group, ownedFromGroup, name: group.name };
+    });
+  }, [ingredientGroups, ownedIngredients]);
+
   return (
-    <Box style={{ marginTop: 20, padding: 10 }}>
-      <Stack>
-        {tab === PizzaCave.rebake && renderPizza()}
-        {tab === PizzaCave.buyAndBake && (
-          <Flex justify={'space-between'} alignItems="center">
-            <Text color="gray.dark" fontWeight={700} fontSize={'xl'}>
-              Select your Ingredients
-            </Text>
-            {!!handleQuickStart && (
-              <Button onClick={handleQuickStart} className="tomato-btn">
-                Quick Start
-              </Button>
-            )}
-          </Flex>
-        )}
-        {ingredientGroups &&
-          ingredientGroups.map(_group => {
-            const ownedFromGroup =
-              _group.ingredients?.filter(ingredient =>
-                ownedIngredients?.find(
-                  ownedIngredient =>
-                    ingredient.tokenId === ownedIngredient.tokenId &&
-                    !!ownedIngredient.balance,
-                ),
-              ) || [];
-            return ownedFromGroup.length || !ownedIngredients ? (
-              <IngredientList
-                ingredientGroup={_group}
-                ownedIngredients={ownedIngredients}
-                key={_group.name}
-                addIngredient={addIngredient}
-                removeIngredient={removeIngredient}
-                unburnIngredient={unburnIngredient}
-                pizza={pizza}
-                tab={tab}
-              />
-            ) : null;
-          })}
-      </Stack>
-    </Box>
+    <>
+      {alertOpened ? (
+        <AlertModal
+          message={alertOpened}
+          isOpen={!!alertOpened}
+          onRequestClose={setAlertOpened.bind(null, false)}
+        />
+      ) : null}
+      <Box style={{ marginTop: 20, padding: 10 }}>
+        <Stack>
+          {tab === PizzaCave.rebake && renderPizza()}
+          {tab === PizzaCave.buyAndBake && (
+            <Flex justify={'space-between'} alignItems="center">
+              <Text color="gray.dark" fontWeight={700} fontSize={'xl'}>
+                Select your Ingredients{' '}
+                <InfoIcon
+                  ml={2}
+                  color="tomato.500"
+                  fontSize={'l'}
+                  sx={{ cursor: 'pointer' }}
+                  onClick={showAlert}
+                />
+              </Text>
+              {!!handleQuickStart && (
+                <Button onClick={handleQuickStart} className="tomato-btn">
+                  Quick Start
+                </Button>
+              )}
+            </Flex>
+          )}
+          {ingredientGroups && (
+            <Tabs color={'primary'}>
+              <TabList>
+                {ingredientsTabs.map(item => (
+                  <Tab
+                    sx={{
+                      color: 'gray.dark',
+                      fontSize: '18px',
+                      border: 'none',
+                      marginRight: '5px',
+                      borderBottomStyle: 'solid',
+                      borderBottomWidth: '2px',
+                      borderBottomColor: 'background.light',
+                      [`&[aria-selected=true]`]: {
+                        color: 'tomato.500',
+                        borderBottomColor: 'tomato.500',
+                      },
+                    }}
+                    key={item.name}
+                  >
+                    {item.name}
+                  </Tab>
+                ))}
+              </TabList>
+              <TabPanels>
+                {ingredientsTabs.map(item => (
+                  <TabPanel key={item.name}>
+                    <IngredientList
+                      ingredientGroup={item.group}
+                      ownedIngredients={ownedIngredients}
+                      addIngredient={addIngredient}
+                      removeIngredient={removeIngredient}
+                      unburnIngredient={unburnIngredient}
+                      pizza={pizza}
+                      tab={tab}
+                      columns={2}
+                    />
+                  </TabPanel>
+                ))}
+              </TabPanels>
+            </Tabs>
+          )}
+        </Stack>
+      </Box>
+    </>
   );
 };

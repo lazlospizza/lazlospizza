@@ -1,12 +1,7 @@
-import { isEmpty, update } from 'lodash';
+import { isEmpty } from 'lodash';
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
-import {
-  BASE_LIMIT,
-  CHEESE_LIMIT,
-  MEAT_LIMIT,
-  TOPPING_LIMIT,
-} from '../constants';
-import { Ingredient, IngredientType, Pizza, PizzaCave } from '../types';
+import { CHEESE_LIMIT, MEAT_LIMIT, TOPPING_LIMIT } from '../constants';
+import { Ingredient, IngredientType, Pizza } from '../types';
 
 export const parsePrice = (
   amount: number,

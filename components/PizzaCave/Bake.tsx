@@ -130,18 +130,8 @@ export const Bake = () => {
         </Stack>
       ) : (
         // desktop view
-        <Flex
-          borderTop="2px"
-          borderColor={'gray.light'}
-          maxHeight={'900px'}
-          top="20px"
-        >
-          <Box
-            className="scrollable"
-            width={'50%'}
-            maxHeight="900px"
-            overflowY={'auto'}
-          >
+        <Flex borderTop="2px" borderColor={'gray.light'} top="20px">
+          <Box className="scrollable" width={'50%'}>
             <SelectYourIngredients
               ingredientGroups={ingredientGroups}
               ownedIngredients={myIngredients}
@@ -153,8 +143,6 @@ export const Bake = () => {
           </Box>
           <Stack
             style={{ width: '50%', backgroundColor: colors.gray.background }}
-            maxHeight="900px"
-            overflowY={'auto'}
           >
             <Flex
               pt="4"
