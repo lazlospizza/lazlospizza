@@ -1,31 +1,161 @@
 import dynamic from 'next/dynamic';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { selectShowTutorial, toggleTutorial } from '../store/appSlice';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../store';
 import { useWallet } from '../hooks/useWallet';
+import {
+  Box,
+  Button,
+  Flex,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  Text,
+} from '@chakra-ui/react';
 
 const ReactourNoSSR = dynamic(() => import('reactour'), { ssr: false });
 
 export const Tutorial: React.FC = () => {
   const showTutorial = useSelector(selectShowTutorial);
   const dispatch = useAppDispatch();
+  const openTutorial = () => dispatch(toggleTutorial(true));
   const closeTutorial = () => dispatch(toggleTutorial(false));
+  const [modalOpened, setModalOpened] = useState<boolean>(false);
   const wallet = useWallet();
+  const closeModal = () => {
+    setModalOpened(false);
+  };
   useEffect(() => {
     if (!wallet.isConnected) {
       return;
     }
-    const initialShown = localStorage.getItem('tutorialInitialShown');
+    const initialShown = localStorage.getItem('initialPopupShown');
     if (!initialShown) {
-      setTimeout(() => {
-        dispatch(toggleTutorial(true));
-      }, 1000);
-      localStorage.setItem('tutorialInitialShown', 'true');
+      setModalOpened(true);
+      localStorage.setItem('initialPopupShown', 'true');
     }
   }, [wallet, dispatch]);
+  const items = [
+    {
+      title: '1. Select ingredients',
+      img: '/assets/ingredients-pane.png',
+    },
+    {
+      title: '2. Bake a pizza',
+      img: '/assets/tutorial_pizza.png',
+    },
+    {
+      title: '3. Get the lowest rarity score',
+      img: '/assets/tutorial_score_to_beat.png',
+    },
+    {
+      title: '4. Win eth rewards',
+      img: '/assets/tutorial_winner.png',
+    },
+  ];
   return (
     <>
+      <Modal isOpen={modalOpened} onClose={closeModal} size="4xl">
+        <ModalOverlay />
+        <ModalContent backgroundColor={'tomato.500'} position="relative">
+          <Box sx={{ position: 'absolute', top: '10px', left: '10px' }}>
+            <img
+              style={{
+                height: `80px`,
+              }}
+              src="/assets/logo-header.png"
+              className="logo"
+              alt="Logo"
+            />
+          </Box>
+          <ModalHeader>
+            <Stack alignItems={'center'}>
+              <Box mb={2}>
+                <img
+                  src="/assets/header-logo.png"
+                  className="logo"
+                  alt="Logo"
+                  style={{ height: '70px' }}
+                />
+              </Box>
+              <Text
+                fontFamily="heading"
+                fontSize="15px"
+                color="cheese.200"
+                textTransform="uppercase"
+              >
+                Bake the rarest pizza to win eth rewards!
+              </Text>
+            </Stack>
+          </ModalHeader>
+          <ModalBody>
+            <Flex
+              flexWrap="wrap"
+              justifyContent="space-around"
+              alignItems="center"
+              maxW="600px"
+              margin="0 auto"
+            >
+              {items.map(item => (
+                <Stack
+                  key={item.title}
+                  height="100%"
+                  sx={{ width: ['100%', '50%'] }}
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Stack sx={{ margin: '10px', border: '2px solid #FFDF8D' }}>
+                    <Text
+                      fontSize="18px"
+                      lineHeight="24px"
+                      fontWeight="bold"
+                      textAlign="center"
+                      color="cheese.200"
+                      textTransform="uppercase"
+                    >
+                      {item.title}
+                    </Text>
+                    <Box sx={{ flex: 1 }} m={4}>
+                      <img
+                        src={item.img}
+                        alt={item.title}
+                        style={{ width: '100%' }}
+                      />
+                    </Box>
+                  </Stack>
+                </Stack>
+              ))}
+            </Flex>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              backgroundColor={'white'}
+              color="gray.dark"
+              mr={3}
+              onClick={closeModal}
+            >
+              Continue to Site
+            </Button>
+            <Button
+              backgroundColor={'cheese.200'}
+              color="gray.dark"
+              mr={3}
+              onClick={() => {
+                closeModal();
+                openTutorial();
+              }}
+            >
+              View tutorial
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
       {/* @ts-ignore */}
       <ReactourNoSSR
@@ -36,16 +166,20 @@ export const Tutorial: React.FC = () => {
         // @ts-ignore
         steps={[
           {
-            content:
-              'Mama mia, welcome to Lazlo’s Pizza! I’m Lazlo, let me show you around.',
+            content: (
+              <div className="pizza-tour-step">
+                Mama mia, welcome to Lazlo’s Pizza! I’m Lazlo, let me show you
+                around.
+              </div>
+            ),
             selector: 'body',
           },
           {
             content: (
               <div className="pizza-tour-step">
                 Lazlo’s Pizza lets users build their own pizza and create their
-                own rarity, rewarding users that that achieve the best Rarity
-                Score with ETH rewards. Reward amounts and a countdown to the
+                own rarity, rewarding users that achieve the best Rarity Score
+                with ETH rewards. Reward amounts and a countdown to the next
                 payout can be viewed here.
               </div>
             ),
@@ -98,7 +232,7 @@ export const Tutorial: React.FC = () => {
             content: (
               <div className="pizza-tour-step">
                 Learn more about Rarity Scores and how Rewards are awarded on
-                the Rarity Rewards page. you can also view a list of previous
+                the Rarity Rewards page. You can also view a list of previous
                 winners.
               </div>
             ),
@@ -116,8 +250,12 @@ export const Tutorial: React.FC = () => {
             selector: '.tour-meet-artists',
           },
           {
-            content:
-              'Got more questions? Check out the FAQs, or connect with us on Twitter and Discord.',
+            content: (
+              <div className="pizza-tour-step">
+                Got more questions? Check out the FAQs, or connect with us on
+                Twitter.
+              </div>
+            ),
             selector: '.tour-faq',
           },
         ]}

@@ -170,18 +170,8 @@ export const Rebake = () => {
           </Stack>
         ) : (
           // desktop view
-          <Flex
-            borderTop="2px"
-            borderColor={'gray.light'}
-            maxHeight={'900px'}
-            top="20px"
-          >
-            <Box
-              className="scrollable"
-              width={'50%'}
-              maxHeight="900px"
-              overflowY={'auto'}
-            >
+          <Flex borderTop="2px" borderColor={'gray.light'} top="20px">
+            <Box className="scrollable" width={'50%'}>
               {pizza ? (
                 <SelectYourIngredients
                   ingredientGroups={ingredientGroups}
@@ -203,8 +193,6 @@ export const Rebake = () => {
             </Box>
             <Stack
               style={{ width: '50%', backgroundColor: colors.gray.background }}
-              maxHeight="900px"
-              overflowY={'auto'}
               className="scrollable"
             >
               <Flex

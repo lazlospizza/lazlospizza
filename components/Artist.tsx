@@ -16,7 +16,7 @@ interface Artist {
 }
 
 export const Artist = ({ artist }: Artist) => {
-  const { bio, name, role, imgSrc, link } = artist;
+  const { bio, name, imgSrc, link } = artist;
   const size = useGetWindowSize();
   const $link = link ? (
     <Box>
@@ -45,9 +45,6 @@ export const Artist = ({ artist }: Artist) => {
             <Heading color="tomato.500" size={'md'}>
               {name}
             </Heading>
-            <Text color="gray.light" fontWeight={600} fontSize={'lg'}>
-              {role}
-            </Text>
             <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
               {bio}
             </Text>
@@ -65,9 +62,6 @@ export const Artist = ({ artist }: Artist) => {
             <Heading color="tomato.500" size={'md'}>
               {name}
             </Heading>
-            <Text color="gray.light" fontWeight={600} fontSize={'lg'}>
-              {role}
-            </Text>
           </Stack>
           <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
             {bio}

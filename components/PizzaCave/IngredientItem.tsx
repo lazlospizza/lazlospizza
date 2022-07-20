@@ -87,8 +87,9 @@ export const IngredientItem = ({
         backgroundColor={selected ? colors.cheese[150] : ''}
         p="2"
       >
-        <Flex>
+        <Flex sx={{ height: '100%' }}>
           <Center
+            mr={2}
             style={{
               position: 'relative',
               display: 'flex',
@@ -115,18 +116,20 @@ export const IngredientItem = ({
             />
           </Center>
           {/* Right of Image */}
-          <Flex width={'100%'} justifyContent={'space-between'}>
+          <Stack
+            width={'100%'}
+            justifyContent={'space-between'}
+            flexWrap="wrap"
+          >
             {/* Name and Cost */}
             <Flex
               direction={'column'}
               justifyContent={
                 tab === PizzaCave.buyAndBake ? 'space-between' : 'center'
               }
-              px="8"
-              py="2"
             >
               <Stack direction="row" alignItems="center">
-                <Heading size={'sm'} color="gray.dark">
+                <Heading fontSize="14px" size={'sm'} color="gray.dark" mb={2}>
                   {name}
                 </Heading>
                 {!!balance && (
@@ -153,8 +156,8 @@ export const IngredientItem = ({
               )}
             </Flex>
             {/* Count and Add Button */}
-            <Flex direction={'column'} justifyContent={'space-between'} py="2">
-              <Text size={'sm'} color="gray.dark" align={'right'}>
+            <Flex direction={'column'} justifyContent={'space-between'}>
+              <Text size={'sm'} fontSize="14px" color="gray.dark" mb={2}>
                 {supply}/10,000 remaining
               </Text>
               {!!addIngredient && !!removeIngredient && (
@@ -162,12 +165,15 @@ export const IngredientItem = ({
                   className="tomato-btn"
                   onClick={selected ? handleRemove : handleAdd}
                   disabled={tab === PizzaCave.rebake && pizzaHasItem}
+                  display="inline-block"
+                  size="sm"
+                  width="auto"
                 >
                   {selected ? `Remove` : `Add`}
                 </Button>
               )}
             </Flex>
-          </Flex>
+          </Stack>
         </Flex>
       </Box>
     </>

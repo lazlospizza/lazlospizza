@@ -270,27 +270,28 @@ export const SelectYourPizza = ({
                               <FaCube fontSize="14" />{' '}
                               <Text>{pizza.payout.block}</Text>
                             </Stack>
-                            {pizza.payout.hasBeenPaid !== undefined && (
-                              <Text
-                                color={
-                                  pizza.payout.hasBeenPaid
-                                    ? 'green.500'
-                                    : undefined
-                                }
-                                textTransform="uppercase"
-                              >
-                                {pizza.payout.hasBeenPaid
-                                  ? 'Claimed'
-                                  : 'Unclaimed'}
-                              </Text>
-                            )}
+                            <Text
+                              color={
+                                pizza.payout.hasBeenPaid
+                                  ? 'green.500'
+                                  : undefined
+                              }
+                              textTransform="uppercase"
+                            >
+                              {pizza.payout.hasBeenPaid
+                                ? 'Claimed'
+                                : 'Unclaimed'}
+                            </Text>
                             <Stack direction="row" alignItems="center">
                               <FaEthereum fontSize="14" />{' '}
                               {pizza.payout.payout_amount && (
                                 <Text>
                                   {parsePrice(
                                     Number(
-                                      pizza.payout.payout_amount.toFixed(3),
+                                      (
+                                        pizza.payout.payout_amount /
+                                        1000000000000000000
+                                      ).toFixed(3),
                                     ),
                                     3,
                                     false,
@@ -368,7 +369,9 @@ export const SelectYourPizza = ({
                       fontSize="9"
                       fontFamily={'heading'}
                     >
-                      <Text textDecoration="underline">{pizza.owner}</Text>
+                      <Text textDecoration="underline">
+                        {pizza.owner?.slice(0, 6)}
+                      </Text>
                     </Stack>
                   </Link>
                 ) : null}
