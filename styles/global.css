@@ -25,17 +25,18 @@
   padding: 20px;
   background-color: #cc4443;
   font-family: 'Press Start 2P', cursive;
-  font-size: 14px;
-  text-align: justify;
-  text-justify: inter-word;
+  font-size: 13px;
+  text-align: left;
+  margin-top: 20px;
+  margin-left: 20px;
 }
 .pizza-tour.reactour__helper:after {
   content: ' ';
   position: absolute;
-  top: -30px;
-  left: -30px;
-  width: 60px;
-  height: 60px;
+  top: -20px;
+  left: -20px;
+  width: 40px;
+  height: 40px;
   background-image: url('/assets/logo-header.png');
   background-size: 100% 100%;
 }
@@ -61,6 +62,5 @@
 }
 
 .pizza-tour-step {
-  max-height: 200px;
   overflow-y: auto;
 }

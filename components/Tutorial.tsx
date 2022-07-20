@@ -36,16 +36,20 @@ export const Tutorial: React.FC = () => {
         // @ts-ignore
         steps={[
           {
-            content:
-              'Mama mia, welcome to Lazlo’s Pizza! I’m Lazlo, let me show you around.',
+            content: (
+              <div className="pizza-tour-step">
+                Mama mia, welcome to Lazlo’s Pizza! I’m Lazlo, let me show you
+                around.
+              </div>
+            ),
             selector: 'body',
           },
           {
             content: (
               <div className="pizza-tour-step">
                 Lazlo’s Pizza lets users build their own pizza and create their
-                own rarity, rewarding users that that achieve the best Rarity
-                Score with ETH rewards. Reward amounts and a countdown to the
+                own rarity, rewarding users that achieve the best Rarity Score
+                with ETH rewards. Reward amounts and a countdown to the next
                 payout can be viewed here.
               </div>
             ),
@@ -116,8 +120,12 @@ export const Tutorial: React.FC = () => {
             selector: '.tour-meet-artists',
           },
           {
-            content:
-              'Got more questions? Check out the FAQs, or connect with us on Twitter and Discord.',
+            content: (
+              <div className="pizza-tour-step">
+                Got more questions? Check out the FAQs, or connect with us on
+                Twitter.
+              </div>
+            ),
             selector: '.tour-faq',
           },
         ]}

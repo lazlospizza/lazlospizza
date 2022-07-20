@@ -1,5 +1,6 @@
 import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/react';
 import axios from 'axios';
+import { orderBy } from 'lodash';
 import { useEffect } from 'react';
 import { useCallback, useMemo, useState } from 'react';
 import { SelectYourPizza } from '../components/PizzaCave/SelectYourPizza';
@@ -30,7 +31,7 @@ export default function RarityRewards() {
     const res = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}/winning_pizzas`,
     );
-    setWinningPizzas(res.data);
+    setWinningPizzas(res.data?.slice(0, 50));
   }, []);
   const { mainContract } = useMainContract();
 
@@ -78,7 +79,20 @@ export default function RarityRewards() {
         })(),
       ),
     );
-    setPreviousWinners(previousWinners.filter(item => !!item));
+    const usedBlocks = [];
+    setPreviousWinners(
+      orderBy(
+        previousWinners.filter(item => {
+          if (!item || usedBlocks.includes(item.block)) {
+            return false;
+          }
+          usedBlocks.push(item.block);
+          return item;
+        }),
+        'block',
+        'desc',
+      ).slice(0, 50),
+    );
   }, []);
 
   useEffect(() => {
@@ -168,7 +182,7 @@ export default function RarityRewards() {
       </Flex>
       {selectedTab === Tabs.previousWinners && (
         <SelectYourPizza
-          pizzas={previousWinners.slice(0, 50)}
+          pizzas={previousWinners}
           hideTitle
           useIngredientsForImage
           columns={2}
@@ -178,7 +192,7 @@ export default function RarityRewards() {
       )}
       {selectedTab === Tabs.topPizzas && (
         <SelectYourPizza
-          pizzas={rarestPizzas.slice(0, 50)}
+          pizzas={rarestPizzas}
           columns={2}
           hideTitle
           showOwner

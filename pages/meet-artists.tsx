@@ -159,6 +159,19 @@ export default function MeetArtists() {
         <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
           {`Meet our awesome team!`}
         </Text>
+        <Text color="gray.dark" fontWeight={500} fontSize={'lg'}>
+          Lazlo’s Pizza is both a game and a collaborative art project that
+          allows users to combine a range of 25 different ingredient NFTs and
+          pizza layers from a bunch of respected NFT artists. As well as a top
+          tier roster of NFT artists, some of the most innovative buidlers
+          working in web3 today were instrumental in coding our smart contracts
+          and writing complex code to make it simpler for you to view Rarity
+          Scores and Rewards in real time - no mean feat at all! Did you know
+          Lazlo also has a spot in the Metaverse, built out by some of the most
+          sought-after Voxels architects working in the space. Meet them all
+          below - and be sure to give them a follow to keep up to date with
+          their latest work!
+        </Text>
       </Stack>
       <Grid gridTemplateColumns={[`1fr`, `1fr`, `1fr`, '1fr 1fr']} gap={5}>
         {artists.map((artist, artistIdx) => (
