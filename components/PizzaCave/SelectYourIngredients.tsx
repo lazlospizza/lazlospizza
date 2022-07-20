@@ -12,6 +12,7 @@ import {
   Tab,
   TabPanels,
   TabPanel,
+  Tooltip,
 } from '@chakra-ui/react';
 import { useMemo, useState } from 'react';
 import { colors } from '../../styles/theme';
@@ -136,13 +137,19 @@ export const SelectYourIngredients = ({
             <Flex justify={'space-between'} alignItems="center">
               <Text color="gray.dark" fontWeight={700} fontSize={'xl'}>
                 Select your Ingredients{' '}
-                <InfoIcon
-                  ml={2}
-                  color="tomato.500"
-                  fontSize={'l'}
-                  sx={{ cursor: 'pointer' }}
-                  onClick={showAlert}
-                />
+                <Tooltip
+                  backgroundColor="blackAlpha.800"
+                  color="whiteAlpha.900"
+                  px={5}
+                  py={3}
+                  fontSize="initial"
+                  label={
+                    'All pizzas must have 1 base, 1 sauce, 1-3 cheeses, 0-4 meats  0-4 toppings.'
+                  }
+                  placement="left"
+                >
+                  <InfoIcon ml={2} color="tomato.500" fontSize={'l'} />
+                </Tooltip>
               </Text>
               {!!handleQuickStart && (
                 <Button onClick={handleQuickStart} className="tomato-btn">
