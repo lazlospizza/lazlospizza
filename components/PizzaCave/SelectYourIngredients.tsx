@@ -14,10 +14,9 @@ import {
   TabPanel,
   Tooltip,
 } from '@chakra-ui/react';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { colors } from '../../styles/theme';
 import { Ingredient, IngredientGroup, Pizza, PizzaCave } from '../../types';
-import { AlertModal } from '../shared/AlertModal';
 import { IngredientList } from './IngredientList';
 
 interface Props {
@@ -43,12 +42,6 @@ export const SelectYourIngredients = ({
   handleQuickStart,
   unselectPizza,
 }: Props) => {
-  const [alertOpened, setAlertOpened] = useState<string | null>();
-  const showAlert = () => {
-    setAlertOpened(
-      'All pizzas must have 1 base, 1 sauce, 1-3 cheeses, 0-4 meats  0-4 toppings.',
-    );
-  };
   const renderPizza = () => {
     return (
       <Box
@@ -123,13 +116,6 @@ export const SelectYourIngredients = ({
 
   return (
     <>
-      {alertOpened ? (
-        <AlertModal
-          message={alertOpened}
-          isOpen={!!alertOpened}
-          onRequestClose={setAlertOpened.bind(null, false)}
-        />
-      ) : null}
       <Box style={{ marginTop: 20, padding: 10 }}>
         <Stack>
           {tab === PizzaCave.rebake && renderPizza()}
