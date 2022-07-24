@@ -35,7 +35,7 @@ export const NETWORK_CONFIG: Record<EthNetwork, EthNetworkConfig> = {
     openSeaBaseUrl: 'https://opensea.io',
     openSeaProjectSlug: 'lazlospizza',
     openSeaBaseApiUrl: 'https://api.opensea.io',
-    defaultBlockInterval: 1000,
+    defaultBlockInterval: 10000,
   },
   rinkeby: {
     name: 'rinkeby',
