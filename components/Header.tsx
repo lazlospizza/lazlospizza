@@ -172,6 +172,7 @@ export const Header = () => {
             <img
               style={{
                 marginTop: '20px',
+                marginLeft: isMobile ? '10px' : '20px',
                 height: `${
                   isMobile
                     ? headerHeight.mobile - 20
