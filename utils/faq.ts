@@ -18,7 +18,7 @@ Bake a pizza in the Pizza Cave, check your Rarity Score in My Wallet after bakin
   {
     question: `How are Rarity Scores calculated?`,
     answer: `Every pizza, by design, has a total of 21 traits. Each trait has an associated percentage score that reflects the percentage of existing pizzas with said trait at that time. Rarity scores are calculated by summing the prevailing percentage score associated with each trait and dividing by 21. Rarity scores, therefore, range from 0-100.
-As users Bake, Unbake and Rebake pizzas, the percentage scores associated with ingredient traits change dynamically, meaning that Rarity Scores also change on an ongoing basis.`,
+As users Bake, Unbake and Rebake pizzas, the percentage scores associated with ingredient traits change dynamically, meaning that Rarity Scores also change on an ongoing basis. You can view the API here: https://github.com/lazlospizza/lazlospizza-api.`,
   },
   {
     question: `What if I get the lowest score in a cycle but other users copy my pizza, making my score increase? Can I still win?`,
