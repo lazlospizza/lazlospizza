@@ -110,6 +110,7 @@ export const Bake = () => {
               <NavButton
                 title={BuyAndBakeTabs.selections}
                 isSelected={selectedTab === BuyAndBakeTabs.selections}
+                badge={pizza?.allIngredients.length}
                 onClick={() => {
                   setSelectedTab(BuyAndBakeTabs.selections);
                   setSelectedHalfTab(BuyAndBakeTabs.selections);
@@ -153,6 +154,7 @@ export const Bake = () => {
               <NavButton
                 title={BuyAndBakeTabs.selections}
                 isSelected={selectedHalfTab === BuyAndBakeTabs.selections}
+                badge={pizza?.allIngredients.length}
                 onClick={() => {
                   setSelectedTab(BuyAndBakeTabs.selections);
                   setSelectedHalfTab(BuyAndBakeTabs.selections);

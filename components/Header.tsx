@@ -171,14 +171,15 @@ export const Header = () => {
           <a>
             <img
               style={{
+                marginTop: '20px',
                 height: `${
                   isMobile
-                    ? headerHeight.mobile - 40
-                    : headerHeight.desktop - 90
+                    ? headerHeight.mobile - 20
+                    : headerHeight.desktop - 50
                 }px`,
-                margin: isMobile ? `20px 10px` : `30px 15px 60px 15px`,
+                marginBottom: isMobile ? '0' : '40px',
               }}
-              src="/assets/logo-header.png"
+              src="/assets/logo.png"
               className="logo"
               alt="Logo"
             />
