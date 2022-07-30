@@ -1,5 +1,5 @@
 import { InfoIcon } from '@chakra-ui/icons';
-import { Icon, Text, Tooltip } from '@chakra-ui/react';
+import { Box, Text, Tooltip } from '@chakra-ui/react';
 import { CSSProperties } from 'react';
 
 interface Props {
@@ -8,6 +8,7 @@ interface Props {
   onClick: () => void;
   infoTooltip?: string;
   bgColor?: string; // to 'hide' bottom border when not selected
+  badge?: number;
 }
 
 export const NavButton = ({
@@ -16,6 +17,7 @@ export const NavButton = ({
   onClick,
   infoTooltip,
   bgColor = 'white',
+  badge,
 }: Props) => {
   const selectedStyle: CSSProperties = {
     color: '#CC4443',
@@ -28,7 +30,6 @@ export const NavButton = ({
     marginBottom: '16',
     borderColor: bgColor,
   };
-
   return (
     <Text
       textAlign="center"
@@ -40,8 +41,32 @@ export const NavButton = ({
       fontWeight={500}
       style={isSelected ? selectedStyle : notSelectedStyle}
       onClick={onClick}
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      fontSize={['13px', '16px']}
     >
       {title}
+      {!!badge && (
+        <Box
+          sx={{
+            bgColor: 'tomato.500',
+            color: 'white',
+            width: '16px',
+            height: '16px',
+            borderRadius: '8px',
+            fontSize: '11px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+            top: '-10px',
+            right: '-2px',
+          }}
+        >
+          {badge}
+        </Box>
+      )}
       {infoTooltip ? (
         <Tooltip
           backgroundColor="blackAlpha.800"
@@ -52,7 +77,15 @@ export const NavButton = ({
           label={infoTooltip}
           placement="left"
         >
-          <InfoIcon ml={2} color="tomato.500" fontSize={'l'} />
+          <InfoIcon
+            color="tomato.500"
+            fontSize={'l'}
+            sx={{
+              position: 'relative',
+              top: '-10px',
+              right: '-2px',
+            }}
+          />
         </Tooltip>
       ) : null}
     </Text>

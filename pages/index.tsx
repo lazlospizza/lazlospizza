@@ -62,7 +62,10 @@ export default function PizzaCave() {
       >
         <Button
           onClick={() => setTab(Tabs.buyAndBake)}
-          backgroundColor={tab === Tabs.buyAndBake ? '#3D3431' : ''}
+          bgColor={tab === Tabs.buyAndBake ? '#3D3431' : ''}
+          _hover={{
+            bgColor: tab === Tabs.buyAndBake ? '#3D3431' : 'transparent',
+          }}
           className={
             tab === Tabs.buyAndBake ? 'cave-nav-btn-selected' : 'cave-nav-btn'
           }
@@ -71,7 +74,10 @@ export default function PizzaCave() {
         </Button>
         <Button
           onClick={() => setTab(Tabs.bake)}
-          backgroundColor={tab === Tabs.bake ? '#3D3431' : ''}
+          bgColor={tab === Tabs.bake ? '#3D3431' : ''}
+          _hover={{
+            bgColor: tab === Tabs.bake ? '#3D3431' : 'transparent',
+          }}
           className={
             tab === Tabs.bake ? 'cave-nav-btn-selected' : 'cave-nav-btn'
           }
@@ -80,7 +86,10 @@ export default function PizzaCave() {
         </Button>
         <Button
           onClick={() => setTab(Tabs.unbake)}
-          backgroundColor={tab === Tabs.unbake ? '#3D3431' : ''}
+          bgColor={tab === Tabs.unbake ? '#3D3431' : ''}
+          _hover={{
+            bgColor: tab === Tabs.unbake ? '#3D3431' : 'transparent',
+          }}
           className={
             tab === Tabs.unbake ? 'cave-nav-btn-selected' : 'cave-nav-btn'
           }
@@ -89,7 +98,10 @@ export default function PizzaCave() {
         </Button>
         <Button
           onClick={() => setTab(Tabs.rebake)}
-          backgroundColor={tab === Tabs.rebake ? '#3D3431' : ''}
+          bgColor={tab === Tabs.rebake ? '#3D3431' : ''}
+          _hover={{
+            bgColor: tab === Tabs.rebake ? '#3D3431' : 'transparent',
+          }}
           className={
             tab === Tabs.rebake ? 'cave-nav-btn-selected' : 'cave-nav-btn'
           }
@@ -98,7 +110,10 @@ export default function PizzaCave() {
         </Button>
         <Button
           onClick={() => setTab(Tabs.randomBake)}
-          backgroundColor={tab === Tabs.randomBake ? '#3D3431' : ''}
+          bgColor={tab === Tabs.randomBake ? '#3D3431' : ''}
+          _hover={{
+            bgColor: tab === Tabs.randomBake ? '#3D3431' : 'transparent',
+          }}
           className={
             tab === Tabs.randomBake ? 'cave-nav-btn-selected' : 'cave-nav-btn'
           }

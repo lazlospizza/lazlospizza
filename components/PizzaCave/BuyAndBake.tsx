@@ -164,6 +164,7 @@ export const BuyAndBake = () => {
               <NavButton
                 title={BuyAndBakeTabs.selections}
                 isSelected={selectedTab === BuyAndBakeTabs.selections}
+                badge={pizza?.allIngredients.length}
                 onClick={() => {
                   setSelectedTab(BuyAndBakeTabs.selections);
                   setSelectedHalfTab(BuyAndBakeTabs.selections);
@@ -214,6 +215,7 @@ export const BuyAndBake = () => {
                   setSelectedHalfTab(BuyAndBakeTabs.selections);
                 }}
                 bgColor={colors.gray.background}
+                badge={pizza?.allIngredients.length}
               />
               <NavButton
                 title={BuyAndBakeTabs.checkRarity}

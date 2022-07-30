@@ -93,16 +93,18 @@ export const Header = () => {
         console.log(e);
       }
     }
-    try {
-      const signer = wallet.web3Provider.getSigner();
-      const contractWithSigner = mainContract.connect(signer);
-      const result = await contractWithSigner.redeemPayout(payouts, {
-        from: signer._address,
-      });
-      await result.wait();
-      setUnpaidRewards([]);
-    } catch (e) {
-      console.log(e);
+    if (payouts.length) {
+      try {
+        const signer = wallet.web3Provider.getSigner();
+        const contractWithSigner = mainContract.connect(signer);
+        const result = await contractWithSigner.redeemPayout(payouts, {
+          from: signer._address,
+        });
+        await result.wait();
+        setUnpaidRewards([]);
+      } catch (e) {
+        console.log(e);
+      }
     }
     setIsClaimingRewards(false);
   };
@@ -171,14 +173,16 @@ export const Header = () => {
           <a>
             <img
               style={{
+                marginTop: '20px',
+                marginLeft: isMobile ? '10px' : '20px',
                 height: `${
                   isMobile
-                    ? headerHeight.mobile - 40
-                    : headerHeight.desktop - 90
+                    ? headerHeight.mobile - 20
+                    : headerHeight.desktop - 50
                 }px`,
-                margin: isMobile ? `20px 10px` : `30px 15px 60px 15px`,
+                marginBottom: isMobile ? '0' : '40px',
               }}
-              src="/assets/logo-header.png"
+              src="/assets/logo.png"
               className="logo"
               alt="Logo"
             />

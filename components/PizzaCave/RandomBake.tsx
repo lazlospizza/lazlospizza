@@ -53,7 +53,6 @@ export const RandomBake = () => {
       } = res.data;
       const signer = wallet.web3Provider.getSigner();
       const contractWithSigner = mainContract.connect(signer);
-      console.log('HERE 1');
       const _txn = await contractWithSigner.bakeRandomPizza(
         data.token_ids,
         data.timestamp,
@@ -66,8 +65,6 @@ export const RandomBake = () => {
           gasLimit: 500000,
         },
       );
-      console.log('HERE 2');
-      console.log('TXN', _txn);
       setTxn(_txn);
       const receipt = await _txn.wait();
 

@@ -146,14 +146,18 @@ export const SelectYourIngredients = ({
           )}
           {ingredientGroups && (
             <Tabs color={'primary'}>
-              <TabList>
+              <TabList
+                flexWrap="wrap"
+                justifyContent={['space-between', 'left']}
+              >
                 {ingredientsTabs.map(item => (
                   <Tab
                     sx={{
                       color: 'gray.dark',
-                      fontSize: '18px',
+                      fontSize: ['14px', '18px'],
                       border: 'none',
-                      marginRight: '5px',
+                      marginRight: ['2px', '5px'],
+                      px: ['3px', '5px'],
                       borderBottomStyle: 'solid',
                       borderBottomWidth: '2px',
                       borderBottomColor: 'background.light',
