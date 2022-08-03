@@ -31,14 +31,6 @@ export const HeaderMenu = ({
           : {}),
       }}
     >
-      {/* <Link href={PageRoutes.home}>
-        <a
-          style={{ marginRight: 16 }}
-          className={pathname === PageRoutes.home ? 'current' : ''}
-        >
-          {Pages.home}
-        </a>
-      </Link> */}
       <Link href={PageRoutes.pizzaCave}>
         <a
           style={{ marginRight: 16 }}

@@ -78,7 +78,8 @@ export const CheckRarity = () => {
             color={'tomato.500'}
             textAlign="center"
           >
-            # of Pizzas
+            No. of
+            <br /> Pizzas
           </Heading>
           {allIngredients.map(item => {
             return (

@@ -12,6 +12,7 @@ import { ConnectWalletButton } from './ConnectWalletButton';
 import { HeaderMenu } from './shared/HeaderMenu';
 import Marquee from 'react-fast-marquee';
 import { useRewardsInfo } from '../hooks/useRewardsInfo';
+import { useOutsideClick } from '../hooks/helpers';
 
 interface Reward {
   block: number;
@@ -107,9 +108,14 @@ export const Header = () => {
     setIsClaimingRewards(false);
   };
 
-  const MobileMenu = () => {
+  const MobileMenu: React.FC<{ onRequestClose: () => void }> = ({
+    onRequestClose,
+  }) => {
+    const ref = useRef();
+    useOutsideClick(ref, onRequestClose);
     return (
       <Box
+        ref={ref}
         position="absolute"
         right={0}
         top={120}
@@ -243,7 +249,7 @@ export const Header = () => {
           <Marquee
             style={{
               position: 'absolute',
-              bottom: isMobile ? '-16px' : '-20px',
+              bottom: isMobile ? '-16px' : '-22px',
               left: `0`,
               width: `100%`,
               backgroundColor: '#ff0144',
@@ -258,6 +264,7 @@ export const Header = () => {
                 key={key}
                 direction="row"
                 gap={isMobile ? 3 : 6}
+                height={isMobile ? '16px' : '22px'}
                 fontFamily={'heading'}
                 minWidth="50%"
                 justifyContent="space-around"
@@ -324,7 +331,9 @@ export const Header = () => {
             }}
           />
         </Box>
-        {isMobile && showMobileMenu && <MobileMenu />}
+        {isMobile && showMobileMenu && (
+          <MobileMenu onRequestClose={() => setShowMobileMenu(false)} />
+        )}
       </Box>
       <div
         style={{

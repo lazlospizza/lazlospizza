@@ -1,6 +1,7 @@
 import { Box, Center, Heading, Stack } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRef } from 'react';
+import { FaTwitter } from 'react-icons/fa';
 import { useWallet } from '../hooks/useWallet';
 import { useAppDispatch } from '../store';
 import { toggleTutorial } from '../store/appSlice';
@@ -21,10 +22,7 @@ export const Footer = () => {
   return (
     <Box className="footer">
       <Stack w={'full'} spacing={'60px'}>
-        <Heading size={'sm'} color="cheese.200">
-          {'Join Our Community'}
-        </Heading>
-        <Stack spacing={10}>
+        <Stack spacing={8}>
           <Link href={PageRoutes.meetArtists}>
             <a>Meet Pizzaiolos</a>
           </Link>
@@ -39,8 +37,18 @@ export const Footer = () => {
           <Link href={'https://opensea.io/collection/lazlos-pizza'}>
             <a>OpenSea</a>
           </Link>
+          <a
+            href="https://twitter.com/lazlospizza"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Stack direction="row" alignItems="center">
+              <FaTwitter fontSize={'20px'} color="#00acee" />
+              <span>Follow us on twitter</span>
+            </Stack>
+          </a>
         </Stack>
-        <Center w="100%">
+        <Center w="100%" display={['none', 'block']}>
           <Heading size={'xs'}>Copyright 2022</Heading>
         </Center>
       </Stack>

@@ -426,19 +426,28 @@ export const YourSelections = ({
                 ) ? (
                   <Heading
                     size={'sm'}
+                    fontSize={['12px', '16px']}
                     color={'gray.dark'}
                     textDecoration="line-through"
                   >
                     {item.name}
                   </Heading>
                 ) : (
-                  <Heading size={'sm'} color={'gray.dark'}>
+                  <Heading
+                    size={'sm'}
+                    fontSize={['12px', '16px']}
+                    color={'gray.dark'}
+                  >
                     {item.name}
                   </Heading>
                 )}
                 <Flex alignItems="center" gap={3}>
                   {tab === PizzaCave.buyAndBake && (
-                    <Heading size={'sm'} color={'tomato.500'}>
+                    <Heading
+                      size={'sm'}
+                      fontSize={['12px', '16px']}
+                      color={'tomato.500'}
+                    >
                       {item.price}
                     </Heading>
                   )}
@@ -449,6 +458,7 @@ export const YourSelections = ({
                       ) ? (
                         <Button
                           className="tomato-btn"
+                          size="sm"
                           onClick={() => removeBurnIngredient(item)}
                         >
                           Undo
@@ -456,6 +466,7 @@ export const YourSelections = ({
                       ) : (
                         <Button
                           className="tomato-btn"
+                          size="sm"
                           onClick={() => addBurnIngredient(item)}
                         >
                           Burn
@@ -465,6 +476,7 @@ export const YourSelections = ({
                   ) : tab !== PizzaCave.unbake ? (
                     <Button
                       className="tomato-btn"
+                      size="sm"
                       onClick={() =>
                         removeIngredient({
                           item,
