@@ -94,16 +94,18 @@ export const Header = () => {
         console.log(e);
       }
     }
-    try {
-      const signer = wallet.web3Provider.getSigner();
-      const contractWithSigner = mainContract.connect(signer);
-      const result = await contractWithSigner.redeemPayout(payouts, {
-        from: signer._address,
-      });
-      await result.wait();
-      setUnpaidRewards([]);
-    } catch (e) {
-      console.log(e);
+    if (payouts.length) {
+      try {
+        const signer = wallet.web3Provider.getSigner();
+        const contractWithSigner = mainContract.connect(signer);
+        const result = await contractWithSigner.redeemPayout(payouts, {
+          from: signer._address,
+        });
+        await result.wait();
+        setUnpaidRewards([]);
+      } catch (e) {
+        console.log(e);
+      }
     }
     setIsClaimingRewards(false);
   };
