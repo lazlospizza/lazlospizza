@@ -3,6 +3,7 @@ import axios from 'axios';
 import { orderBy } from 'lodash';
 import { useEffect } from 'react';
 import { useCallback, useMemo, useState } from 'react';
+import { PizzaItem } from '../components/PizzaCave/PizzaItem';
 import { SelectYourPizza } from '../components/PizzaCave/SelectYourPizza';
 import { NavButton } from '../components/shared/NavButton';
 import { useMainContract } from '../hooks/useContract';
@@ -152,13 +153,15 @@ export default function RarityRewards() {
           <Heading fontFamily="Lato" size="lg" color="tomato.500">
             Score to beat
           </Heading>
-          <SelectYourPizza
-            style={{ marginTop: 0 }}
-            pizzas={winningPizzas}
-            hideTitle
-            useIngredientsForImage
-            showOwner
-          />
+          {winningPizzas?.length > 0 && (
+            <Box mt={5}>
+              <PizzaItem
+                pizza={winningPizzas[0]}
+                useIngredientsForImage
+                showOwner
+              />
+            </Box>
+          )}
         </Box>
       </Stack>
 

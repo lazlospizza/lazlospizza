@@ -4,7 +4,6 @@ import { CSSProperties, useMemo, useState } from 'react';
 import { orderBy } from 'lodash';
 import { useWallet } from '../../hooks/useWallet';
 import MultiSelectMenu from '../MultiSelect/MultiSelect';
-import Lightbox from 'react-image-lightbox';
 import { PizzaItem } from './PizzaItem';
 
 enum PizzaOrder {
@@ -48,7 +47,6 @@ export const SelectYourPizza = ({
   showOptions = false,
   style,
 }: Props) => {
-  const [lightBoxImage, setLightBoxImage] = useState<string>();
   const [order, setOrder] = useState<PizzaOrder>(PizzaOrder.rarityDesc);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const { ingredientGroups } = useWallet();
@@ -105,17 +103,6 @@ export const SelectYourPizza = ({
   }, [pizzas, order, selectedIngredients, showOptions]);
   return (
     <Box style={{ marginTop: 20, padding: 10, ...style }}>
-      {lightBoxImage && (
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        <Lightbox
-          mainSrc={lightBoxImage}
-          onImageLoad={() => {
-            window.dispatchEvent(new Event('resize'));
-          }}
-          onCloseRequest={() => setLightBoxImage(null)}
-        />
-      )}
       <Stack>
         <Flex justify={'space-between'} alignItems="center">
           <Text color="gray.dark" fontWeight={700} fontSize={'xl'}>
@@ -166,9 +153,6 @@ export const SelectYourPizza = ({
               key={`${pizza.tokenId}-${i}`}
               selected={pizza.tokenId === selectedPizza?.tokenId}
               useIngredientsForImage={useIngredientsForImage}
-              onClick={() => {
-                setLightBoxImage(pizza.image);
-              }}
               showPayout={showPayout}
               showOwner={showOwner}
               onSelect={selectPizza}
