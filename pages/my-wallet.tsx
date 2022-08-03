@@ -38,7 +38,7 @@ export default function MyWallet() {
         />
       </Flex>
       {selectedTab === Tabs.pizzas && (
-        <SelectYourPizza showOptions={true} pizzas={myPizzas} columns={2} />
+        <SelectYourPizza showOptions={true} pizzas={myPizzas} columns={3} />
       )}
       {selectedTab === Tabs.ingredients && (
         <Box style={{ marginTop: 20, padding: 10 }}>

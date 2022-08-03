@@ -185,7 +185,7 @@ export default function RarityRewards() {
           pizzas={previousWinners}
           hideTitle
           useIngredientsForImage
-          columns={2}
+          columns={3}
           showPayout
           showOwner
         />
@@ -193,7 +193,7 @@ export default function RarityRewards() {
       {selectedTab === Tabs.topPizzas && (
         <SelectYourPizza
           pizzas={rarestPizzas}
-          columns={2}
+          columns={3}
           hideTitle
           showOwner
         />
