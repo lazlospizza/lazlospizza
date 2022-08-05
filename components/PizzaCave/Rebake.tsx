@@ -86,6 +86,7 @@ export const Rebake = () => {
             selectPizza={p => setPizza(p)}
             pizzas={pizzas}
             selectedPizza={pizza}
+            columns={2}
           />
         );
       case RebakeTabs.selection:
@@ -188,6 +189,7 @@ export const Rebake = () => {
                   selectPizza={p => setPizza(p)}
                   pizzas={pizzas}
                   selectedPizza={pizza}
+                  columns={2}
                 />
               )}
             </Box>

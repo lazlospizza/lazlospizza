@@ -48,7 +48,7 @@ export const styles = {
       display: 'flex',
       flexDirection: 'row',
       backgroundColor: 'tomato.500',
-      borderBottomWidth: '2px',
+      borderBottomWidth: ['2px', '0px'],
       borderColor: 'gray.dark',
       zIndex: 1000,
       background: 'url("/assets/header-bg.png") repeat',
